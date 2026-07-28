@@ -1,13 +1,82 @@
+---
+import logo from '~/assets/images/scrl-logo.svg';
+---
 <style>
-.test {
-  position: fixed;
-  bottom: 20px;
-  left: 20px;
-  width: 80px;
-  height: 80px;
-  background: red;
-  z-index: 999999;
-}
+	.scroll-indicator-track {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		height: 8px;
+		z-index: 9999;
+		pointer-events: none;
+	}
+
+	.scroll-indicator {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 0%;
+		height: 8px;
+		background: white;
+		transition: width 0.05s linear;
+	}
+
+	.scroll-indicator-logo {
+		position: absolute;
+		bottom: 0;
+		left: 0%;
+		transform: translate(-50%, -100%);
+		width: 28px;
+		height: 28px;
+		transition: left 0.05s linear;
+		will-change: left;
+	}
+
+	.scroll-indicator-logo img {
+		width: 100%;
+		height: 100%;
+		display: block;
+	}
 </style>
 
-<div class="test"></div>
+<div class="scroll-indicator-track">
+	<div id="scrlind" class="scroll-indicator"></div>
+	<div id="scrllogo" class="scroll-indicator-logo">
+		<img src={logo} alt="logo" />
+	</div>
+</div>
+
+<script is:inline>
+	function updateBar() {
+		const bar = document.getElementById("scrlind");
+		const logo = document.getElementById("scrllogo");
+
+		if (!bar || !logo) return;
+
+		const scrollTop = window.scrollY;
+		const docHeight =
+			document.documentElement.scrollHeight - window.innerHeight;
+
+		const progress = docHeight > 0
+			? (scrollTop / docHeight) * 100
+			: 0;
+
+		bar.style.width = `${progress}%`;
+		logo.style.left = `${progress}%`;
+	}
+
+	function initScrollIndicator() {
+		updateBar();
+
+		window.addEventListener("scroll", updateBar, {
+			passive: true
+		});
+
+		window.addEventListener("resize", updateBar);
+	}
+
+	initScrollIndicator();
+
+	document.addEventListener("astro:page-load", initScrollIndicator);
+</script>
