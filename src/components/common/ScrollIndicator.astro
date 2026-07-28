@@ -1,5 +1,6 @@
-import LOGO from '~/assets/images/scrl-logo.svg';
-
+---
+import logo from '~/assets/images/scrl-logo.svg';
+---
 <style>
 	.scroll-indicator-track {
 		position: fixed;
@@ -42,7 +43,7 @@ import LOGO from '~/assets/images/scrl-logo.svg';
 <div class="scroll-indicator-track">
 	<div id="scrlind" class="scroll-indicator"></div>
 	<div id="scrllogo" class="scroll-indicator-logo">
-		<img src={LOGO} alt="logo" />
+		<img src={logo} alt="logo" />
 	</div>
 </div>
 
