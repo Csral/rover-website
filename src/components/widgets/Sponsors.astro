@@ -1,0 +1,53 @@
+---
+import WidgetWrapper from '~/components/ui/WidgetWrapper.astro';
+import Headline from '~/components/ui/Headline.astro';
+import { sponsors } from '~/data/sponsors';
+
+const {
+  title = 'Our Sponsors',
+  subtitle = 'Grateful for the support of our incredible sponsors who help bring Skanda to life.',
+  id = 'sponsors',
+  isDark = false,
+} = Astro.props;
+
+const logoImages = import.meta.glob<{ default: ImageMetadata }>('/src/data/sponsor-logo/*.{png,jpg,jpeg,webp,svg}');
+
+const resolvedSponsors = await Promise.all(
+  sponsors.map(async (s) => {
+    const path = `/src/data/sponsor-logo/${s.logo}`;
+    let imgSrc = '';
+    if (logoImages[path]) {
+      const mod = await logoImages[path]();
+      imgSrc = mod.default.src;
+    }
+    return { ...s, imgSrc };
+  })
+);
+---
+
+{resolvedSponsors.length > 0 && (
+  <WidgetWrapper id={id} isDark={isDark} containerClass="max-w-6xl mx-auto py-12 md:py-16">
+    <Headline title={title} subtitle={subtitle} />
+    <div class="flex flex-wrap justify-center items-center gap-8 md:gap-12 mt-8">
+      {resolvedSponsors.map((sponsor) => (
+        <a
+          href={sponsor.website}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="group relative flex items-center justify-center p-4 md:p-6 bg-white dark:bg-white rounded-xl border border-gray-200 dark:border-gray-200 shadow-sm hover:shadow-md hover:border-primary transition duration-300 transform hover:-translate-y-1 min-w-[160px] h-[90px]"
+          title={sponsor.name}
+        >
+          {sponsor.imgSrc ? (
+            <img
+              src={sponsor.imgSrc}
+              alt={sponsor.name}
+              class="max-h-16 max-w-[180px] w-auto object-contain transition duration-300"
+            />
+          ) : (
+            <span class="text-xl font-bold text-gray-900">{sponsor.name}</span>
+          )}
+        </a>
+      ))}
+    </div>
+  </WidgetWrapper>
+)}
