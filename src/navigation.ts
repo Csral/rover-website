@@ -11,10 +11,6 @@ export const headerData = {
       href: '/team',
     },
     {
-      text: 'About',
-      href: '/about',
-    },
-    {
       text: 'Blog',
       href: '/blog',
     },

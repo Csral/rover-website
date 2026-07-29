@@ -2,9 +2,12 @@
 import Layout from "~/layouts/PageLayout.astro";
 
 import Hero from "~/components/widgets/Hero.astro";
-import CallToAction from "~/components/widgets/CallToAction.astro";
+import Content from "~/components/widgets/Content.astro";
 import Features3 from "~/components/widgets/Features3.astro";
-import Brands from "~/components/widgets/Brands.astro";
+import Steps2 from "~/components/widgets/Steps2.astro";
+import ContactUs from "~/components/widgets/Contact.astro";
+import Sponsors from "~/components/widgets/Sponsors.astro";
+import { YouTube } from "astro-embed";
 
 const metadata = {
   title: "Team Odyssey",
@@ -12,17 +15,11 @@ const metadata = {
 ---
 
 <Layout metadata={metadata}>
+  <!-- Main Hero -->
   <Hero
     tagline="Team Odyssey"
     actions={[
-      {
-        variant: "primary",
-        target: "_blank",
-        text: "Sponsor Us",
-        href: "#contact",
-        icon: "tabler:heart-handshake",
-      },
-      { text: "Learn more", href: "/about" },
+      { text: "Learn more", href: "#about" },
     ]}
     image={{
       src: "~/assets/images/rover.png",
@@ -46,24 +43,237 @@ const metadata = {
     <Fragment slot="image"> </Fragment>
   </Hero>
 
+  <!-- About The Rover (Side-by-side) -->
+  <Content
+    id="about"
+    image={{
+      src: '~/assets/images/rover-sunrise.jpeg',
+      alt: 'Team Odyssey Rover at Sunrise',
+    }}
+  >
+    <Fragment slot="content">
+      <p class="text-base text-secondary dark:text-blue-200 font-bold tracking-wide uppercase mb-2">
+        About The Rover
+      </p>
+      <h2 class="text-4xl md:text-5xl font-bold tracking-tighter mb-4 font-heading text-heading">
+        <span class="text-accent dark:text-white">Skanda</span>
+      </h2>
+      <p class="text-lg text-muted dark:text-slate-400">
+        A rover capable of excelling in the IRC's diverse tasks, including extreme terrain navigation, equipment
+        servicing, autonomous operations, and scientific analysis. Our design integrates advanced mechanical systems,
+        robust electronics, and intelligent algorithms, reflecting our commitment to interdisciplinary excellence and the
+        spirit of exploration.
+      </p>
+    </Fragment>
+  </Content>
+
+  <!-- Meet Our Team -->
   <Features3
-    title="Sponsor Us"
-    subtitle="Get in touch with us to discuss ways you can help fund our efforts."
-    columns={4}
-    id="contact"
+    title="Meet our team"
+    columns={3}
+    isBeforeContent={true}
     items={[
-      {},
       {
-        title: "Email Us",
-        icon: "tabler:mail",
-        href: "mailto:rover_avvb@blr.amrita.edu",
+        title: 'CS Subsystem',
+        description: 'The CS Subsystem is in charge of programming the primitives for the rover to issue directions.',
+        icon: 'tabler:device-desktop',
       },
       {
-        title: "Connect With Us",
-        icon: "tabler:brand-linkedin",
-        href: "https://www.linkedin.com/in/avv-b-rover-team/",
+        title: 'Automation Subsystem',
+        description:
+          'Integrates all other subsystems and enables rover to act autonomously and perform all tasks programmatically.',
+        icon: 'tabler:ai',
       },
-      {},
+      {
+        title: 'Mechanical Subsystem',
+        description: 'Responsible for physical build of the rover and ensures its movement and tolerance.',
+        icon: 'tabler:settings',
+      },
+      {
+        title: 'Electrical Subsystem',
+        description: 'Integrating sensors, power management and stable communication.',
+        icon: 'tabler:bolt',
+      },
+      {
+        title: 'Arm Subsystem',
+        description:
+          'Responsible for operating the robotic arm attachment for extracting samples and manipulating objects.',
+        icon: 'tabler:asset',
+      },
+      {
+        title: 'Science Subsystem',
+        description: 'Performs data analysis and gathers insights from the samples gathered by the rover.',
+        icon: 'tabler:flask',
+      },
+    ]}
+    image={{
+      src: '~/assets/images/rover-team.jpeg',
+      alt: 'Team Odyssey members posing together',
+      width: 1920,
+      height: 1080,
+      aspectRatio: '16:9',
+      objectPosition: 'center 65%',
+      style: 'max-width: 1080px; margin: 0 auto; display: block;',
+    }}
+  >
+    <Fragment slot="subtitle">
+      We're a rag-tag team of students, working across departments to bring Skanda to life.
+      <div class="mt-4">
+        <a
+          href="/team"
+          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-white bg-primary hover:bg-primary/90 transition shadow font-medium"
+        >
+          View Full Team &rarr;
+        </a>
+      </div>
+    </Fragment>
+    <Fragment slot="caption">
+      <p class="text-center text-sm italic text-muted dark:text-slate-400 mt-2">IRC 2026 Team</p>
+    </Fragment>
+  </Features3>
+
+  <!-- Achievements -->
+  <Steps2
+    title="Achievements"
+    subtitle="Our team proudly secured 6th place in IRDC 2020 and ranked among the top 20 in IRC 2020, showcasing consistent performance on global platforms. We placed 23rd in the ISRO Rover Challenge 2024 and recently qualified for the IRC 2025 finals, ranking 17th in the SDDR phase. These milestones reflect our dedication to innovation, engineering excellence, and collaborative problem-solving."
+    isReversed={true}
+    items={[
+      {
+        title: '6th place in IRDC 2020',
+        description: '',
+        icon: 'tabler:award',
+      },
+      {
+        title: 'Top 20 in IRC 2020',
+        description: '',
+        icon: 'tabler:award',
+      },
+      {
+        title: '17th place in IRC 2025',
+        description: '',
+        icon: 'tabler:award',
+      },
     ]}
   />
+
+  <!-- Watch a Video (Smaller, Embed Left, Text Right) -->
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16">
+    <div class="flex flex-col md:flex-row items-center gap-8 lg:gap-12 bg-gray-50 dark:bg-slate-800/50 p-6 md:p-8 rounded-2xl border border-gray-200 dark:border-slate-700/60 shadow-sm">
+      <div class="w-full md:w-1/2 max-w-lg rounded-xl overflow-hidden shadow-md">
+        <YouTube
+          id="kf187VukHJA"
+          title="IRC (International Rover Challenge) | Team Odyssey | AVVB | Rover Functionality Demonstration |"
+        />
+        <style is:inline>
+          lite-youtube {
+            margin: 0 auto;
+            max-width: 100%;
+          }
+        </style>
+      </div>
+
+      <div class="w-full md:w-1/2 text-left">
+        <h3 class="text-2xl md:text-3xl font-bold tracking-tight text-gray-900 dark:text-white mb-3">
+          Watch a Video
+        </h3>
+        <p class="text-base text-muted dark:text-slate-300 leading-relaxed">
+          Check out this introductory video going over the various subsystems and the efforts taken so far to bring Skanda to life.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Our Sponsors Section -->
+  <Sponsors />
+
+  <!-- Find & Contact Us Side-by-Side Section -->
+  <section id="contact" class="max-w-7xl mx-auto px-4 sm:px-6 py-12 md:py-16 not-prose">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+      
+      <!-- Left Column: Find Us Cards & Google Maps Embed -->
+      <div class="flex flex-col gap-6">
+        <div>
+          <p class="text-base text-secondary dark:text-blue-200 font-bold tracking-wide uppercase">Get in touch</p>
+          <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-gray-900 dark:text-white mt-1 mb-4">Find Us</h2>
+        </div>
+
+        <!-- Location Cards Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="p-5 rounded-xl bg-white dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700/60 shadow-sm flex flex-col gap-2">
+            <div class="flex items-center gap-3 text-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 flex-shrink-0" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                <path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z" />
+              </svg>
+              <h4 class="font-bold text-lg text-gray-900 dark:text-white">Our Location</h4>
+            </div>
+            <p class="text-sm text-muted dark:text-slate-300 leading-relaxed">
+              Amrita School of Engineering, Amrita Nagar, Choodasandra, Junnasandra, Bengaluru, Karnataka 560035
+            </p>
+          </div>
+
+          <div class="p-5 rounded-xl bg-white dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700/60 shadow-sm flex flex-col gap-2">
+            <div class="flex items-center gap-3 text-primary">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 flex-shrink-0" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" />
+                <path d="M3 7l9 6l9 -6" />
+              </svg>
+              <h4 class="font-bold text-lg text-gray-900 dark:text-white">Email Us</h4>
+            </div>
+            <p class="text-sm text-muted dark:text-slate-300 leading-relaxed">
+              Reach out to us at:<br/>
+              <a href="mailto:rover_avvb@blr.amrita.edu" class="text-primary underline font-medium">rover_avvb@blr.amrita.edu</a>
+            </p>
+          </div>
+        </div>
+
+        <!-- Google Maps Embed -->
+        <div class="rounded-xl overflow-hidden shadow-md border border-gray-200 dark:border-gray-700/60">
+          <iframe
+            src="https://maps.google.com/maps?q=Amrita%20Nagar,%20Choodasandra,%20Junnasandra,%20Bengaluru,%20Karnataka%20560035&t=&z=15&ie=UTF8&iwloc=&output=embed"
+            width="100%"
+            height="340"
+            style="border:0;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            title="Amrita Nagar Google Map Location"
+          ></iframe>
+        </div>
+      </div>
+
+      <!-- Right Column: Contact Us Form -->
+      <div class="w-full">
+        <ContactUs
+          id="contact-form"
+          title="Contact Us"
+          subtitle="Have questions or want to get in touch with Team Odyssey? Drop us a message below."
+          inputs={[
+            {
+              type: 'text',
+              name: 'name',
+              label: 'Name',
+            },
+            {
+              type: 'email',
+              name: 'email',
+              label: 'Email',
+            },
+          ]}
+          textarea={{
+            label: 'Message',
+          }}
+          disclaimer={{
+            label:
+              'By submitting this contact form, you acknowledge and agree to the collection of your personal information to respond to your query.',
+          }}
+          button="Send Message"
+          description="We typically respond within 24–48 business hours."
+        />
+      </div>
+
+    </div>
+  </section>
 </Layout>
