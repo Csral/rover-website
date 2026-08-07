@@ -58,6 +58,10 @@ const teamData: Record<string, TeamMember[]> = {
       socials: { github: 'https://github.com', linkedin: 'https://linkedin.com', email: 'maanasha@rovah.org' }
     },
     {
+      name: 'Reyvanth R V', role: 'Member', subdivision: 'EC & EE', speciality: null, about: null, photo: 'default.png',
+      socials: { github: 'https://github.com', linkedin: 'https://linkedin.com', email: 'maanasha@rovah.org' }
+    },
+    {
       name: 'Jhansi', role: 'Member', subdivision: 'EC & EE', speciality: null, about: null, photo: 'default.png',
       socials: { github: 'https://github.com', linkedin: 'https://linkedin.com', email: 'jhansi@rovah.org' }
     },
