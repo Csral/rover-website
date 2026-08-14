@@ -26,9 +26,21 @@ export interface TeamMember {
 
 const teamData: Record<string, TeamMember[]> = {
   Mechanical: [
+    // {
+    //   name: 'Tejasvi Maligi', role: 'Member', subdivision: 'Mechanical', speciality: null, about: null, photo: 'default.png',
+    //   socials: { github: 'https://github.com', linkedin: 'https://linkedin.com', email: 'tejasvi@rovah.org' }
+    // },
     {
-      name: 'Tejasvi Maligi', role: 'Member', subdivision: 'Mechanical', speciality: null, about: null, photo: 'default.png',
-      socials: { github: 'https://github.com', linkedin: 'https://linkedin.com', email: 'tejasvi@rovah.org' }
+      name: 'Roopavani SD', role: 'Member', subdivision: 'Mechanical', speciality: null, about: null, photo: 'default.png',
+      socials: { github: 'https://github.com', linkedin: 'https://linkedin.com', email: 'roopavani@rovah.org' }
+    },
+    {
+      name: 'S. V. Sanjay', role: 'Member', subdivision: 'Mechanical', speciality: null, about: null, photo: 'default.png',
+      socials: { github: 'https://github.com', linkedin: 'https://linkedin.com', email: 'sanjay@rovah.org' }
+    },
+    {
+      name: 'Swanand Khanapurkar', role: 'Member', subdivision: 'Mechanical', speciality: null, about: null, photo: 'default.png',
+      socials: { github: 'https://github.com', linkedin: 'https://linkedin.com', email: 'swanand@rovah.org' }
     },
     {
       name: 'Korivi Susruth Achinthya', role: 'Member', subdivision: 'Mechanical', speciality: null, about: null, photo: 'default.png',
@@ -96,10 +108,10 @@ const teamData: Record<string, TeamMember[]> = {
       name: 'Manasvini Kandikonda', role: 'Member', subdivision: 'CS & AI', speciality: null, about: null, photo: 'default.png',
       socials: { github: 'https://github.com', linkedin: 'https://linkedin.com', email: 'manasvini@rovah.org' }
     },
-    {
-      name: 'Shaurya Pandey', role: 'Member', subdivision: 'CS & AI', speciality: null, about: null, photo: 'default.png',
-      socials: { github: 'https://github.com', linkedin: 'https://linkedin.com', email: 'shaurya@rovah.org' }
-    },
+    // {
+    //   name: 'Shaurya Pandey', role: 'Member', subdivision: 'CS & AI', speciality: null, about: null, photo: 'default.png',
+    //   socials: { github: 'https://github.com', linkedin: 'https://linkedin.com', email: 'shaurya@rovah.org' }
+    // },
     {
       name: 'K Deepti', role: 'Member', subdivision: 'CS & AI', speciality: null, about: null, photo: 'default.png',
       socials: { github: 'https://github.com', linkedin: 'https://linkedin.com', email: 'deepti@rovah.org' }
@@ -218,7 +230,7 @@ const teamData: Record<string, TeamMember[]> = {
       name: 'Naga Vaishnavi', role: 'Project Manager', subdivision: 'Mechanical', speciality: null, about: null, photo: 'default.png',
       socials: { github: 'https://github.com', linkedin: 'https://linkedin.com', email: 'vaishnavi@rovah.org' }
     },
-    
+
     {
       name: 'Shainehaa VT', role: 'Project Manager', subdivision: 'EC & EE', speciality: null, about: null, photo: 'default.png',
       socials: { github: 'https://github.com', linkedin: 'https://linkedin.com', email: 'shainehaa@rovah.org' }
@@ -227,7 +239,7 @@ const teamData: Record<string, TeamMember[]> = {
       name: 'S.J. Yatish', role: 'Project Manager', subdivision: 'EC & EE', speciality: null, about: null, photo: 'default.png',
       socials: { github: 'https://github.com', linkedin: 'https://linkedin.com', email: 'yatish@rovah.org' }
     },
-    
+
     {
       name: 'Gokul Krishna M', role: 'Project Manager', subdivision: 'CS & AI', speciality: null, about: null, photo: 'default.png',
       socials: { github: 'https://github.com', linkedin: 'https://linkedin.com', email: 'gokul@rovah.org' }
@@ -236,7 +248,7 @@ const teamData: Record<string, TeamMember[]> = {
       name: 'Jahnavi S', role: 'Project Manager', subdivision: 'CS & AI', speciality: null, about: null, photo: 'default.png',
       socials: { github: 'https://github.com', linkedin: 'https://linkedin.com', email: 'jahnavi@rovah.org' }
     },
-    
+
     {
       name: 'Harshil Reddy', role: 'Project Manager', subdivision: 'Science', speciality: null, about: null, photo: 'default.png',
       socials: { github: 'https://github.com', linkedin: 'https://linkedin.com', email: 'harshil@rovah.org' }
