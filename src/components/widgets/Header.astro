@@ -1,5 +1,6 @@
 ---
 import { Icon } from 'astro-icon/components';
+import { SITE } from 'astrowind:config';
 import Logo from '~/components/Logo.astro';
 import ToggleTheme from '~/components/common/ToggleTheme.astro';
 import ToggleMenu from '~/components/common/ToggleMenu.astro';
@@ -45,6 +46,7 @@ const {
 } = Astro.props;
 
 const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
+const currentWebsiteHref = SITE?.site || getHomePermalink();
 ---
 
 <header
@@ -56,6 +58,17 @@ const currentPath = `/${trimSlash(new URL(Astro.url).pathname)}`;
   {...id ? { id } : {}}
 >
   <div class="absolute inset-0"></div>
+  <div class="relative border-b border-gray-200/80 bg-gray-50/95 dark:border-gray-800 dark:bg-gray-900/90">
+    <div class:list={['px-3 py-2 md:px-6 mx-auto w-full flex justify-end', { 'max-w-7xl': !isFullWidth }]}>
+      <a
+        href={currentWebsiteHref}
+        class="btn btn-secondary text-xs md:text-sm px-3 py-1.5"
+        aria-label="Return to new website"
+      >
+        Return to new website
+      </a>
+    </div>
+  </div>
   <div
     class:list={[
       'relative text-default py-3 px-3 md:px-6 mx-auto w-full',
