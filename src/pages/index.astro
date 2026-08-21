@@ -12,6 +12,73 @@ import { YouTube } from "astro-embed";
 const metadata = {
   title: "Team Odyssey",
 };
+
+const items = [
+  {
+    title: "bla bla 1",
+    details: [
+      "meow meowwww",
+      "meow",
+    ],
+  },
+  {
+    title: "bla bla 2",
+    details: [
+      "meow meoww",
+      "meow meoww",
+    ],
+  },
+  {
+    title: "bla bla 3",
+    details: [
+      "meow meoww",
+      "meow meoww",
+    ],
+  },
+  {
+    title: "bla bla 4",
+    details: [
+      "meow meoww",
+      "meow meoww",
+    ],
+  },
+  {
+    title: "bla bla 5",
+    details: [
+        "meow meoww one.",
+        "meow meoww two.",
+    ],
+  },
+    {
+    title: "bla bla 6",
+    details: [
+        "meow meoww one.",
+        "meow meoww two.",
+    ],
+  },
+    {
+    title: "bla bla 7",
+    details: [
+        "meow meoww one.",
+        "meow meoww two.",
+    ],
+  },
+    {
+    title: "bla bla 8",
+    details: [
+        "meow meoww one.",
+        "meow meoww two.",
+    ],
+  },
+     {
+    title: "bla bla 9",
+    details: [
+        "meow meoww one.",
+        "meow meoww two.",
+    ],
+  },
+];
+
 ---
 
 <Layout metadata={metadata}>
@@ -67,6 +134,29 @@ const metadata = {
     </Fragment>
   </Content>
 
+  <section class="wwd" id="what-we-do">
+    <div class="wwd__inner">
+      <h2 class="wwd__heading">What we do</h2>
+
+      <div class="wwd__grid">
+        {
+          items.map((item) => (
+            <details class="folder">
+              <summary class="folder__head">
+                <span class="folder__title">{item.title}</span>
+              </summary>
+              <div class="folder__details">
+                {item.details.map((p) => (
+                  <p>{p}</p>
+                ))}
+              </div>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
   <!-- Meet Our Team -->
   <Features3
     title="Meet our team"
@@ -79,12 +169,6 @@ const metadata = {
         icon: 'tabler:device-desktop',
       },
       {
-        title: 'Automation Subsystem',
-        description:
-          'Integrates all other subsystems and enables rover to act autonomously and perform all tasks programmatically.',
-        icon: 'tabler:ai',
-      },
-      {
         title: 'Mechanical Subsystem',
         description: 'Responsible for physical build of the rover and ensures its movement and tolerance.',
         icon: 'tabler:settings',
@@ -95,15 +179,14 @@ const metadata = {
         icon: 'tabler:bolt',
       },
       {
-        title: 'Arm Subsystem',
-        description:
-          'Responsible for operating the robotic arm attachment for extracting samples and manipulating objects.',
-        icon: 'tabler:asset',
-      },
-      {
         title: 'Science Subsystem',
         description: 'Performs data analysis and gathers insights from the samples gathered by the rover.',
         icon: 'tabler:flask',
+      },
+      {
+        title: 'Media Subsystem',
+        description: 'Responsible for outreach, sponsorships, social media management, and documenting the rover journey.',
+        icon: 'tabler:camera',
       },
     ]}
     image={{
@@ -277,3 +360,125 @@ const metadata = {
     </div>
   </section>
 </Layout>
+
+<style>
+  .wwd {
+    --wwd-blue: #0546a0;
+    --wwd-card: #c4a82b;
+    --wwd-ink: #111111;
+    --wwd-ink-soft: #444444;
+    --wwd-rule: #e4e4e4;
+    --wwd-tab: 24px; /* height of the folder tab */
+    padding: 4rem 1.5rem;
+  }
+
+  .wwd__inner {
+    max-width: 1200px;
+    margin-inline: auto;
+  }
+
+  .wwd__heading {
+    color: var(--aw-color-text-heading);
+    margin: 0 0 3rem;
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+  }
+
+  .wwd__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 170px);
+    justify-content: center;
+    gap: 1.5rem;
+    align-items: start; /* keeps closed cards short when a sibling opens */
+  }
+
+  /*  folder shape  */
+  .folder {
+    position: relative;
+    margin-top: var(--wwd-tab);
+    background: var(--wwd-card);
+    color: var(--wwd-ink);
+    border-radius: 14px;
+    border: 2px solid #000;
+    border-top-left-radius: 0; /* squared where the tab meets the body */
+  }
+
+  .folder::before {
+    content: "";
+    position: absolute;
+    top: calc(var(--wwd-tab) * -1);
+    left: 0;
+    width: 55%;
+    height: calc(var(--wwd-tab) + 4px); 
+    background: var(--wwd-card);
+    border-radius: 14px 14px 0 0;
+    border-top: 2px solid #000;
+  }
+
+  /*  clickable head  */
+  .folder__head {
+    position: relative;
+    display: block;
+    padding: 2rem 4rem 2rem 2rem;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .folder__head::-webkit-details-marker {
+    display: none;
+  }
+
+  .folder__head::after {
+    content: "+";
+    position: absolute;
+    top: 1.1rem;
+    right: 1.1rem;
+    font-size: 1.25rem;
+    line-height: 1;
+    color: var(--wwd-blue);
+  }
+
+  .folder[open] .folder__head::after {
+    content: "\2212"; /* minus sign */
+  }
+
+  .folder__head:focus-visible {
+    outline: 3px solid #ffd400;
+    outline-offset: 2px;
+    border-radius: 12px;
+  }
+
+  .folder__title {
+    display: block;
+    margin-bottom: 0.6rem;
+    font-weight: 700;
+    font-size: 1rem;
+  }
+
+  .folder__summary {
+    display: block;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--wwd-ink-soft);
+  }
+
+  /*  expanded content  */
+  .folder__details {
+    margin: 0 1.25rem;
+    padding: 1rem 0 1.25rem;
+    border-top: 1px solid var(--wwd-rule);
+    font-size: 0.9rem;
+    line-height: 1.6;
+    color: var(--wwd-ink-soft);
+  }
+
+  .folder__details p {
+    margin: 0 0 0.75rem;
+  }
+
+  .folder__details p:last-child {
+    margin-bottom: 0;
+  }
+</style>
