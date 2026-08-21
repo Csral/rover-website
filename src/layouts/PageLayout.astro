@@ -2,25 +2,29 @@
 import Layout from '~/layouts/Layout.astro';
 import Header from '~/components/widgets/Header.astro';
 import Footer from '~/components/widgets/Footer.astro';
-
+import OnThisPage from '~/components/common/OnThisPage.astro';
 import { headerData, footerData } from '~/navigation';
 
 import type { MetaData } from '~/types';
 
 export interface Props {
   metadata?: MetaData;
+  showToc?: boolean;
 }
 
-const { metadata } = Astro.props;
+const { metadata, showToc = true } = Astro.props;
 ---
 
 <Layout metadata={metadata}>
   <slot name="header">
     <Header {...headerData} isSticky showRssFeed showToggleTheme />
   </slot>
-  <main>
-    <slot />
-  </main>
+  <div class="relative w-full min-h-screen">
+    <main class="w-full transition-all [&.has-toc]:xl:pr-64 [&.has-toc]:2xl:pr-72">
+      <slot />
+    </main>
+    {showToc && <OnThisPage />}
+  </div>
   <slot name="footer">
     <Footer {...footerData} />
   </slot>

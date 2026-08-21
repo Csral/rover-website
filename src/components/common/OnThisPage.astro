@@ -1,0 +1,320 @@
+---
+import { Icon } from 'astro-icon/components';
+
+export interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<aside id="on-this-page-wrapper" class={`on-this-page-container ${className}`}>
+  <!-- Desktop Sticky Section -->
+  <nav
+    id="on-this-page-desktop"
+    class="hidden xl:block fixed right-6 2xl:right-10 top-28 z-30 w-56 2xl:w-60 p-4 rounded-2xl border border-gray-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md shadow-lg transition-all duration-300"
+    aria-label="On this page navigation"
+  >
+    <div class="flex items-center gap-2 mb-3 pb-2 border-b border-gray-100 dark:border-slate-800 text-gray-900 dark:text-gray-100 font-bold text-xs uppercase tracking-wider">
+      <Icon name="tabler:list-details" class="w-4 h-4 text-primary dark:text-blue-400" />
+      <span>On this page</span>
+    </div>
+    <ul
+      id="on-this-page-desktop-list"
+      class="space-y-1 text-xs text-muted dark:text-slate-400 max-h-[calc(100vh-12rem)] overflow-y-auto pr-1 scrollbar-thin"
+    >
+      <!-- Populated via JS -->
+    </ul>
+  </nav>
+
+  <!-- Mobile Floating Button & Drawer -->
+  <div id="on-this-page-mobile" class="xl:hidden fixed bottom-6 right-6 z-50">
+    <button
+      id="on-this-page-toggle"
+      type="button"
+      class="flex items-center gap-2 px-4 py-2.5 rounded-full bg-primary text-white shadow-xl hover:bg-primary/90 active:scale-95 transition-all duration-200 text-xs font-semibold"
+      aria-label="Toggle page outline"
+    >
+      <Icon name="tabler:list-details" class="w-4 h-4" />
+      <span>On this page</span>
+    </button>
+
+    <div
+      id="on-this-page-drawer"
+      class="hidden absolute bottom-14 right-0 w-72 max-h-[70vh] p-4 rounded-2xl border border-gray-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl shadow-2xl overflow-y-auto"
+    >
+      <div class="flex items-center justify-between mb-3 pb-2 border-b border-gray-100 dark:border-slate-800">
+        <div class="flex items-center gap-2 font-bold text-xs uppercase tracking-wider text-gray-900 dark:text-gray-100">
+          <Icon name="tabler:list-details" class="w-4 h-4 text-primary dark:text-blue-400" />
+          <span>On this page</span>
+        </div>
+        <button
+          id="on-this-page-close"
+          class="p-1 rounded-lg text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
+        >
+          <Icon name="tabler:x" class="w-4 h-4" />
+        </button>
+      </div>
+      <ul id="on-this-page-mobile-list" class="space-y-1.5 text-xs text-muted dark:text-slate-400">
+        <!-- Populated via JS -->
+      </ul>
+    </div>
+  </div>
+</aside>
+
+<script>
+  function setupOnThisPage() {
+    const mainEl = document.querySelector('main');
+    const wrapper = document.getElementById('on-this-page-wrapper');
+    const desktopList = document.getElementById('on-this-page-desktop-list');
+    const mobileList = document.getElementById('on-this-page-mobile-list');
+
+    if (!mainEl || !wrapper) return;
+
+    // Target major section headings
+    const selector = 'h2:not(.no-toc):not([data-no-toc]), .section-title:not(.no-toc):not([data-no-toc]), [data-toc-heading]';
+    const rawHeadings = Array.from(mainEl.querySelectorAll(selector)) as HTMLElement[];
+
+    // Filter valid visible headings
+    const headings = rawHeadings.filter((el) => {
+      if (el.classList.contains('no-toc') || el.hasAttribute('data-no-toc')) return false;
+      if (el.closest('.no-toc, [data-no-toc]')) return false;
+
+      const text = el.innerText?.trim();
+      if (!text) return false;
+      if (el.closest('.hidden')) return false;
+      return true;
+    });
+
+    // Handle pages with 0 or 1 heading (e.g. /links, /404)
+    if (headings.length <= 1) {
+      wrapper.style.display = 'none';
+      mainEl.classList.remove('has-toc');
+      mainEl.classList.add('has-no-toc');
+      return;
+    } else {
+      wrapper.style.display = 'block';
+      mainEl.classList.remove('has-no-toc');
+      mainEl.classList.add('has-toc');
+    }
+
+    const items: { id: string; text: string; sectionEl: HTMLElement }[] = [];
+    const usedIds = new Set<string>();
+
+    headings.forEach((el, index) => {
+      let id = el.id;
+
+      // Find section container for accurate viewport observation
+      let sectionEl = el.closest('section, article, .grid-section, .widget-wrapper, [id]') as HTMLElement;
+      if (!sectionEl || sectionEl === mainEl || sectionEl === document.body) {
+        sectionEl = el;
+      }
+
+      if (!id && sectionEl.id && !usedIds.has(sectionEl.id)) {
+        id = sectionEl.id;
+      }
+
+      let text = el.innerText.replace(/[\n\r]+/g, ' ').trim();
+      if (text.length > 40) {
+        text = text.substring(0, 37) + '...';
+      }
+
+      if (!id) {
+        id = text
+          .toLowerCase()
+          .replace(/[^\w\s-]/g, '')
+          .replace(/\s+/g, '-');
+        if (!id) id = `section-${index}`;
+
+        let uniqueId = id;
+        let counter = 1;
+        while (usedIds.has(uniqueId) || document.getElementById(uniqueId)) {
+          uniqueId = `${id}-${counter++}`;
+        }
+        id = uniqueId;
+      }
+
+      // Assign id to element if not set
+      if (!el.id) el.id = id;
+      if (!sectionEl.id) sectionEl.id = id;
+      usedIds.add(id);
+
+      items.push({ id, text, sectionEl });
+    });
+
+    function populateList(ulEl: HTMLElement | null, isMobile = false) {
+      if (!ulEl) return;
+      ulEl.innerHTML = '';
+
+      items.forEach((item) => {
+        const li = document.createElement('li');
+        const a = document.createElement('a');
+        a.href = `#${item.id}`;
+        a.textContent = item.text;
+        a.setAttribute('data-toc-target', item.id);
+        
+        a.className =
+          'block truncate py-1.5 px-2.5 rounded-lg font-medium transition-all duration-200 text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-blue-400 hover:bg-gray-100/80 dark:hover:bg-slate-800/80 border-l-2 border-transparent';
+
+        a.addEventListener('click', (e) => {
+          e.preventDefault();
+          highlightActive(item.id);
+          const targetEl = document.getElementById(item.id) || item.sectionEl;
+          if (targetEl) {
+            const yOffset = -90;
+            const y = targetEl.getBoundingClientRect().top + window.pageYOffset + yOffset;
+            window.scrollTo({ top: y, behavior: 'smooth' });
+            history.pushState(null, '', `#${item.id}`);
+          }
+          if (isMobile) {
+            const drawer = document.getElementById('on-this-page-drawer');
+            if (drawer) drawer.classList.add('hidden');
+          }
+        });
+
+        li.appendChild(a);
+        ulEl.appendChild(li);
+      });
+    }
+
+    populateList(desktopList, false);
+    populateList(mobileList, true);
+
+    // Instant & Smooth Active Link Highlighting
+    let currentActiveId = '';
+
+    function highlightActive(id: string) {
+      if (!id || id === currentActiveId) return;
+      currentActiveId = id;
+
+      const allLinks = document.querySelectorAll('[data-toc-target]');
+      allLinks.forEach((link) => {
+        const anchor = link as HTMLAnchorElement;
+        const targetId = anchor.getAttribute('data-toc-target');
+
+        if (targetId === id) {
+          anchor.classList.add(
+            'text-primary',
+            'dark:text-blue-400',
+            'font-bold',
+            'bg-blue-50/90',
+            'dark:bg-blue-950/60',
+            'border-primary',
+            'dark:border-blue-400'
+          );
+          anchor.classList.remove('text-slate-600', 'dark:text-slate-400', 'border-transparent');
+        } else {
+          anchor.classList.remove(
+            'text-primary',
+            'dark:text-blue-400',
+            'font-bold',
+            'bg-blue-50/90',
+            'dark:bg-blue-950/60',
+            'border-primary',
+            'dark:border-blue-400'
+          );
+          anchor.classList.add('text-slate-600', 'dark:text-slate-400', 'border-transparent');
+        }
+      });
+    }
+
+    // Hardware Accelerated IntersectionObserver for Sections
+    const visibleSections = new Map<string, number>();
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            visibleSections.set(entry.target.id, entry.boundingClientRect.top);
+          } else {
+            visibleSections.delete(entry.target.id);
+          }
+        });
+
+        if (visibleSections.size > 0) {
+          let bestId = '';
+          let minTop = Infinity;
+
+          visibleSections.forEach((top, id) => {
+            if (top < minTop) {
+              minTop = top;
+              bestId = id;
+            }
+          });
+
+          if (bestId) {
+            highlightActive(bestId);
+          }
+        }
+      },
+      {
+        rootMargin: '-76px 0px -40% 0px',
+        threshold: [0, 0.1, 0.25]
+      }
+    );
+
+    items.forEach((item) => {
+      observer.observe(item.sectionEl);
+    });
+
+    // Highlight initial item on page load
+    if (items.length > 0) {
+      highlightActive(items[0].id);
+    }
+
+    // Drawer toggle event handlers
+    const toggleBtn = document.getElementById('on-this-page-toggle');
+    const drawerEl = document.getElementById('on-this-page-drawer');
+    const closeBtn = document.getElementById('on-this-page-close');
+
+    if (toggleBtn && drawerEl) {
+      toggleBtn.onclick = (e) => {
+        e.stopPropagation();
+        drawerEl.classList.toggle('hidden');
+      };
+    }
+
+    if (closeBtn && drawerEl) {
+      closeBtn.onclick = () => {
+        drawerEl.classList.add('hidden');
+      };
+    }
+
+    document.addEventListener('click', (e) => {
+      if (drawerEl && !drawerEl.classList.contains('hidden')) {
+        const target = e.target as HTMLElement;
+        if (!drawerEl.contains(target) && !toggleBtn?.contains(target)) {
+          drawerEl.classList.add('hidden');
+        }
+      }
+    });
+
+    // Hide the panel once the footer comes into view so it never covers it
+    const footerEl = document.querySelector('footer');
+    const desktopNav = document.getElementById('on-this-page-desktop');
+    const mobileNav = document.getElementById('on-this-page-mobile');
+
+    if (footerEl) {
+      const footerObserver = new IntersectionObserver(
+        (entries) => {
+          const hidden = entries.some((entry) => entry.isIntersecting);
+          [desktopNav, mobileNav].forEach((el) => {
+            if (!el) return;
+            el.style.opacity = hidden ? '0' : '';
+            el.style.pointerEvents = hidden ? 'none' : '';
+          });
+          if (hidden) {
+            const drawer = document.getElementById('on-this-page-drawer');
+            if (drawer) drawer.classList.add('hidden');
+          }
+        },
+        { rootMargin: '0px 0px -10% 0px', threshold: 0 }
+      );
+      footerObserver.observe(footerEl);
+    }
+  }
+
+  // Setup on initial load and Astro View Transitions
+  setupOnThisPage();
+  document.addEventListener('astro:page-load', setupOnThisPage);
+</script>
