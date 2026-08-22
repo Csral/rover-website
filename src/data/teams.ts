@@ -129,7 +129,7 @@ const teamData: Record<string, TeamMember[]> = {
       socials: { github: 'https://github.com/NiyateeG', linkedin: 'https://www.linkedin.com/in/niyatee-gamre-b83bb438a', email: 'niyatee.gamre@gmail.com' }
     },
     {
-      name: 'Manya Kumar', role: 'Member', subdivision: 'CS & AI', speciality: 'AI & Software Development', about: 'Proficient in Java, Python, C, HTML, CSS, and JavaScript, with a strong interest in AI and problem-solving.', photo: 'Manya Kumar.png',
+      name: 'Manya Kumar', role: 'Member', subdivision: 'CS & AI', speciality: 'AI & Software Development', about: 'Proficient in Java, Python, C, HTML, CSS, and JavaScript, with a strong interest in AI and problem-solving.', photo: 'Manya Kumar.jpeg',
       socials: { linkedin: 'https://www.linkedin.com/in/manya-kumar-6265643a3', email: 'manya.kumar0911@gmail.com' }
     },
   ],

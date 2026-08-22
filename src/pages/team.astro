@@ -1,6 +1,7 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
 import teamData from '~/data/teams';
+import { Image } from 'astro:assets';
 
 const subdivisionColors = {
   'CS & AI': 'Blue',
@@ -22,7 +23,7 @@ type Member = {
   speciality: string | null;
   about: string | null;
   photo?: string | null;
-  photoResolved?: string;
+  photoResolved?: ImageMetadata;
   socials: { github?: string; linkedin?: string; email?: string; website?: string }
 };
 
@@ -30,13 +31,13 @@ type Member = {
 const images = import.meta.glob<{ default: ImageMetadata }>('/src/data/profilepic/*.{jpeg,jpg,png,gif,webp}');
 
 async function resolvePhoto(photoName: string | null | undefined) {
-  if (!photoName) return '';
+  if (!photoName || photoName === 'default.png') return undefined;
   const path = `/src/data/profilepic/${photoName}`;
   if (images[path]) {
     const mod = await images[path]();
-    return mod.default.src;
+    return mod.default;
   }
-  return '';
+  return undefined;
 }
 
 // Pre-resolve all photos at build time
@@ -93,6 +94,14 @@ for (const sub of subdivisionMap) {
 function initials(name: string) {
   return name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
 }
+
+function photoPosition(member: Member) {
+  if (member.name === 'Chaturya') return 'center center';
+  if (member.photoResolved && member.photoResolved.height > member.photoResolved.width * 1.15) {
+    return 'center 24%';
+  }
+  return 'center center';
+}
 ---
 
 <Layout metadata={metadata} showToc={false}>
@@ -137,7 +146,7 @@ function initials(name: string) {
               data-role={mentor.role}
               data-speciality={mentor.speciality || ""}
               data-about={mentor.about || ""}
-              data-photo={mentor.photoResolved || ""}
+              data-photo={mentor.photoResolved?.src || ""}
               data-github={mentor.socials.github}
               data-linkedin={mentor.socials.linkedin}
               data-email={mentor.socials.email}
@@ -149,8 +158,10 @@ function initials(name: string) {
                 <span class="pcard-name">{mentor.name}</span>
                 <span class="pcard-role">{mentor.role}</span>
               </div>
-              <div class="pcard-avatar" style={mentor.photoResolved ? `background: url("${mentor.photoResolved}") center/cover no-repeat` : `background: linear-gradient(135deg, #f59e0b, #d97706)`}>
-                {!mentor.photoResolved && initials(mentor.name)}
+              <div class="pcard-avatar" style={!mentor.photoResolved ? `background: linear-gradient(135deg, #f59e0b, #d97706)` : undefined}>
+                {mentor.photoResolved ? (
+                  <Image class="pcard-avatar-image" src={mentor.photoResolved} alt="" width={640} quality="high" style={`object-position:${photoPosition(mentor)}`} />
+                ) : initials(mentor.name)}
               </div>
             </div>
           ))}
@@ -172,7 +183,7 @@ function initials(name: string) {
                     data-role={techLead.role}
                     data-speciality={techLead.speciality || ""}
                     data-about={techLead.about || ""}
-                    data-photo={techLead.photoResolved || ""}
+                    data-photo={techLead.photoResolved?.src || ""}
                     data-github={techLead.socials.github}
                     data-linkedin={techLead.socials.linkedin}
                     data-email={techLead.socials.email}
@@ -183,8 +194,10 @@ function initials(name: string) {
                       <span class="pcard-name">{techLead.name}</span>
                       <span class="pcard-role">{techLead.role}</span>
                     </div>
-                    <div class="pcard-avatar" style={techLead.photoResolved ? `background: url("${techLead.photoResolved}") center/cover no-repeat` : `background: linear-gradient(135deg, #fcd34d, #f59e0b)`}>
-                      {!techLead.photoResolved && initials(techLead.name)}
+                    <div class="pcard-avatar" style={!techLead.photoResolved ? `background: linear-gradient(135deg, #fcd34d, #f59e0b)` : undefined}>
+                      {techLead.photoResolved ? (
+                        <Image class="pcard-avatar-image" src={techLead.photoResolved} alt="" width={640} quality="high" style={`object-position:${photoPosition(techLead)}`} />
+                      ) : initials(techLead.name)}
                     </div>
                   </div>
 
@@ -199,7 +212,7 @@ function initials(name: string) {
                       data-role={adminLead.role}
                       data-speciality={adminLead.speciality || ""}
                       data-about={adminLead.about || ""}
-                      data-photo={adminLead.photoResolved || ""}
+                      data-photo={adminLead.photoResolved?.src || ""}
                       data-github={adminLead.socials.github}
                       data-linkedin={adminLead.socials.linkedin}
                       data-email={adminLead.socials.email}
@@ -210,8 +223,10 @@ function initials(name: string) {
                         <span class="pcard-name">{adminLead.name}</span>
                         <span class="pcard-role">{adminLead.role}</span>
                       </div>
-                      <div class="pcard-avatar" style={adminLead.photoResolved ? `background: url("${adminLead.photoResolved}") center/cover no-repeat` : `background: linear-gradient(135deg, #fcd34d, #f59e0b)`}>
-                        {!adminLead.photoResolved && initials(adminLead.name)}
+                      <div class="pcard-avatar" style={!adminLead.photoResolved ? `background: linear-gradient(135deg, #fcd34d, #f59e0b)` : undefined}>
+                        {adminLead.photoResolved ? (
+                          <Image class="pcard-avatar-image" src={adminLead.photoResolved} alt="" width={640} quality="high" style={`object-position:${photoPosition(adminLead)}`} />
+                        ) : initials(adminLead.name)}
                       </div>
                     </div>
                   </div>
@@ -245,7 +260,7 @@ function initials(name: string) {
                     data-role="Team Lead"
                     data-speciality={tl.speciality || ""}
                     data-about={tl.about || ""}
-                    data-photo={tl.photoResolved || ""}
+                    data-photo={tl.photoResolved?.src || ""}
                     data-github={tl.socials.github}
                     data-linkedin={tl.socials.linkedin}
                     data-email={tl.socials.email}
@@ -257,8 +272,10 @@ function initials(name: string) {
                       <span class="pcard-role">Team Lead</span>
                       <span class="pcard-sub">{sub.label}</span>
                     </div>
-                    <div class="pcard-avatar" style={tl.photoResolved ? `background: url("${tl.photoResolved}") center/cover no-repeat` : `background: linear-gradient(135deg, ${sub.color}aa, ${sub.color})`}>
-                      {!tl.photoResolved && initials(tl.name)}
+                    <div class="pcard-avatar" style={!tl.photoResolved ? `background: linear-gradient(135deg, ${sub.color}aa, ${sub.color})` : undefined}>
+                      {tl.photoResolved ? (
+                        <Image class="pcard-avatar-image" src={tl.photoResolved} alt="" width={640} quality="high" style={`object-position:${photoPosition(tl)}`} />
+                      ) : initials(tl.name)}
                     </div>
                   </div>
 
@@ -276,7 +293,7 @@ function initials(name: string) {
                             data-role="Project Manager"
                             data-speciality={pm.speciality || ""}
                             data-about={pm.about || ""}
-                            data-photo={pm.photoResolved || ""}
+                            data-photo={pm.photoResolved?.src || ""}
                             data-github={pm.socials.github}
                             data-linkedin={pm.socials.linkedin}
                             data-email={pm.socials.email}
@@ -287,8 +304,10 @@ function initials(name: string) {
                               <span class="pcard-name">{pm.name}</span>
                               <span class="pcard-role">Project Manager</span>
                             </div>
-                            <div class="pcard-avatar" style={pm.photoResolved ? `background: url("${pm.photoResolved}") center/cover no-repeat` : `background: linear-gradient(135deg, ${sub.color}88, ${sub.color}bb)`}>
-                              {!pm.photoResolved && initials(pm.name)}
+                            <div class="pcard-avatar" style={!pm.photoResolved ? `background: linear-gradient(135deg, ${sub.color}88, ${sub.color}bb)` : undefined}>
+                              {pm.photoResolved ? (
+                                <Image class="pcard-avatar-image" src={pm.photoResolved} alt="" width={640} quality="high" style={`object-position:${photoPosition(pm)}`} />
+                              ) : initials(pm.name)}
                             </div>
                           </div>
                         </div>
@@ -304,7 +323,7 @@ function initials(name: string) {
                             data-role="Member"
                             data-speciality={m.speciality || ""}
                             data-about={m.about || ""}
-                            data-photo={m.photoResolved || ""}
+                            data-photo={m.photoResolved?.src || ""}
                             data-github={m.socials.github}
                             data-linkedin={m.socials.linkedin}
                             data-email={m.socials.email}
@@ -315,8 +334,10 @@ function initials(name: string) {
                               <span class="pcard-name">{m.name}</span>
                               <span class="pcard-role">Member</span>
                             </div>
-                            <div class="pcard-avatar" style={m.photoResolved ? `background: url("${m.photoResolved}") center/cover no-repeat` : `background: linear-gradient(135deg, ${sub.color}44, ${sub.color}77)`}>
-                              {!m.photoResolved && initials(m.name)}
+                            <div class="pcard-avatar" style={!m.photoResolved ? `background: linear-gradient(135deg, ${sub.color}44, ${sub.color}77)` : undefined}>
+                              {m.photoResolved ? (
+                                <Image class="pcard-avatar-image" src={m.photoResolved} alt="" width={640} quality="high" style={`object-position:${photoPosition(m)}`} />
+                              ) : initials(m.name)}
                             </div>
                           </div>
                         </div>
@@ -348,7 +369,7 @@ function initials(name: string) {
                 data-role={m.role}
                 data-speciality={m.speciality || ""}
                 data-about={m.about || ""}
-                data-photo={m.photoResolved || ""}
+                data-photo={m.photoResolved?.src || ""}
                 data-subdivision=""
                 data-github={m.socials.github}
                 data-linkedin={m.socials.linkedin}
@@ -360,8 +381,10 @@ function initials(name: string) {
                   <span class="pcard-name">{m.name}</span>
                   <span class="pcard-role">{m.role}</span>
                 </div>
-                <div class="pcard-avatar" style={m.photoResolved ? `background: url("${m.photoResolved}") center/cover no-repeat` : `background:#f59e0b`}>
-                  {!m.photoResolved && initials(m.name)}
+                <div class="pcard-avatar" style={!m.photoResolved ? `background:#f59e0b` : undefined}>
+                  {m.photoResolved ? (
+                    <Image class="pcard-avatar-image" src={m.photoResolved} alt="" width={640} quality="high" style={`object-position:${photoPosition(m)}`} />
+                  ) : initials(m.name)}
                 </div>
               </div>
             ))}
@@ -380,7 +403,7 @@ function initials(name: string) {
               data-role={m.role}
               data-speciality={m.speciality || ""}
               data-about={m.about || ""}
-              data-photo={m.photoResolved || ""}
+              data-photo={m.photoResolved?.src || ""}
               data-subdivision={m.subdivision || ""}
               data-github={m.socials.github}
               data-linkedin={m.socials.linkedin}
@@ -392,8 +415,10 @@ function initials(name: string) {
                 <span class="pcard-role">{m.role}</span>
                 {m.subdivision && <span class="pcard-sub">{m.subdivision}</span>}
               </div>
-              <div class="pcard-avatar" style={m.photoResolved ? `background: url("${m.photoResolved}") center/cover no-repeat` : `background:#0284c7`}>
-                {!m.photoResolved && initials(m.name)}
+              <div class="pcard-avatar" style={!m.photoResolved ? `background:#0284c7` : undefined}>
+                {m.photoResolved ? (
+                  <Image class="pcard-avatar-image" src={m.photoResolved} alt="" width={640} quality="high" style={`object-position:${photoPosition(m)}`} />
+                ) : initials(m.name)}
               </div>
             </div>
           ))}
@@ -420,7 +445,7 @@ function initials(name: string) {
                   data-role={m.role}
                   data-speciality={m.speciality || ""}
                   data-about={m.about || ""}
-                  data-photo={m.photoResolved || ""}
+                  data-photo={m.photoResolved?.src || ""}
                   data-subdivision={sub.label}
                   data-github={m.socials.github}
                   data-linkedin={m.socials.linkedin}
@@ -431,8 +456,10 @@ function initials(name: string) {
                     <span class="pcard-name">{m.name}</span>
                     <span class="pcard-role">{m.role}</span>
                   </div>
-                  <div class="pcard-avatar" style={m.photoResolved ? `background: url("${m.photoResolved}") center/cover no-repeat` : `background:${sub.color}`}>
-                    {!m.photoResolved && initials(m.name)}
+                  <div class="pcard-avatar" style={!m.photoResolved ? `background:${sub.color}` : undefined}>
+                    {m.photoResolved ? (
+                      <Image class="pcard-avatar-image" src={m.photoResolved} alt="" width={640} quality="high" style={`object-position:${photoPosition(m)}`} />
+                    ) : initials(m.name)}
                   </div>
                 </div>
               ))}
@@ -447,46 +474,48 @@ function initials(name: string) {
     <div id="member-modal" class="modal-backdrop hidden" aria-modal="true" role="dialog">
       <div class="modal-content">
         <button class="modal-close" aria-label="Close details">&times;</button>
-        
-        <!-- Profile Header with large avatar -->
-        <div class="modal-profile-header">
-          <div id="modal-avatar" class="modal-avatar-large"></div>
-          <h3 id="modal-name"></h3>
-          <p id="modal-role"></p>
-          <span id="modal-subdivision" class="modal-sub-badge"></span>
+
+        <div id="modal-media" class="modal-media">
+          <img id="modal-photo" class="modal-photo hidden" src="" alt="" />
+          <div id="modal-avatar" class="modal-avatar-large hidden"></div>
         </div>
-        
-        <div class="modal-divider"></div>
-        
-        <div class="modal-body">
-          <!-- Field: Speciality -->
-          <div class="modal-field">
-            <span class="field-label">Speciality</span>
-            <span id="modal-speciality" class="field-value"></span>
+
+        <div class="modal-details">
+          <div class="modal-profile-header">
+            <h3 id="modal-name"></h3>
+            <p id="modal-role"></p>
+            <span id="modal-subdivision" class="modal-sub-badge"></span>
           </div>
 
-          <!-- Field: About -->
-          <div class="modal-field">
-            <span class="field-label">About</span>
-            <span id="modal-about" class="field-value text-muted"></span>
-          </div>
+          <div class="modal-divider"></div>
 
-          <!-- Field: Connect with me -->
-          <div class="modal-field">
-            <span class="field-label">Connect with me</span>
-            <div class="modal-socials">
-              <a id="modal-link-github" href="#" target="_blank" rel="noopener" class="social-btn" title="GitHub">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-              </a>
-              <a id="modal-link-linkedin" href="#" target="_blank" rel="noopener" class="social-btn" title="LinkedIn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
-              </a>
-              <a id="modal-link-email" href="#" class="social-btn" title="Email">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-              </a>
-              <a id="modal-link-website" href="#" target="_blank" rel="noopener" class="social-btn" title="Website">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-              </a>
+          <div class="modal-body">
+            <div class="modal-field">
+              <span class="field-label">Speciality</span>
+              <span id="modal-speciality" class="field-value"></span>
+            </div>
+
+            <div class="modal-field">
+              <span class="field-label">About</span>
+              <span id="modal-about" class="field-value text-muted"></span>
+            </div>
+
+            <div class="modal-field">
+              <span class="field-label">Connect with me</span>
+              <div class="modal-socials">
+                <a id="modal-link-github" href="#" target="_blank" rel="noopener" class="social-btn" title="GitHub">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                </a>
+                <a id="modal-link-linkedin" href="#" target="_blank" rel="noopener" class="social-btn" title="LinkedIn">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                </a>
+                <a id="modal-link-email" href="#" class="social-btn" title="Email">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                </a>
+                <a id="modal-link-website" href="#" target="_blank" rel="noopener" class="social-btn" title="Website">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -552,6 +581,8 @@ function initials(name: string) {
     var modalSpeciality = document.getElementById('modal-speciality');
     var modalAbout = document.getElementById('modal-about');
     var modalSubdivision = document.getElementById('modal-subdivision');
+    var modalMedia = document.getElementById('modal-media');
+    var modalPhoto = document.getElementById('modal-photo');
     var modalAvatar = document.getElementById('modal-avatar');
     
     var modalLinkGithub = document.getElementById('modal-link-github');
@@ -629,11 +660,20 @@ function initials(name: string) {
 
         // Photo / Avatar Render
         if (photo) {
-          modalAvatar.style.background = `url("${photo}") center/cover no-repeat`;
+          modalPhoto.src = photo;
+          modalPhoto.alt = name;
+          modalPhoto.classList.remove('hidden');
+          modalAvatar.classList.add('hidden');
           modalAvatar.textContent = '';
+          modalMedia.classList.remove('is-placeholder');
         } else {
+          modalPhoto.removeAttribute('src');
+          modalPhoto.alt = '';
+          modalPhoto.classList.add('hidden');
+          modalAvatar.classList.remove('hidden');
           modalAvatar.textContent = getInitials(name);
           modalAvatar.style.background = avatarGradient || 'linear-gradient(135deg, #38bdf8, #0284c7)';
+          modalMedia.classList.add('is-placeholder');
         }
 
         modal.classList.remove('hidden');
@@ -646,6 +686,7 @@ function initials(name: string) {
       modal.classList.remove('active');
       modal.classList.add('hidden');
       document.body.style.overflow = '';
+      modalPhoto.removeAttribute('src');
     }
 
     if (modalClose) modalClose.addEventListener('click', closeModal);
@@ -810,6 +851,7 @@ function initials(name: string) {
   width: 28px;
   height: 28px;
   border-radius: 50%;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -818,6 +860,13 @@ function initials(name: string) {
   color: #ffffff;
   letter-spacing: 0.02em;
   box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+}
+.pcard-avatar-image {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none;
+  object-fit: cover;
 }
 .pcard-info {
   display: flex;
@@ -1219,8 +1268,8 @@ function initials(name: string) {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(15, 23, 42, 0.45);
-  backdrop-filter: blur(4px);
+  background-color: rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(8px);
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -1236,13 +1285,16 @@ function initials(name: string) {
 
 .modal-content {
   background: #ffffff;
-  border-radius: 0.75rem;
+  border-radius: 1rem;
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.05);
   border: 1px solid #e2e8f0;
-  width: 90%;
-  max-width: 380px;
-  padding: 2rem 1.5rem 1.5rem;
+  width: min(1100px, calc(100vw - 2rem));
+  max-height: calc(100vh - 2rem);
+  padding: 0;
   position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(300px, 0.75fr);
+  overflow: hidden;
   transform: scale(0.95);
   transition: transform 0.2s ease-in-out;
 }
@@ -1260,7 +1312,7 @@ function initials(name: string) {
   top: 0.85rem;
   right: 0.85rem;
   border: none;
-  background: transparent;
+  background: rgba(255, 255, 255, 0.88);
   font-size: 1.5rem;
   line-height: 1;
   color: #64748b;
@@ -1268,6 +1320,8 @@ function initials(name: string) {
   padding: 0.25rem 0.5rem;
   border-radius: 0.375rem;
   transition: background 0.15s, color 0.15s;
+  z-index: 2;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.16);
 }
 .modal-close:hover {
   background: #f1f5f9;
@@ -1284,9 +1338,39 @@ function initials(name: string) {
   align-items: center;
   text-align: center;
 }
+.modal-media {
+  min-width: 0;
+  min-height: 360px;
+  max-height: calc(100vh - 2rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #e2e8f0;
+}
+:global(.dark) .modal-media { background: #020617; }
+.modal-media.is-placeholder {
+  background: linear-gradient(145deg, #e2e8f0, #cbd5e1);
+}
+:global(.dark) .modal-media.is-placeholder {
+  background: linear-gradient(145deg, #1e293b, #0f172a);
+}
+.modal-photo {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: calc(100vh - 2rem);
+  object-fit: contain;
+}
+.modal-details {
+  min-width: 0;
+  overflow-y: auto;
+  padding: 3rem 1.75rem 1.75rem;
+}
 .modal-avatar-large {
-  width: 72px;
-  height: 72px;
+  width: 112px;
+  height: 112px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -1295,7 +1379,7 @@ function initials(name: string) {
   font-weight: 800;
   color: #ffffff;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  margin-bottom: 0.85rem;
+  margin: 0;
   border: 3px solid #ffffff;
 }
 :global(.dark) .modal-avatar-large {
@@ -1427,6 +1511,31 @@ function initials(name: string) {
   }
   .grid-section {
     padding: 0 1rem;
+  }
+}
+
+@media (max-width: 720px) {
+  .modal-backdrop {
+    align-items: flex-end;
+  }
+  .modal-content {
+    width: 100%;
+    max-height: calc(100dvh - 0.75rem);
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(220px, 52dvh) auto;
+    border-radius: 1rem 1rem 0 0;
+    overflow-y: auto;
+  }
+  .modal-media {
+    min-height: 220px;
+    max-height: 52dvh;
+  }
+  .modal-photo {
+    max-height: 52dvh;
+  }
+  .modal-details {
+    overflow: visible;
+    padding: 1.5rem 1.25rem 1.75rem;
   }
 }
 </style>
