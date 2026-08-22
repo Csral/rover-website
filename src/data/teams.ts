@@ -201,7 +201,8 @@ const teamData: Record<string, TeamMember[]> = {
       socials: { github: 'https://github.com/Ekansh-K', linkedin: 'https://www.linkedin.com/in/ekansh-khullar-b0916a327', email: 'ekanshkhullar9@gmail.com' }
     },
     {
-      name: 'Chaturya', role: 'Team Lead', subdivision: 'CS & AI', speciality: 'Ig bro', about: 'I do have a lot to say, just check csral.dev. Have a nice day!', photo: 'Chaturya.png',
+      // my pfp was rejected: Chaturya.png :(
+      name: 'Chaturya', role: 'Team Lead', subdivision: 'CS & AI', speciality: 'Ig bro', about: 'I do have a lot to say, just check csral.dev. Have a nice day!', photo: 'default.png',
       socials: { github: 'https://github.com/Csral', linkedin: 'https://www.linkedin.com/in/chaturya-reddy-247b01352/', email: 'me@csral.dev' }
     },
     {
