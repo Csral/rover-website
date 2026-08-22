@@ -149,7 +149,7 @@ function initials(name: string) {
                 <span class="pcard-name">{mentor.name}</span>
                 <span class="pcard-role">{mentor.role}</span>
               </div>
-              <div class="pcard-avatar" style={mentor.photoResolved ? `background: url(${mentor.photoResolved}) center/cover no-repeat` : `background: linear-gradient(135deg, #f59e0b, #d97706)`}>
+              <div class="pcard-avatar" style={mentor.photoResolved ? `background: url("${mentor.photoResolved}") center/cover no-repeat` : `background: linear-gradient(135deg, #f59e0b, #d97706)`}>
                 {!mentor.photoResolved && initials(mentor.name)}
               </div>
             </div>
@@ -183,7 +183,7 @@ function initials(name: string) {
                       <span class="pcard-name">{techLead.name}</span>
                       <span class="pcard-role">{techLead.role}</span>
                     </div>
-                    <div class="pcard-avatar" style={techLead.photoResolved ? `background: url(${techLead.photoResolved}) center/cover no-repeat` : `background: linear-gradient(135deg, #fcd34d, #f59e0b)`}>
+                    <div class="pcard-avatar" style={techLead.photoResolved ? `background: url("${techLead.photoResolved}") center/cover no-repeat` : `background: linear-gradient(135deg, #fcd34d, #f59e0b)`}>
                       {!techLead.photoResolved && initials(techLead.name)}
                     </div>
                   </div>
@@ -210,7 +210,7 @@ function initials(name: string) {
                         <span class="pcard-name">{adminLead.name}</span>
                         <span class="pcard-role">{adminLead.role}</span>
                       </div>
-                      <div class="pcard-avatar" style={adminLead.photoResolved ? `background: url(${adminLead.photoResolved}) center/cover no-repeat` : `background: linear-gradient(135deg, #fcd34d, #f59e0b)`}>
+                      <div class="pcard-avatar" style={adminLead.photoResolved ? `background: url("${adminLead.photoResolved}") center/cover no-repeat` : `background: linear-gradient(135deg, #fcd34d, #f59e0b)`}>
                         {!adminLead.photoResolved && initials(adminLead.name)}
                       </div>
                     </div>
@@ -257,7 +257,7 @@ function initials(name: string) {
                       <span class="pcard-role">Team Lead</span>
                       <span class="pcard-sub">{sub.label}</span>
                     </div>
-                    <div class="pcard-avatar" style={tl.photoResolved ? `background: url(${tl.photoResolved}) center/cover no-repeat` : `background: linear-gradient(135deg, ${sub.color}aa, ${sub.color})`}>
+                    <div class="pcard-avatar" style={tl.photoResolved ? `background: url("${tl.photoResolved}") center/cover no-repeat` : `background: linear-gradient(135deg, ${sub.color}aa, ${sub.color})`}>
                       {!tl.photoResolved && initials(tl.name)}
                     </div>
                   </div>
@@ -287,7 +287,7 @@ function initials(name: string) {
                               <span class="pcard-name">{pm.name}</span>
                               <span class="pcard-role">Project Manager</span>
                             </div>
-                            <div class="pcard-avatar" style={pm.photoResolved ? `background: url(${pm.photoResolved}) center/cover no-repeat` : `background: linear-gradient(135deg, ${sub.color}88, ${sub.color}bb)`}>
+                            <div class="pcard-avatar" style={pm.photoResolved ? `background: url("${pm.photoResolved}") center/cover no-repeat` : `background: linear-gradient(135deg, ${sub.color}88, ${sub.color}bb)`}>
                               {!pm.photoResolved && initials(pm.name)}
                             </div>
                           </div>
@@ -315,7 +315,7 @@ function initials(name: string) {
                               <span class="pcard-name">{m.name}</span>
                               <span class="pcard-role">Member</span>
                             </div>
-                            <div class="pcard-avatar" style={m.photoResolved ? `background: url(${m.photoResolved}) center/cover no-repeat` : `background: linear-gradient(135deg, ${sub.color}44, ${sub.color}77)`}>
+                            <div class="pcard-avatar" style={m.photoResolved ? `background: url("${m.photoResolved}") center/cover no-repeat` : `background: linear-gradient(135deg, ${sub.color}44, ${sub.color}77)`}>
                               {!m.photoResolved && initials(m.name)}
                             </div>
                           </div>
@@ -360,7 +360,7 @@ function initials(name: string) {
                   <span class="pcard-name">{m.name}</span>
                   <span class="pcard-role">{m.role}</span>
                 </div>
-                <div class="pcard-avatar" style={m.photoResolved ? `background: url(${m.photoResolved}) center/cover no-repeat` : `background:#f59e0b`}>
+                <div class="pcard-avatar" style={m.photoResolved ? `background: url("${m.photoResolved}") center/cover no-repeat` : `background:#f59e0b`}>
                   {!m.photoResolved && initials(m.name)}
                 </div>
               </div>
@@ -392,7 +392,7 @@ function initials(name: string) {
                 <span class="pcard-role">{m.role}</span>
                 {m.subdivision && <span class="pcard-sub">{m.subdivision}</span>}
               </div>
-              <div class="pcard-avatar" style={m.photoResolved ? `background: url(${m.photoResolved}) center/cover no-repeat` : `background:#0284c7`}>
+              <div class="pcard-avatar" style={m.photoResolved ? `background: url("${m.photoResolved}") center/cover no-repeat` : `background:#0284c7`}>
                 {!m.photoResolved && initials(m.name)}
               </div>
             </div>
@@ -431,7 +431,7 @@ function initials(name: string) {
                     <span class="pcard-name">{m.name}</span>
                     <span class="pcard-role">{m.role}</span>
                   </div>
-                  <div class="pcard-avatar" style={m.photoResolved ? `background: url(${m.photoResolved}) center/cover no-repeat` : `background:${sub.color}`}>
+                  <div class="pcard-avatar" style={m.photoResolved ? `background: url("${m.photoResolved}") center/cover no-repeat` : `background:${sub.color}`}>
                     {!m.photoResolved && initials(m.name)}
                   </div>
                 </div>
@@ -629,7 +629,7 @@ function initials(name: string) {
 
         // Photo / Avatar Render
         if (photo) {
-          modalAvatar.style.background = 'url(' + photo + ') center/cover no-repeat';
+          modalAvatar.style.background = `url("${photo}") center/cover no-repeat`;
           modalAvatar.textContent = '';
         } else {
           modalAvatar.textContent = getInitials(name);
