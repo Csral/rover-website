@@ -3,13 +3,22 @@ import Layout from '~/layouts/PageLayout.astro';
 import teamData from '~/data/teams';
 import { Image } from 'astro:assets';
 
-const subdivisionColors = {
-  'CS & AI': 'Blue',
-  'Mechanical': 'Red',
-  'Science': 'Green',
-  'EC & EE': 'Pink',
-  'Media': 'Pink'
+const teamColors = {
+  'Leadership': '#140f4b',
+  'Faculty Mentors': '#CE8166',
+  'CS & AI': '#163031',
+  'Mechanical': '#9f1436',
+  'Science': '#b4b49d',
+  'EC & EE': '#894f6e',
+  'Media': '#f3b5e4'
 };
+
+const leadershipColor = teamColors['Leadership'];
+const mentorColor = teamColors['Faculty Mentors'];
+
+function avatarGradient(color: string, strength = 65) {
+  return `linear-gradient(135deg, color-mix(in srgb, ${color} ${strength}%, white), ${color})`;
+}
 
 const metadata = {
   title: 'Our Team',
@@ -63,13 +72,6 @@ const adminLead = allLeads.find(l => l.role === 'Administrative Lead');
 const techLead  = allLeads.find(l => l.role === 'Technical Lead');
 const teamLeads = allLeads.filter(l => l.role === 'Team Lead');
 
-const colorHexMap = {
-  Red: '#ef4444',
-  Blue: '#3b82f6',
-  Green: '#22c55e',
-  Pink: '#ec4899'
-};
-
 const subdivisionMap = [
   { key: 'CS and AI',  label: 'CS & AI',    teamLeadName: 'Chaturya' },
   { key: 'Science',    label: 'Science',     teamLeadName: 'Lohitashwa Talamanchi' },
@@ -78,7 +80,7 @@ const subdivisionMap = [
   { key: 'Media',      label: 'Media',       teamLeadName: 'Pragathi L' },
 ].map(sub => ({
   ...sub,
-  color: colorHexMap[subdivisionColors[sub.label as keyof typeof subdivisionColors]] || '#64748b'
+  color: teamColors[sub.label as keyof typeof teamColors] || '#64748b'
 }));
 
 // Pre-resolve all subdivision members
@@ -138,10 +140,11 @@ function photoPosition(member: Member) {
       <!-- Mentors float top-right -->
       {mentors.length > 0 && (
         <div class="mentor-corner">
-          <span class="mentor-label">Faculty Mentors</span>
+          <span class="mentor-label" style={`color:${mentorColor}`}>Faculty Mentors</span>
           {mentors.map(mentor => (
             <div 
               class="pcard mentor-card interactive-card"
+              style={`--accent:${mentorColor}`}
               data-name={mentor.name}
               data-role={mentor.role}
               data-speciality={mentor.speciality || ""}
@@ -152,13 +155,13 @@ function photoPosition(member: Member) {
               data-email={mentor.socials.email}
               data-website={mentor.socials.website}
               data-subdivision=""
-              data-avatar-gradient="linear-gradient(135deg, #f59e0b, #d97706)"
+              data-avatar-gradient={avatarGradient(mentorColor)}
             >
               <div class="pcard-info">
                 <span class="pcard-name">{mentor.name}</span>
                 <span class="pcard-role">{mentor.role}</span>
               </div>
-              <div class="pcard-avatar" style={!mentor.photoResolved ? `background: linear-gradient(135deg, #f59e0b, #d97706)` : undefined}>
+              <div class="pcard-avatar" style={!mentor.photoResolved ? `background:${avatarGradient(mentorColor)}` : undefined}>
                 {mentor.photoResolved ? (
                   <Image class="pcard-avatar-image" src={mentor.photoResolved} alt="" width={640} quality="high" style={`object-position:${photoPosition(mentor)}`} />
                 ) : initials(mentor.name)}
@@ -178,7 +181,7 @@ function photoPosition(member: Member) {
               <div class="root-node-container">
                   <div 
                     class="pcard root-card interactive-card leadership-card" 
-                    style="--accent: #eab308"
+                    style={`--accent:${leadershipColor}`}
                     data-name={techLead.name}
                     data-role={techLead.role}
                     data-speciality={techLead.speciality || ""}
@@ -188,13 +191,13 @@ function photoPosition(member: Member) {
                     data-linkedin={techLead.socials.linkedin}
                     data-email={techLead.socials.email}
                     data-subdivision=""
-                    data-avatar-gradient="linear-gradient(135deg, #fcd34d, #f59e0b)"
+                    data-avatar-gradient={avatarGradient(leadershipColor)}
                   >
                     <div class="pcard-info">
                       <span class="pcard-name">{techLead.name}</span>
                       <span class="pcard-role">{techLead.role}</span>
                     </div>
-                    <div class="pcard-avatar" style={!techLead.photoResolved ? `background: linear-gradient(135deg, #fcd34d, #f59e0b)` : undefined}>
+                    <div class="pcard-avatar" style={!techLead.photoResolved ? `background:${avatarGradient(leadershipColor)}` : undefined}>
                       {techLead.photoResolved ? (
                         <Image class="pcard-avatar-image" src={techLead.photoResolved} alt="" width={640} quality="high" style={`object-position:${photoPosition(techLead)}`} />
                       ) : initials(techLead.name)}
@@ -207,7 +210,7 @@ function photoPosition(member: Member) {
                     <div class="staff-connector-h"></div>
                     <div 
                       class="pcard staff-card interactive-card leadership-card" 
-                      style="--accent: #eab308"
+                      style={`--accent:${leadershipColor}`}
                       data-name={adminLead.name}
                       data-role={adminLead.role}
                       data-speciality={adminLead.speciality || ""}
@@ -217,13 +220,13 @@ function photoPosition(member: Member) {
                       data-linkedin={adminLead.socials.linkedin}
                       data-email={adminLead.socials.email}
                       data-subdivision=""
-                      data-avatar-gradient="linear-gradient(135deg, #fcd34d, #f59e0b)"
+                      data-avatar-gradient={avatarGradient(leadershipColor)}
                     >
                       <div class="pcard-info">
                         <span class="pcard-name">{adminLead.name}</span>
                         <span class="pcard-role">{adminLead.role}</span>
                       </div>
-                      <div class="pcard-avatar" style={!adminLead.photoResolved ? `background: linear-gradient(135deg, #fcd34d, #f59e0b)` : undefined}>
+                      <div class="pcard-avatar" style={!adminLead.photoResolved ? `background:${avatarGradient(leadershipColor)}` : undefined}>
                         {adminLead.photoResolved ? (
                           <Image class="pcard-avatar-image" src={adminLead.photoResolved} alt="" width={640} quality="high" style={`object-position:${photoPosition(adminLead)}`} />
                         ) : initials(adminLead.name)}
@@ -265,14 +268,14 @@ function photoPosition(member: Member) {
                     data-linkedin={tl.socials.linkedin}
                     data-email={tl.socials.email}
                     data-subdivision={sub.label}
-                    data-avatar-gradient={`linear-gradient(135deg, ${sub.color}aa, ${sub.color})`}
+                    data-avatar-gradient={avatarGradient(sub.color)}
                   >
                     <div class="pcard-info">
                       <span class="pcard-name">{tl.name}</span>
                       <span class="pcard-role">Team Lead</span>
                       <span class="pcard-sub">{sub.label}</span>
                     </div>
-                    <div class="pcard-avatar" style={!tl.photoResolved ? `background: linear-gradient(135deg, ${sub.color}aa, ${sub.color})` : undefined}>
+                    <div class="pcard-avatar" style={!tl.photoResolved ? `background:${avatarGradient(sub.color)}` : undefined}>
                       {tl.photoResolved ? (
                         <Image class="pcard-avatar-image" src={tl.photoResolved} alt="" width={640} quality="high" style={`object-position:${photoPosition(tl)}`} />
                       ) : initials(tl.name)}
@@ -298,13 +301,13 @@ function photoPosition(member: Member) {
                             data-linkedin={pm.socials.linkedin}
                             data-email={pm.socials.email}
                             data-subdivision={sub.label}
-                            data-avatar-gradient={`linear-gradient(135deg, ${sub.color}88, ${sub.color}bb)`}
+                            data-avatar-gradient={avatarGradient(sub.color, 50)}
                           >
                             <div class="pcard-info">
                               <span class="pcard-name">{pm.name}</span>
                               <span class="pcard-role">Project Manager</span>
                             </div>
-                            <div class="pcard-avatar" style={!pm.photoResolved ? `background: linear-gradient(135deg, ${sub.color}88, ${sub.color}bb)` : undefined}>
+                            <div class="pcard-avatar" style={!pm.photoResolved ? `background:${avatarGradient(sub.color, 50)}` : undefined}>
                               {pm.photoResolved ? (
                                 <Image class="pcard-avatar-image" src={pm.photoResolved} alt="" width={640} quality="high" style={`object-position:${photoPosition(pm)}`} />
                               ) : initials(pm.name)}
@@ -328,13 +331,13 @@ function photoPosition(member: Member) {
                             data-linkedin={m.socials.linkedin}
                             data-email={m.socials.email}
                             data-subdivision={sub.label}
-                            data-avatar-gradient={`linear-gradient(135deg, ${sub.color}44, ${sub.color}77)`}
+                            data-avatar-gradient={avatarGradient(sub.color, 35)}
                           >
                             <div class="pcard-info">
                               <span class="pcard-name">{m.name}</span>
                               <span class="pcard-role">Member</span>
                             </div>
-                            <div class="pcard-avatar" style={!m.photoResolved ? `background: linear-gradient(135deg, ${sub.color}44, ${sub.color}77)` : undefined}>
+                            <div class="pcard-avatar" style={!m.photoResolved ? `background:${avatarGradient(sub.color, 35)}` : undefined}>
                               {m.photoResolved ? (
                                 <Image class="pcard-avatar-image" src={m.photoResolved} alt="" width={640} quality="high" style={`object-position:${photoPosition(m)}`} />
                               ) : initials(m.name)}
@@ -359,12 +362,12 @@ function photoPosition(member: Member) {
 
       {mentors.length > 0 && (
         <section class="grid-section">
-          <h2 class="section-title">Faculty Mentors</h2>
+          <h2 class="section-title" style={`border-bottom-color:${mentorColor}33`}>Faculty Mentors</h2>
           <div class="member-grid">
             {mentors.map(m => (
               <div 
                 class="pcard grid-pcard interactive-card" 
-                style="--accent:#f59e0b"
+                style={`--accent:${mentorColor}`}
                 data-name={m.name}
                 data-role={m.role}
                 data-speciality={m.speciality || ""}
@@ -375,13 +378,13 @@ function photoPosition(member: Member) {
                 data-linkedin={m.socials.linkedin}
                 data-email={m.socials.email}
                 data-website={m.socials.website}
-                data-avatar-gradient="linear-gradient(135deg, #f59e0b, #d97706)"
+                data-avatar-gradient={avatarGradient(mentorColor)}
               >
                 <div class="pcard-info">
                   <span class="pcard-name">{m.name}</span>
                   <span class="pcard-role">{m.role}</span>
                 </div>
-                <div class="pcard-avatar" style={!m.photoResolved ? `background:#f59e0b` : undefined}>
+                <div class="pcard-avatar" style={!m.photoResolved ? `background:${avatarGradient(mentorColor)}` : undefined}>
                   {m.photoResolved ? (
                     <Image class="pcard-avatar-image" src={m.photoResolved} alt="" width={640} quality="high" style={`object-position:${photoPosition(m)}`} />
                   ) : initials(m.name)}
@@ -393,12 +396,12 @@ function photoPosition(member: Member) {
       )}
 
       <section class="grid-section">
-        <h2 class="section-title">Leadership</h2>
+        <h2 class="section-title" style={`border-bottom-color:${leadershipColor}33`}>Leadership</h2>
         <div class="member-grid">
           {allLeads.map(m => (
             <div 
               class="pcard grid-pcard interactive-card" 
-              style="--accent:#0ea5e9"
+              style={`--accent:${leadershipColor}`}
               data-name={m.name}
               data-role={m.role}
               data-speciality={m.speciality || ""}
@@ -408,14 +411,14 @@ function photoPosition(member: Member) {
               data-github={m.socials.github}
               data-linkedin={m.socials.linkedin}
               data-email={m.socials.email}
-              data-avatar-gradient="linear-gradient(135deg, #38bdf8, #0284c7)"
+              data-avatar-gradient={avatarGradient(leadershipColor)}
             >
               <div class="pcard-info">
                 <span class="pcard-name">{m.name}</span>
                 <span class="pcard-role">{m.role}</span>
                 {m.subdivision && <span class="pcard-sub">{m.subdivision}</span>}
               </div>
-              <div class="pcard-avatar" style={!m.photoResolved ? `background:#0284c7` : undefined}>
+              <div class="pcard-avatar" style={!m.photoResolved ? `background:${avatarGradient(leadershipColor)}` : undefined}>
                 {m.photoResolved ? (
                   <Image class="pcard-avatar-image" src={m.photoResolved} alt="" width={640} quality="high" style={`object-position:${photoPosition(m)}`} />
                 ) : initials(m.name)}
@@ -450,13 +453,13 @@ function photoPosition(member: Member) {
                   data-github={m.socials.github}
                   data-linkedin={m.socials.linkedin}
                   data-email={m.socials.email}
-                  data-avatar-gradient={`linear-gradient(135deg, ${sub.color}aa, ${sub.color})`}
+                  data-avatar-gradient={avatarGradient(sub.color)}
                 >
                   <div class="pcard-info">
                     <span class="pcard-name">{m.name}</span>
                     <span class="pcard-role">{m.role}</span>
                   </div>
-                  <div class="pcard-avatar" style={!m.photoResolved ? `background:${sub.color}` : undefined}>
+                  <div class="pcard-avatar" style={!m.photoResolved ? `background:${avatarGradient(sub.color)}` : undefined}>
                     {m.photoResolved ? (
                       <Image class="pcard-avatar-image" src={m.photoResolved} alt="" width={640} quality="high" style={`object-position:${photoPosition(m)}`} />
                     ) : initials(m.name)}
@@ -836,14 +839,14 @@ function photoPosition(member: Member) {
 
 .leadership-card {
   border-width: 3px !important;
-  border-color: #eab308 !important;
-  background: #fffbeb !important;
-  box-shadow: 0 4px 12px rgba(234, 179, 8, 0.15) !important;
+  border-color: var(--accent) !important;
+  background: color-mix(in srgb, var(--accent) 12%, #ffffff) !important;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 20%, transparent) !important;
 }
 :global(.dark) .leadership-card {
-  background: #422006 !important;
-  border-color: #f59e0b !important;
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2) !important;
+  background: color-mix(in srgb, var(--accent) 22%, #0f172a) !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 24%, transparent) !important;
 }
 
 .pcard-avatar {
@@ -927,7 +930,7 @@ function photoPosition(member: Member) {
 }
 .mentor-card {
   --accent: #f59e0b;
-  box-shadow: 0 4px 15px rgba(245, 158, 11, 0.12);
+  box-shadow: 0 4px 15px color-mix(in srgb, var(--accent) 18%, transparent);
   width: 185px;
 }
 
