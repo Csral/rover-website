@@ -243,7 +243,7 @@ const teamData: Record<string, TeamMember[]> = {
     },
 
     {
-      name: 'Gokul Krishna M', role: 'Project Manager', subdivision: 'CS & AI', speciality: 'AI & Autonomous Systems', about: 'AI and Data Science student coordinating the CS & AI subsystem for IRC 2027.', photo: 'default.png',
+      name: 'Gokul Krishna M', role: 'Project Manager', subdivision: 'CS & AI', speciality: 'AI & Autonomous Systems', about: 'AI and Data Science student coordinating the CS & AI subsystem for IRC 2027.', photo: 'Gokul.jpeg',
       socials: { github: 'https://github.com/GokulKrishna005', linkedin: 'https://www.linkedin.com/in/gokul-krishna-m-208300232', email: 'gokulkrishna.m2005.lap@gmail.com' }
     },
     {
