@@ -182,11 +182,11 @@ const teamData: Record<string, TeamMember[]> = {
 
   Mentors: [
     {
-      name: 'Dr. D. N. Kiran Pandiri', role: 'Mentor', speciality: null, about: null, photo: 'd-n-kiran-pandiri.png',
+      name: 'Dr. D. N. Kiran Pandiri', role: 'Mentor', speciality: null, about: "Mentor of Team Odyssey", photo: 'd-n-kiran-pandiri.png',
       socials: { website: 'https://www.amrita.edu/faculty/d-n-kiran-pandiri/', email: 'p_kiran@blr.amrita.edu', linkedin: 'https://www.linkedin.com/in/dr-kiran-pandiri-39758856/' }
     },
     {
-      name: 'Dr. Rajesh M', role: 'Mentor', speciality: null, about: null, photo: 'dr_rajesh_m.png',
+      name: 'Dr. Rajesh M', role: 'Mentor', speciality: null, about: "Mentor of Team Odyssey", photo: 'dr_rajesh_m.png',
       socials: { website: 'https://www.amrita.edu/faculty/rajesh-m/', email: 'm_rajesh@blr.amrita.edu', linkedin: 'https://www.linkedin.com/in/rajesh-madathil-68986a24/' }
     },
   ],
