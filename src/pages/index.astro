@@ -2,12 +2,15 @@
 import { Image } from 'astro:assets';
 import Layout from '~/layouts/HomeLayout.astro';
 import SubsystemNotebook from '~/components/home/SubsystemNotebook';
+import HeroTitle from '~/components/home/HeroTitle.astro';
 import roverPhoto from '~/assets/images/rover-sunrise.jpeg';
 import teamPhoto from '~/assets/images/rover-team.jpeg';
 import armPhoto from '~/assets/images/october-arm-post/arm.jpg';
 import powerPhoto from '~/assets/images/october-power-distribution/cover.jpeg';
 import { sponsors } from '~/data/sponsors';
 import { footerData } from '~/navigation';
+
+import ArrowHead from '~/components/scrapbook/ArrowHead.astro';
 
 const sponsorImages = import.meta.glob<{ default: ImageMetadata }>('/src/data/sponsor-logo/*.png', { eager: true });
 const milestones = [
@@ -19,55 +22,40 @@ const milestones = [
 ---
 
 <Layout>
-  <header class="home-header">
-    <a class="wordmark" href="/" aria-label="Team Odyssey home">odyssey<span class="wordmark-dot">.</span></a>
-    <nav aria-label="Main navigation">
-      <a href="#about">The rover</a><a href="/team">The team</a><a href="/blog">Field notes</a>
-      <a class="nav-contact" href="#contact">Say hello <span aria-hidden="true">↗</span></a>
-    </nav>
-  </header>
   <main>
     <section class="intro" aria-label="Introducing Team Odyssey">
       <div class="intro-stage">
-        <div class="star-field" aria-hidden="true"></div>
-        <div class="mars-horizon" aria-hidden="true"></div>
-        <div class="smoke-fallback" aria-hidden="true"></div><div class="smoke-canvas" aria-hidden="true"></div>
-        <div class="light-beam" aria-hidden="true"></div>
-        <div class="light-source" aria-hidden="true">
-          <div class="light-halo"></div><div class="light-glint"></div><i class="light-core"></i>
-        </div>
-        <div class="hero-content">
-          <p class="hero-location"><span class="status-dot" aria-hidden="true"></span> Amrita Bengaluru / Rover team</p>
-          <div class="hero-type">
-            <div class="initials" aria-hidden="true">
-              <span class="initial initial-t">T</span><span class="initial initial-o">O</span>
-            </div>
-            <h1 class="full-name" aria-label="Team Odyssey">
-              <span class="name-team">Team</span><span class="name-odyssey"
-                >Odyssey<span class="title-period">.</span></span
-              >
-            </h1>
-          </div>
-          <div class="hero-bottom">
-            <p>Built on Earth.<br />Made for the unknown.</p>
-            <a class="scroll-cue" href="#about"
-              ><span class="scroll-line" aria-hidden="true"></span> Scroll to turn the lights on <span
-                aria-hidden="true">↓</span
-              ></a
-            >
-            <span class="hero-note">a few students. one big odyssey.</span>
-          </div>
-        </div>
-        <div class="light-wash" aria-hidden="true"></div>
-        <button class="motion-toggle" type="button" aria-pressed="false">Pause atmosphere</button>
+        <div class="cover-label">Hello there</div>
+        <div class="smoke-fallback" aria-hidden="true"></div>
+        <HeroTitle />
+        <!-- <button
+          class="motion-toggle"
+          type="button"
+          aria-label="Pause animation"
+          title="Pause animation"
+          aria-pressed="false"
+        >
+          <svg viewBox="0 0 20 20" aria-hidden="true"
+            ><path class="pause-symbol" d="M6 4v12M14 4v12"></path><path class="play-symbol" d="m6 4 10 6-10 6Z"
+            ></path></svg
+          >
+        </button> -->
+        <!-- <button class="hero-replay" type="button" aria-label="Replay intro" title="Replay intro">↺</button> -->
       </div>
     </section>
     <div class="scrapbook">
+      <header class="home-header">
+        <a class="wordmark" href="/" aria-label="Team Odyssey home">odyssey<span class="wordmark-dot">.</span></a>
+        <nav aria-label="Main navigation">
+          <a href="#about">The rover</a><a href="/team">The team</a><a href="/blog">Field notes</a>
+          <a class="nav-contact" href="#contact">Say hello <span aria-hidden="true">↗</span></a>
+        </nav>
+      </header>
       <section id="about" class="about spread" aria-labelledby="about-title">
-        <div class="spread-top"><span>Team Odyssey / The scrapbook</span><span>Bengaluru, India</span></div>
+        <div class="spread-top"><span>Team Odyssey</span><span>Bengaluru, India</span></div>
         <div class="about-copy">
           <span class="handwritten margin-note">It started with a “what if?”</span>
-          <h2 id="about-title">A little dust.<br />A lot of possibility.</h2>
+          <h2 id="about-title" tabindex="-1">A small lab.<br />A lot of possibility.</h2>
           <p>
             We're Team Odyssey, the official rover team at Amrita's Bengaluru campus. A rag-tag bunch of students from
             different departments, building a rover together.
@@ -152,8 +140,8 @@ const milestones = [
         </figure>
         <div class="team-copy">
           <p class="small-note">Meet the crew</p><h2 id="team-title">It takes<br />a whole team.</h2><p>
-            Different departments. Different ways of thinking. The same dusty shoes at the end of a test run.
-          </p><p>We're the students who bring Skanda to life, from the first sketch to the field.</p><a
+            Different departments. Different ways of thinking. The same dusty objective.
+          </p><p>We're the students who bring Skanda to life, from the design and first sketch to the field.</p><a
             class="ink-link"
             href="/team">Meet everyone <span aria-hidden="true">↗</span></a
           ><span class="handwritten team-scribble">some assembly (and coffee) required</span>
@@ -161,10 +149,7 @@ const milestones = [
       </section>
       <section class="records spread" aria-labelledby="records-title">
         <div class="section-heading">
-          <div><p class="small-note">Saved for the scrapbook</p><h2 id="records-title">A few milestones.</h2></div><a
-            class="ink-link"
-            href="http://records.teamodyssey.space/">Our records <span aria-hidden="true">↗</span></a
-          >
+          <div><p class="small-note">Saved for the scrapbook</p><h2 id="records-title">A few milestones.</h2></div>
         </div>
         <div class="milestone-list">
           {
@@ -187,10 +172,14 @@ const milestones = [
           href="https://www.youtube.com/watch?v=kf187VukHJA"
           target="_blank"
           rel="noopener noreferrer"
-          ><span class="play-icon" aria-hidden="true">▶</span><div>
+          >
+          <span class="play-icon" aria-hidden="true">▶</span><div>
             <h3>See Skanda in action.</h3><p>Our rover functionality demo, from subsystems to the field.</p>
           </div><span class="film-duration">Watch the film <span aria-hidden="true">↗</span></span></a
         >
+        <div class="youtube-annotation">
+          <ArrowHead /><span class="handwritten youtube-annotation-text">Warning: Opens in YouTube</span>
+        </div>
       </section>
       <section id="sponsors" class="sponsors spread" aria-labelledby="sponsors-title">
         <div>
@@ -234,7 +223,7 @@ const milestones = [
         </address>
       </section>
       <footer class="home-footer spread">
-        <a class="wordmark" href="/">odyssey.</a><p>Built by students. Going places.</p><div>
+        <a class="wordmark" href="/">odyssey.</a><p>Built by students.</p><div>
           {footerData.socialLinks.map((link) => <a href={link.href}>{link.ariaLabel}</a>)}<a href="/links">More links</a
           >
         </div><span>© {new Date().getFullYear()} Team Odyssey</span>

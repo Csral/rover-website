@@ -1,134 +1,349 @@
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
+import { MorphSVGPlugin } from 'gsap/MorphSVGPlugin';
+import type { createHeroScene } from './smoke';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(DrawSVGPlugin, MorphSVGPlugin);
+type HeroScene = NonNullable<ReturnType<typeof createHeroScene>>;
 let cleanup: (() => void) | undefined;
 
 export function initHome() {
   cleanup?.();
-  const intro = document.querySelector<HTMLElement>('.intro');
-  if (!intro) return;
-  const stage = intro.querySelector<HTMLElement>('.intro-stage')!;
-  const toggle = stage.querySelector<HTMLButtonElement>('.motion-toggle')!;
+  const stage = document.querySelector<HTMLElement>('.intro-stage');
+  if (!stage) return;
+  const note = stage.querySelector<HTMLElement>('.typed-note')!;
   const media = gsap.matchMedia();
-  const animations: gsap.core.Animation[] = [];
-  let disposeSmoke: (() => void) | undefined;
-  let setSmokePaused: ((paused: boolean) => void) | undefined;
+  let scene: HeroScene | undefined;
+  let sequence: gsap.core.Timeline | undefined;
+  let fog: gsap.core.Tween | undefined;
   let disposed = false;
-  let paused = false;
 
-  const applyPause = () => {
-    for (const animation of animations) {
-      if (paused) animation.progress(1);
-      animation.paused(paused);
-    }
-    setSmokePaused?.(paused);
-    toggle.textContent = paused ? 'Resume atmosphere' : 'Pause atmosphere';
-    toggle.setAttribute('aria-pressed', String(paused));
-  };
-  const onToggle = () => {
-    paused = !paused;
-    applyPause();
-  };
-  toggle.addEventListener('click', onToggle);
+  media.add(
+    { animated: '(prefers-reduced-motion: no-preference)', still: '(prefers-reduced-motion: reduce)' },
+    (context) => {
+      const animated = Boolean(context.conditions?.animated);
+      let active = true;
+      let resize: ResizeObserver | undefined;
+      if (animated) stage.classList.add('kinetic-loading');
 
-  media.add('(prefers-reduced-motion: no-preference)', () => {
-    let active = true;
-    stage.classList.add('intro-ready');
-    gsap.set('.full-name', { autoAlpha: 0 });
-    gsap.set('.full-name > span', { z: -100, rotationY: -5 });
-    // Begin with two staggered initials, retract them, then reveal the complete name.
-    const retract = gsap.to('.initial', {
-      z: -160,
-      scale: 0.88,
-      rotationY: -8,
-      duration: 0.8,
-      delay: 0.65,
-      stagger: 0.13,
-      ease: 'power2.inOut',
-    });
-    const introTimeline = gsap
-      .timeline({ delay: 1.3 })
-      .to('.initials', { autoAlpha: 0, duration: 0.4 })
-      .set('.full-name', { autoAlpha: 1 }, '<+.1')
-      .fromTo(
-        '.full-name > span',
-        { opacity: 0, z: -100, rotationY: -5 },
-        {
-          opacity: 1,
-          z: (index) => (index === 0 ? -20 : 25),
-          rotationY: 0,
-          duration: 1.1,
-          stagger: 0.13,
-          ease: 'power3.out',
-        },
-        '<'
-      )
-      .fromTo('.hero-bottom', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.65 }, '-=.5');
-    const lightBreath = gsap.to('.light-halo', {
-      opacity: 0.58,
-      scale: 0.92,
-      duration: 3.7,
-      repeat: -1,
-      yoyo: true,
-      ease: 'sine.inOut',
-    });
-    animations.push(retract, introTimeline, lightBreath);
-
-    // The distant light disperses into the dark pages as the scrapbook opens.
-    const scrollTimeline = gsap
-      .timeline({
-        scrollTrigger: {
-          trigger: intro,
-          start: 'top top',
-          end: () => `+=${Math.round(innerHeight * 0.7)}`,
-          pin: stage,
-          scrub: 0.6,
-          invalidateOnRefresh: true,
-        },
-      })
-      .to('.hero-content', { opacity: 0, y: -35, duration: 0.65, ease: 'none' }, 0)
-      .to('.light-beam', { scale: 1.8, opacity: 0.6, duration: 0.6, transformOrigin: 'right center', ease: 'none' }, 0)
-      .to('.light-wash', { opacity: 1, duration: 0.7, ease: 'none' }, 0.22)
-      .to(['.light-source', '.smoke-canvas', '.motion-toggle'], { opacity: 0, duration: 0.3, ease: 'none' }, 0.5);
-
-    const headerTween = gsap.to('.home-header', {
-      opacity: 0,
-      scrollTrigger: { trigger: intro, start: 'top top', end: '+=180', scrub: true },
-      ease: 'none',
-    });
-    const container = stage.querySelector<HTMLElement>('.smoke-canvas')!;
-    void import('./smoke')
-      .then(({ createSmoke }) => {
+      function choreograph() {
         if (!active || disposed) return;
-        const smoke = createSmoke(container);
-        disposeSmoke = smoke?.dispose;
-        setSmokePaused = smoke?.setPaused;
-        setSmokePaused?.(paused);
-      })
-      .catch(() => {
-        /* The static red haze remains when WebGL is unavailable. */
-      });
-    applyPause();
-    return () => {
-      active = false;
-      disposeSmoke?.();
-      disposeSmoke = undefined;
-      setSmokePaused = undefined;
-      animations.splice(0).forEach((animation) => animation.kill());
-      scrollTimeline.kill();
-      headerTween.kill();
-      stage.classList.remove('intro-ready');
-    };
-  });
+        stage!.classList.remove('kinetic-loading');
+        note.textContent = "that's us";
+        const q = <T extends Element = HTMLElement>(selector: string) => stage!.querySelector<T>(selector)!;
+        const team = q('.team-word');
+        const letters = [...stage!.querySelectorAll<HTMLElement>('.hero-letter')];
+        const e = q<HTMLElement>('.letter-e'),
+          a = q<HTMLElement>('.letter-a');
+        const s1 = q<HTMLElement>('.letter-s-first'),
+          s2 = q<HTMLElement>('.letter-s-second');
+        const orbit = { angle: 0 };
+        const typing = { count: 0 };
+        const firstNote = "Yes, that's us";
+        const finalNote = "that's us";
+        let orbitX = (e.offsetLeft + e.offsetWidth / 2 + a.offsetLeft + a.offsetWidth / 2) / 2;
+        let eRadius = orbitX - e.offsetLeft - e.offsetWidth / 2;
+        let aRadius = a.offsetLeft + a.offsetWidth / 2 - orbitX;
+        const setEX = gsap.quickSetter(e, 'x', 'px'),
+          setEY = gsap.quickSetter(e, 'y', 'px');
+        const setAX = gsap.quickSetter(a, 'x', 'px'),
+          setAY = gsap.quickSetter(a, 'y', 'px');
+        const inkPaths = [...stage!.querySelectorAll<SVGPathElement>('.pen-note path')];
+        const arrowPaths = stage!.querySelectorAll('.rotating-arrow path, .return-arrow path');
+        let fallenX = 0;
+        let fallenY = 0;
 
-  void document.fonts.ready.then(() => {
-    if (!disposed) ScrollTrigger.refresh();
-  });
+        function settleArrow() {
+          gsap.set(q('.rotating-arrow'), { rotation: -90, x: fallenX, y: fallenY });
+        }
+
+        function placeNotes() {
+          const rect = stage!.getBoundingClientRect();
+          const word = q('.odyssey-word').getBoundingClientRect();
+          const mobile = stage!.clientWidth <= 700;
+          const factor = mobile ? 155 / 240 : 1;
+          const annotation = q<HTMLElement>('.hero-annotation');
+          const sticky = q<HTMLElement>('.hero-sticky');
+          const targetX = mobile ? word.left + word.width * 0.4 : word.right + 40;
+          const targetY = mobile ? word.bottom + 28 : word.top + 10;
+          const desiredLeft = targetX - rect.left - 38 * factor;
+          const noteOffset = mobile ? 160 : 248;
+          const noteWidth = mobile ? 145 : 210;
+          const left = Math.min(desiredLeft, stage!.clientWidth - noteOffset - noteWidth - (mobile ? 25 : 45));
+          const top = targetY - rect.top - 25 * factor;
+          annotation.style.left = left + 'px';
+          annotation.style.top = top + 'px';
+          annotation.style.right = 'auto';
+          annotation.style.bottom = 'auto';
+          const stickyLeft = left + 210 * factor + (mobile ? 28 : 40);
+          const stickyTop = top + 130 * factor + (mobile ? 18 : 28) + (mobile ? 34 : 38);
+          sticky.style.left = stickyLeft + 'px';
+          sticky.style.top = stickyTop + 'px';
+          sticky.style.right = 'auto';
+          sticky.style.bottom = 'auto';
+          // Land the tail on the sticky's left edge, beside the actual scroll instruction.
+          fallenX = stickyLeft - left - 210 * factor;
+          fallenY = stickyTop + sticky.offsetHeight * 0.52 - top - 130 * factor;
+        }
+        placeNotes();
+        resize = new ResizeObserver(() => {
+          placeNotes();
+          orbitX = (e.offsetLeft + e.offsetWidth / 2 + a.offsetLeft + a.offsetWidth / 2) / 2;
+          eRadius = orbitX - e.offsetLeft - e.offsetWidth / 2;
+          aRadius = a.offsetLeft + a.offsetWidth / 2 - orbitX;
+          if (!animated || (sequence && sequence.time() >= 8.4)) settleArrow();
+        });
+        resize.observe(stage!);
+        if (!animated) {
+          settleArrow();
+          gsap.set(q('.arrow-line'), { attr: { d: 'M210 130C179 142 142 117 109 68' } });
+          gsap.set(q('.arrow-head'), { attr: { d: 'M127 71 109 68 111 85' } });
+          return;
+        }
+
+        sequence = gsap.timeline({ defaults: { ease: 'power3.out' } });
+        // Reserve every letter's space so the word does not jump as it assembles.
+        sequence
+          .set(letters, { clearProps: 'transform,color,visibility,opacity' })
+          .set([e, a, q('.letter-m'), ...letters.slice(4)], { autoAlpha: 0 })
+          .set([q('.hero-sticky'), note], { autoAlpha: 0 })
+          .set(note, { textContent: '' })
+          .set(typing, { count: 0 })
+          .set(orbit, { angle: 0 })
+          .set(q('.rotating-arrow'), { rotation: 0, x: 0, y: 0 })
+          .set(q('.rotating-arrow .arrow-line'), { attr: { d: 'M210 130C166 132 91 80 38 25' } })
+          .set(q('.rotating-arrow .arrow-head'), { attr: { d: 'M55 28 38 25 41 43' } })
+          .set(arrowPaths, { drawSVG: '0% 0%' })
+          .set(inkPaths, { drawSVG: '0% 0%', fillOpacity: 0 })
+          .set(q('.y-drawing'), { opacity: 1 })
+          .set(q('.y-fill'), { opacity: 0 })
+          .set(q('.y-reel'), { yPercent: 0 })
+          .set(q('.title-sweep'), { opacity: 0, xPercent: 0 })
+          .set(q('.hero-sticky .tape'), { scaleX: 0 })
+          .set(team, { x: () => e.offsetWidth + a.offsetWidth })
+          .to(team, { x: 0, duration: 1.2, ease: 'power2.inOut' }, 0.25)
+          .fromTo(
+            [e, a, q('.letter-m')],
+            { x: -35, scaleX: 0.5 },
+            { autoAlpha: 1, x: 0, scaleX: 1, duration: 0.6, stagger: 0.14 },
+            0.4
+          )
+          .to(
+            orbit,
+            {
+              angle: Math.PI * 4,
+              duration: 2.2,
+              ease: 'power2.inOut',
+              onUpdate: () => {
+                const { angle } = orbit;
+                setEX(eRadius * (1 - Math.cos(angle)));
+                setEY(-eRadius * Math.sin(angle));
+                setAX(aRadius * (Math.cos(angle) - 1));
+                setAY(aRadius * Math.sin(angle));
+              },
+            },
+            1.15
+          )
+          .fromTo(
+            q('.earth-letter'),
+            { scale: 0.6, rotation: -30 },
+            { autoAlpha: 1, scale: 1, rotation: 0, duration: 0.9, ease: 'back.out(1.3)' },
+            1.15
+          )
+          .fromTo(q('.letter-d'), { y: 35, rotation: 8 }, { autoAlpha: 1, y: 0, rotation: 0, duration: 0.6 }, 1.45)
+          .set(q('.letter-y-first'), { autoAlpha: 1 }, 1.65)
+          .fromTo(q('.y-arm'), { drawSVG: '0% 0%' }, { drawSVG: '0% 100%', duration: 0.35 }, 1.65)
+          .fromTo(q('.y-stem'), { drawSVG: '0% 0%' }, { drawSVG: '0% 100%', duration: 0.55 }, 1.9)
+          .to(q('.y-fill'), { opacity: 1, duration: 0.16 }, 2.4)
+          .to(q('.y-drawing'), { opacity: 0, duration: 0.16 }, 2.4)
+          .fromTo(s1, { y: -25, rotation: -15 }, { autoAlpha: 1, y: 0, rotation: 0, duration: 0.55 }, 1.95)
+          .fromTo(q('.letter-e-last'), { scale: 0.7 }, { autoAlpha: 1, scale: 1, duration: 0.55 }, 2.15)
+          .set(q('.letter-y-last'), { autoAlpha: 1 }, 2.3)
+          .to(q('.y-reel'), { yPercent: -200 / 3, duration: 1.25, ease: 'power2.inOut' }, 2.3)
+          // The second s originates on top of the first, then separates into its own slot.
+          .to(s1, { scaleX: 0.7, rotation: -8, duration: 0.22 }, 3.55)
+          .fromTo(
+            s2,
+            { x: () => s1.offsetLeft - s2.offsetLeft, scaleX: 0.7 },
+            { autoAlpha: 1, x: 0, scaleX: 1, duration: 0.7, ease: 'back.out(1.4)' },
+            3.6
+          )
+          .to(s1, { scaleX: 1, rotation: 0, duration: 0.5, ease: 'back.out(1.4)' }, 3.77);
+
+        // A shared x+y coordinate orders the illumination along a 45-degree wavefront.
+        const bounds = q('.kinetic-title').getBoundingClientRect();
+        const diagonal = letters.map((letter) => {
+          const r = letter.getBoundingClientRect();
+          return { letter, distance: r.left - bounds.left + r.width / 2 + r.top - bounds.top + r.height / 2 };
+        });
+        const min = Math.min(...diagonal.map(({ distance }) => distance));
+        const range = Math.max(...diagonal.map(({ distance }) => distance)) - min || 1;
+        diagonal.forEach(({ letter, distance }) => {
+          const at = 4.45 + ((distance - min) / range) * 0.9;
+          if (letter.classList.contains('earth-letter') && scene) {
+            sequence!
+              .to(scene.atmosphere, { lightLevel: 1.8, duration: 0.09 }, at)
+              .to(scene.atmosphere, { lightLevel: 0.9, duration: 0.09 }, at + 0.09)
+              .to(scene.atmosphere, { lightLevel: 1.7, duration: 0.09 }, at + 0.18)
+              .to(scene.atmosphere, { lightLevel: 1.1, duration: 0.3 }, at + 0.27);
+          }
+          sequence!
+            .to(letter, { color: '#fff8de', duration: 0.09 }, at)
+            .to(letter, { color: '#b2a88e', duration: 0.09 }, at + 0.09)
+            .to(letter, { color: '#fff0c5', duration: 0.09 }, at + 0.18)
+            .to(letter, { color: '#dfd3b8', duration: 0.3 }, at + 0.27);
+        });
+        sequence
+          .fromTo(
+            q('.title-sweep'),
+            { x: 0, opacity: 0 },
+            { x: () => bounds.width * 1.4, opacity: 1, duration: 1.1, ease: 'none' },
+            4.45
+          )
+          .to(q('.title-sweep'), { opacity: 0, duration: 0.15 }, 5.45)
+          .to(q('.rotating-arrow .arrow-line'), { drawSVG: '0% 100%', duration: 0.65 }, 5.6)
+          .to(q('.rotating-arrow .arrow-head'), { drawSVG: '0% 100%', duration: 0.25 }, 6.12)
+          .set(note, { autoAlpha: 1 }, 5.85)
+          .to(
+            typing,
+            {
+              count: firstNote.length,
+              duration: 0.9,
+              ease: 'none',
+              onUpdate: () => {
+                note.textContent = firstNote.slice(0, Math.round(typing.count));
+              },
+            },
+            5.85
+          )
+          // The stroke buckles first, then gravity pulls its tail and swings its tip down.
+          .to(
+            q('.rotating-arrow .arrow-line'),
+            {
+              morphSVG: 'M210 130C186 156 139 146 128 95S76 34 50 40',
+              duration: 0.24,
+              ease: 'power1.inOut',
+            },
+            7.25
+          )
+          .to(
+            q('.rotating-arrow .arrow-head'),
+            {
+              morphSVG: 'M66 38 50 40 48 57',
+              duration: 0.24,
+              ease: 'power1.inOut',
+            },
+            7.25
+          )
+          .to(q('.rotating-arrow'), { rotation: 8, y: 7, duration: 0.24, ease: 'power1.in' }, 7.25)
+          .to(
+            q('.rotating-arrow'),
+            {
+              rotation: -104,
+              x: () => fallenX + 4,
+              y: () => fallenY + 8,
+              duration: 0.66,
+              ease: 'power2.in',
+            },
+            7.49
+          )
+          .to(
+            q('.rotating-arrow .arrow-line'),
+            {
+              morphSVG: 'M210 130C179 142 142 117 109 68',
+              duration: 0.58,
+              ease: 'power2.inOut',
+            },
+            7.49
+          )
+          .to(
+            q('.rotating-arrow .arrow-head'),
+            {
+              morphSVG: 'M127 71 109 68 111 85',
+              duration: 0.58,
+              ease: 'power2.inOut',
+            },
+            7.49
+          )
+          .to(
+            q('.rotating-arrow'),
+            {
+              rotation: -90,
+              x: () => fallenX,
+              y: () => fallenY,
+              duration: 0.24,
+              ease: 'power2.out',
+            },
+            8.15
+          )
+          .to(q('.hero-sticky'), { autoAlpha: 1, duration: 0.2 }, 8.42)
+          .set(q('.hero-sticky .tape'), { scaleX: 1 }, 8.42)
+          .set(typing, { count: 0 }, 8.7)
+          .to(
+            typing,
+            {
+              count: finalNote.length,
+              duration: 0.55,
+              ease: 'none',
+              onUpdate: () => {
+                note.textContent = finalNote.slice(0, Math.round(typing.count));
+              },
+            },
+            8.7
+          )
+          .to(q('.return-arrow .return-line'), { drawSVG: '0% 100%', duration: 0.85, ease: 'none' }, 8.7)
+          .to(q('.return-arrow .return-head'), { drawSVG: '0% 100%', duration: 0.25, ease: 'none' }, 9.5);
+        inkPaths.forEach((path, index) => {
+          const at = 8.7 + index * 0.055;
+          sequence!
+            .to(path, { drawSVG: '0% 100%', duration: 0.2, ease: 'none' }, at)
+            .to(path, { fillOpacity: 1, duration: 0.1 }, at + 0.1);
+        });
+        fog = gsap.to('.intro .smoke-fallback', {
+          y: -35,
+          opacity: 0.45,
+          duration: 7,
+          repeat: -1,
+          yoyo: true,
+          ease: 'sine.inOut',
+        });
+      }
+
+      void Promise.all([document.fonts.ready, import('./smoke')])
+        .then(([, { createHeroScene }]) => {
+          if (!active || disposed) return;
+          try {
+            scene = createHeroScene(stage!, animated);
+          } catch {
+            /* The inline geographic globe remains visible. */
+          }
+          context.add(choreograph);
+        })
+        .catch(() => {
+          if (active && !disposed) context.add(choreograph);
+        });
+
+      return () => {
+        active = false;
+        resize?.disconnect();
+        sequence?.kill();
+        fog?.kill();
+        sequence = undefined;
+        fog = undefined;
+        scene?.dispose();
+        scene = undefined;
+        stage.classList.remove('kinetic-loading');
+        stage.querySelectorAll<HTMLElement>('.hero-annotation, .hero-sticky').forEach((element) => {
+          ['left', 'top', 'right', 'bottom'].forEach((property) => element.style.removeProperty(property));
+        });
+        note.textContent = "that's us";
+      };
+    },
+    stage
+  );
   cleanup = () => {
     disposed = true;
     media.revert();
-    toggle.removeEventListener('click', onToggle);
     cleanup = undefined;
   };
   document.addEventListener('astro:before-swap', cleanup, { once: true });

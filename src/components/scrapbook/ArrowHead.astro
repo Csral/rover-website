@@ -1,0 +1,79 @@
+---
+interface Props {
+  path?: string;
+  width?: string;
+  color?: string;
+  strokeWidth?: number;
+  class?: string;
+  rotate?: number;
+  flipX?: boolean;
+  flipY?: boolean;
+}
+
+const {
+  path = 'M90 50 C65 50, 30 45, 10 10',
+  width = '120px',
+  color = '#e9876f',
+  strokeWidth = 1.6,
+  class: className,
+  rotate = 0,
+  flipX = false,
+  flipY = false,
+} = Astro.props;
+
+const markerId = `arrow-${Math.random().toString(36).slice(2)}`;
+
+const scaleX = flipX ? -1 : 1;
+const scaleY = flipY ? -1 : 1;
+---
+
+<svg
+  class:list={['scribble-arrow', className]}
+  viewBox="0 0 100 60"
+  aria-hidden="true"
+  style={`
+    --arrow-width: ${width};
+    --arrow-color: ${color};
+    --arrow-stroke: ${strokeWidth};
+    transform: rotate(${rotate}deg) scale(${scaleX}, ${scaleY});
+  `}
+>
+  <defs>
+    <marker
+      id={markerId}
+      markerWidth="8"
+      markerHeight="8"
+      refX="6"
+      refY="4"
+      orient="auto"
+      markerUnits="strokeWidth"
+    >
+      <path class="arrow-head" d="M0 0 L7 4 L0 8" />
+    </marker>
+  </defs>
+
+  <path
+    class="arrow-curve"
+    d={path}
+    marker-end={`url(#${markerId})`}
+  />
+</svg>
+
+<style>
+  .scribble-arrow {
+    display: block;
+    width: var(--arrow-width);
+    height: auto;
+    overflow: visible;
+    transform-origin: center;
+  }
+
+  .arrow-curve,
+  .arrow-head {
+    fill: none;
+    stroke: var(--arrow-color);
+    stroke-width: var(--arrow-stroke);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+</style>

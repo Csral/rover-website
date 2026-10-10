@@ -1,95 +1,47 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
 import { Icon } from 'astro-icon/components';
-import Logo from '~/assets/images/logo.png'
-
-const metadata = {
-  title: 'Links',
-};
-
+import { footerData } from '~/navigation';
+const metadata = { title: 'Links' };
 const links = [
-  {
-    title: 'GitHub',
-    url: 'https://github.com/TeamOdysseyHQ/',
-    icon: 'tabler:brand-github',
-  },
-  {
-    title: 'Instagram',
-    url: 'https://instagram.com/TeamOdysseyHQ',
-    icon: 'tabler:brand-instagram',
-  },
+  { title: 'GitHub', url: 'https://github.com/TeamOdysseyHQ/', icon: 'tabler:brand-github' },
+  { title: 'Instagram', url: 'https://instagram.com/teamodysseyhq', icon: 'tabler:brand-instagram' },
   {
     title: 'LinkedIn',
-    url: 'https://linkedin.com/company/SOMETHING',
+    url: footerData.socialLinks.find((link) => link.ariaLabel === 'LinkedIn')!.href,
     icon: 'tabler:brand-linkedin',
   },
-  {
-    title: 'Contact Us',
-    url: '/contact',
-    icon: 'tabler:mail',
-  },
+  { title: 'Contact us', url: '/contact', icon: 'tabler:mail' },
+  { title: 'Our records', url: 'http://records.teamodyssey.space/', icon: 'tabler:external-link' },
+  { title: 'RSS feed', url: '/rss.xml', icon: 'tabler:rss' },
 ];
 ---
 
-<Layout metadata={metadata}>
-  <section class="relative md:-mt-[76px] not-prose min-h-screen flex items-center justify-center">
-    <div class="absolute inset-0 pointer-events-none" aria-hidden="true"></div>
-    <div class="relative max-w-2xl mx-auto px-4 sm:px-6 w-full">
-      <div class="pt-0 md:pt-[76px] pointer-events-none"></div>
-      <div class="py-12 md:py-20">
-        <!-- Header Section -->
-        <div class="text-center mb-12">
-          <div class="mb-6 flex justify-center">
-            <!-- Profile Image - Replace with your actual image or logo -->
-          </div>
-          <p class="text-lg text-muted dark:text-slate-300 mb-2">
-            All our important links in one place
-          </p>
-        </div>
-
-        <!-- Links Section -->
-        <div class="space-y-4 max-w-xl mx-auto">
-          {links.map((link) => (
-            <a
-              href={link.url}
-              target={link.url.startsWith('http') ? '_blank' : '_self'}
-              rel={link.url.startsWith('http') ? 'noopener noreferrer' : undefined}
-              class="group block w-full p-4 rounded-lg border-2 border-gray-200 dark:border-gray-700 hover:border-primary dark:hover:border-primary bg-white dark:bg-slate-900 transition-all duration-300 hover:scale-105 hover:shadow-lg"
-            >
-              <div class="flex items-center gap-4">
-                <!-- Icon -->
-                <div class="flex-shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-primary/10 to-secondary/10 dark:from-primary/20 dark:to-secondary/20 flex items-center justify-center group-hover:from-primary/20 group-hover:to-secondary/20 dark:group-hover:from-primary/30 dark:group-hover:to-secondary/30 transition-all">
-                  <Icon 
-                    name={link.icon} 
-                    class="w-6 h-6 text-primary dark:text-secondary"
-                  />
-                </div>
-                
-                <!-- Content -->
-                <div class="flex-1 text-left">
-                  <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 group-hover:text-primary dark:group-hover:text-secondary transition-colors">
-                    {link.title}
-                  </h3>
-                </div>
-
-                <!-- Arrow -->
-                <div class="flex-shrink-0">
-                  <svg class="w-5 h-5 text-gray-400 group-hover:text-primary dark:group-hover:text-secondary group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                  </svg>
-                </div>
-              </div>
-            </a>
-          ))}
-        </div>
-
-        <!-- Footer Section -->
-        <div class="text-center mt-12">
-          <p class="text-sm text-muted dark:text-slate-400">
-            © {new Date().getFullYear()} Team Odyssey. All rights reserved.
-          </p>
-        </div>
-      </div>
+<Layout metadata={metadata} showToc={false}>
+  <section class="page-spread">
+    <div class="page-caption"><span>Team Odyssey / Links</span><span>Keep in touch</span></div>
+    <header class="page-intro">
+      <p class="pencil-note">A few places to find us.</p><h1>Loose ends.<br />Useful links.</h1><p>
+        Follow the build, meet the team, or drop us a note.
+      </p>
+    </header>
+    <div class="link-scraps">
+      {
+        links.map((link) => (
+          <a
+            class="note-paper"
+            href={link.url}
+            target={link.url.startsWith('http') ? '_blank' : undefined}
+            rel={link.url.startsWith('http') ? 'noopener noreferrer' : undefined}
+          >
+            <>
+              <Icon name={link.icon} width={27} height={27} />
+              <h2>{link.title}</h2>
+              <span aria-hidden="true">↗</span>
+            </>
+          </a>
+        ))
+      }
     </div>
   </section>
 </Layout>
