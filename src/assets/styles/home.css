@@ -1,9 +1,11 @@
 :root {
-  --paper: #ece8dd;
-  --ink: #252821;
-  --red: #a8382c;
-  --muted: #64665b;
-  --white-paper: #faf8f0;
+  color-scheme: dark;
+  --paper: #141416;
+  --ink: #e6e0d5;
+  --red: #e18a73;
+  --muted: #a9a39b;
+  --white-paper: #222123;
+  --rule: #56504a;
   font-family: 'DM Sans', sans-serif;
   color: var(--ink);
   background: var(--paper);
@@ -106,23 +108,50 @@ button {
 }
 .intro {
   position: relative;
-  background: #171716;
+  background: #0d0e10;
 }
 .intro-stage {
   position: relative;
   height: 100svh;
   min-height: 650px;
   overflow: hidden;
-  background: radial-gradient(ellipse at 88% 40%, #33342b 0, #1b1c19 26%, #171716 60%);
+  background:
+    radial-gradient(ellipse at 92% 43%, #36292240 0, transparent 38%),
+    radial-gradient(ellipse at 40% 110%, #47251e65 0, transparent 55%), #0d0e10;
   color: #eee9da;
 }
-.stage-grid {
+.star-field {
   position: absolute;
   inset: 0;
-  opacity: 0.13;
-  background-image: linear-gradient(#72776d 1px, transparent 1px), linear-gradient(90deg, #72776d 1px, transparent 1px);
-  background-size: 92px 92px;
-  mask-image: linear-gradient(transparent 12%, black 90%);
+  opacity: 0.45;
+  background-image:
+    radial-gradient(1px 1px at 15% 20%, #b8c6d1, transparent),
+    radial-gradient(1px 1px at 67% 12%, #b8c6d1, transparent),
+    radial-gradient(1px 1px at 42% 32%, #b8c6d1, transparent),
+    radial-gradient(1px 1px at 78% 28%, #b8c6d1, transparent),
+    radial-gradient(1px 1px at 32% 10%, #b8c6d1, transparent),
+    radial-gradient(1.5px 1.5px at 86% 16%, #b8c6d1, transparent),
+    radial-gradient(1px 1px at 57% 23%, #b8c6d1, transparent);
+}
+.mars-horizon {
+  position: absolute;
+  inset: 70% -5% -2%;
+  background: linear-gradient(#39231f70, #0b0c0e 85%);
+  clip-path: polygon(
+    0 35%,
+    9% 30%,
+    18% 41%,
+    28% 37%,
+    39% 55%,
+    50% 47%,
+    65% 35%,
+    79% 42%,
+    88% 27%,
+    100% 34%,
+    100% 100%,
+    0 100%
+  );
+  opacity: 0.65;
 }
 .hero-content {
   position: relative;
@@ -166,7 +195,7 @@ button {
 .full-name {
   position: relative;
   padding-bottom: 0.09em;
-  text-shadow: -9px 8px 0 #00000016;
+  filter: drop-shadow(-7px 8px 6px #0008);
   transform-style: preserve-3d;
 }
 .full-name > span,
@@ -176,14 +205,21 @@ button {
 }
 .name-team {
   margin-left: 0.04em;
-  color: #d7d4c8;
+  color: #c2b8a8;
 }
 .name-odyssey {
   margin-left: 0.62em;
-  color: #f0ecdf;
+  color: #eee0cb;
+}
+.full-name > span,
+.initial {
+  background: linear-gradient(100deg, #a49a8d, #dbceba 52%, #fff0d6 94%);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 .title-period {
-  color: #b24b3b;
+  color: var(--red);
+  -webkit-text-fill-color: var(--red);
 }
 .initials {
   display: none;
@@ -236,75 +272,49 @@ button {
 .light-beam {
   position: absolute;
   z-index: 2;
-  top: 14%;
-  right: 3%;
-  width: 78%;
-  height: 76%;
-  opacity: 0.48;
-  background: linear-gradient(270deg, #fff5bf30, #f7edc608 70%, transparent);
-  clip-path: polygon(100% 46%, 100% 48%, 0 100%, 0 0);
+  inset: 0;
+  opacity: 0.35;
+  background: radial-gradient(ellipse at 92% 43%, #ffe5c814, #bf896709 26%, transparent 58%);
   pointer-events: none;
 }
-.workshop-lamp {
+.light-source {
   position: absolute;
   z-index: 4;
-  right: 2%;
-  top: 42%;
-  width: 135px;
-  height: 230px;
-  transform: rotate(-9deg);
+  left: 92%;
+  top: 43%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
 }
-.lamp-head {
-  position: relative;
-  width: 125px;
-  height: 54px;
-  border-radius: 8px 35px 35px 8px;
-  background: linear-gradient(#72746c, #35372f 20%, #252821 65%, #55584b);
-  box-shadow: 1px 4px 18px #0008;
-  border: 1px solid #777b67;
-}
-.lamp-led {
+.light-core {
   position: absolute;
-  left: -5px;
-  top: 4px;
-  width: 9px;
-  height: 44px;
+  left: -2px;
+  top: -2px;
+  width: 4px;
+  height: 4px;
   border-radius: 50%;
-  background: #fffbe3;
+  background: #fffaf0;
   box-shadow:
-    -5px 0 16px #fff7c9,
-    -16px 0 50px #fff7c980,
-    -30px 0 100px #fff7c940;
+    0 0 5px 2px #fff1d5,
+    0 0 18px 5px #f2d4a77d,
+    0 0 50px 10px #bc704333;
 }
-.lamp-head::after {
-  content: '';
+.light-halo {
   position: absolute;
-  right: 20px;
-  top: 9px;
-  width: 34px;
-  height: 34px;
-  background: repeating-linear-gradient(90deg, #171b16 0 2px, transparent 2px 5px);
-  opacity: 0.7;
-}
-.lamp-arm {
-  position: absolute;
-  width: 10px;
-  height: 152px;
-  top: 49px;
-  left: 90px;
-  background: linear-gradient(90deg, #23261f, #686d58, #282c20);
-  transform: rotate(18deg);
-  transform-origin: top;
-}
-.lamp-foot {
-  position: absolute;
-  width: 95px;
-  height: 12px;
-  top: 199px;
-  left: 20px;
+  left: -160px;
+  top: -160px;
+  width: 320px;
+  height: 320px;
   border-radius: 50%;
-  background: linear-gradient(#6b6e58, #1d2017);
-  box-shadow: 0 12px 8px #0006;
+  background: radial-gradient(circle, #fff0cf28, #d39c6710 12%, #a8513506 36%, transparent 65%);
+}
+.light-glint {
+  position: absolute;
+  left: -95px;
+  top: -1px;
+  width: 190px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #e3b98d1a 25%, #fff6e8b3 50%, #e3b98d1a 75%, transparent);
 }
 .smoke-canvas {
   position: absolute;
@@ -320,8 +330,8 @@ button {
 .smoke-fallback {
   position: absolute;
   inset: 25% 20% 0 0;
-  opacity: 0.5;
-  background: radial-gradient(ellipse at 35% 80%, #97362b20, transparent 60%);
+  opacity: 0.7;
+  background: radial-gradient(ellipse at 35% 80%, #97362b28, transparent 60%);
   pointer-events: none;
 }
 .light-wash {
@@ -487,7 +497,7 @@ h2 {
   color: var(--red);
   text-align: center;
   transform: rotate(-13deg);
-  background: #ece8dded;
+  background: #191719f5;
 }
 .challenge-stamp span {
   font-size: 10px;
@@ -550,11 +560,11 @@ h2 {
 .notebook-tabs button {
   position: relative;
   padding: 15px 24px;
-  border: 1px solid #b8baa2;
+  border: 1px solid var(--rule);
   border-bottom: 0;
   border-radius: 8px 8px 0 0;
-  background: #d8d9c3;
-  color: #4b503f;
+  background: #19191b;
+  color: var(--muted);
   font-size: 12px;
   min-height: 48px;
 }
@@ -577,13 +587,13 @@ h2 {
   min-height: 390px;
   position: relative;
   background-color: var(--white-paper);
-  background-image: repeating-linear-gradient(transparent 0 31px, #b6bec43f 31px 32px);
+  background-image: repeating-linear-gradient(transparent 0 31px, #8b81741c 31px 32px);
   box-shadow:
-    2px 4px 1px #d2d0bf,
-    2px 6px 1px #faf8ef,
-    3px 8px 1px #d2d0bf,
-    3px 20px 25px #25282112;
-  border: 1px solid #c7c5b6;
+    2px 4px 1px #141416,
+    2px 6px 1px #393331,
+    3px 8px 1px #141416,
+    3px 20px 25px #0004;
+  border: 1px solid var(--rule);
   padding: 50px 60px 45px 100px;
 }
 .notebook-page::before {
@@ -635,7 +645,7 @@ h2 {
   padding: 0;
   margin: 22px 0 25px;
   font-size: 11px;
-  color: #5a614b;
+  color: #b9ad96;
 }
 .subsystem-tags li::before {
   content: '+ ';
@@ -645,7 +655,7 @@ h2 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #777e64;
+  color: #b9ad96;
   transform: rotate(5deg);
 }
 .subsystem-doodle > span:first-child {
@@ -683,13 +693,13 @@ h2 {
   transform: rotate(6deg);
 }
 .lined-note {
-  background: #e1ddbd;
+  background: #302822;
   padding: 25px 30px;
   transform: rotate(2deg);
   box-shadow: 2px 5px 12px #25282110;
 }
 .lined-note .handwritten {
-  color: #747544;
+  color: #c7b08a;
   font-size: 24px;
 }
 .lined-note h3 {
@@ -776,7 +786,7 @@ h2 {
   gap: 28px;
   padding: 35px;
   margin-top: 50px;
-  background: #d5d8c7;
+  background: #262625;
   transform: rotate(-1deg);
 }
 .play-icon {
@@ -784,7 +794,7 @@ h2 {
   place-items: center;
   width: 65px;
   height: 65px;
-  border: 1px solid #777d66;
+  border: 1px solid #a69c88;
   border-radius: 50%;
   flex-shrink: 0;
 }
@@ -827,14 +837,16 @@ h2 {
 }
 .sponsor-logos a {
   width: 30%;
-  background: #fff;
+  background: #222123;
   padding: 15px;
-  border: 1px solid #c7c5b680;
+  border: 1px solid var(--rule);
 }
 .sponsor-logos img {
   width: 100%;
   height: 50px;
   object-fit: contain;
+  filter: grayscale(1) invert(1);
+  mix-blend-mode: screen;
 }
 .contact {
   display: grid;
@@ -865,7 +877,7 @@ h2 {
 }
 .address-note {
   padding: 40px;
-  background: #dedbc9;
+  background: #2b2523;
   transform: rotate(4deg);
   position: relative;
   font-style: normal;
@@ -1019,15 +1031,11 @@ h2 {
     font-size: 10px;
     justify-content: start;
   }
-  .workshop-lamp {
-    transform: scale(0.65) rotate(-12deg);
-    transform-origin: right center;
-    right: -6%;
-    top: 33%;
-  }
-  .light-beam {
-    right: 0;
-    width: 100%;
+  .light-halo {
+    left: -110px;
+    top: -110px;
+    width: 220px;
+    height: 220px;
   }
   .motion-toggle {
     bottom: 14px;
@@ -1101,7 +1109,7 @@ h2 {
     flex: 1 1 auto;
     padding: 12px 10px;
     font-size: 10px;
-    border: 1px solid #b8baa2;
+    border: 1px solid var(--rule);
     border-radius: 4px;
   }
   .notebook-page {

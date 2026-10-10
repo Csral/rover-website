@@ -65,9 +65,17 @@ export function initHome() {
         '<'
       )
       .fromTo('.hero-bottom', { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.65 }, '-=.5');
-    animations.push(retract, introTimeline);
+    const lightBreath = gsap.to('.light-halo', {
+      opacity: 0.58,
+      scale: 0.92,
+      duration: 3.7,
+      repeat: -1,
+      yoyo: true,
+      ease: 'sine.inOut',
+    });
+    animations.push(retract, introTimeline, lightBreath);
 
-    // The lamp flares into paper as native scrolling opens the scrapbook.
+    // The distant light disperses into the dark pages as the scrapbook opens.
     const scrollTimeline = gsap
       .timeline({
         scrollTrigger: {
@@ -80,9 +88,9 @@ export function initHome() {
         },
       })
       .to('.hero-content', { opacity: 0, y: -35, duration: 0.65, ease: 'none' }, 0)
-      .to('.light-beam', { scale: 2.5, opacity: 0.95, duration: 0.6, transformOrigin: 'right center', ease: 'none' }, 0)
+      .to('.light-beam', { scale: 1.8, opacity: 0.6, duration: 0.6, transformOrigin: 'right center', ease: 'none' }, 0)
       .to('.light-wash', { opacity: 1, duration: 0.7, ease: 'none' }, 0.22)
-      .to(['.workshop-lamp', '.smoke-canvas', '.motion-toggle'], { opacity: 0, duration: 0.3, ease: 'none' }, 0.5);
+      .to(['.light-source', '.smoke-canvas', '.motion-toggle'], { opacity: 0, duration: 0.3, ease: 'none' }, 0.5);
 
     const headerTween = gsap.to('.home-header', {
       opacity: 0,
