@@ -299,6 +299,7 @@ h2 {
 }
 .youtube-annotation-text {
   font-size: inherit;
+  margin-top: 16px;
   min-width: 0;
 }
 .paper-edge {
