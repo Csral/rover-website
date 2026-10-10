@@ -1,0 +1,35 @@
+---
+import { Euler, Vector3 } from 'three';
+import land from '~/data/globe-land.json';
+
+const tilt = new Euler(0.14, -0.28, -0.12);
+function project(lon: number, lat: number) {
+  const a = (lon * Math.PI) / 180,
+    b = (lat * Math.PI) / 180;
+  const p = new Vector3(Math.cos(b) * Math.sin(a), Math.sin(b), Math.cos(b) * Math.cos(a)).applyEuler(tilt);
+  return { x: p.x.toFixed(3), y: (-p.y).toFixed(3), visible: p.z > 0 };
+}
+let dots = '';
+for (let i = 0; i < land.coordinates.length; i += 2) {
+  const p = project(land.coordinates[i] / land.coordinateScale, land.coordinates[i + 1] / land.coordinateScale);
+  if (p.visible) dots += `M${p.x},${p.y}h.001`;
+}
+let grid = '';
+function segment(lonA: number, latA: number, lonB: number, latB: number) {
+  const a = project(lonA, latA),
+    b = project(lonB, latB);
+  if (a.visible && b.visible) grid += `M${a.x},${a.y}L${b.x},${b.y}`;
+}
+for (let lon = -180; lon < 180; lon += 20) {
+  for (let lat = -90; lat < 90; lat += 4) segment(lon, lat, lon, lat + 4);
+}
+for (let lat = -75; lat <= 75; lat += 15) {
+  for (let lon = -180; lon < 180; lon += 4) segment(lon, lat, lon + 4, lat);
+}
+---
+
+<svg class="globe-fallback" viewBox="-1.04 -1.04 2.08 2.08" aria-hidden="true">
+  <circle r="1" fill="#050607" stroke="#edc78e" stroke-width=".003" opacity=".75"></circle>
+  <path d={grid} fill="none" stroke="#edc78e" stroke-width=".004" opacity=".40"></path>
+  <path d={dots} fill="none" stroke="#ffdfa9" stroke-width=".009" stroke-linecap="round"></path>
+</svg>

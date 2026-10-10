@@ -367,17 +367,17 @@ html[data-scrapbook] .post-print img {
   margin-bottom: 0;
   border-radius: 0;
 }
-html[data-scrapbook] .team-page {
+html[data-scrapbook] .scrap-page .team-page {
   background: transparent;
   font-family: 'DM Sans', sans-serif;
 }
-html[data-scrapbook] .team-page .team-header-text h1 {
+html[data-scrapbook] .scrap-page .team-page .team-header-text h1 {
   font:
     600 clamp(52px, 6vw, 88px)/1 'Barlow Condensed',
     sans-serif;
   color: #e6e0d5;
 }
-html[data-scrapbook] .team-page .tagline {
+html[data-scrapbook] .scrap-page .team-page .tagline {
   font:
     500 29px/1.2 'Caveat',
     cursive;
@@ -385,42 +385,43 @@ html[data-scrapbook] .team-page .tagline {
   text-transform: none;
   letter-spacing: 0;
 }
-html[data-scrapbook] .team-page .subtitle {
+html[data-scrapbook] .scrap-page .team-page .subtitle {
   color: #a9a39b;
 }
-html[data-scrapbook] .team-page .view-toggle {
+html[data-scrapbook] .scrap-page .team-page .view-toggle {
   background: #222123;
   border: 1px solid #756b5d60;
   border-radius: 2px;
 }
-html[data-scrapbook] .team-page .toggle-btn {
+html[data-scrapbook] .scrap-page .team-page .toggle-btn {
   color: #a9a39b;
   border-radius: 1px;
 }
-html[data-scrapbook] .team-page .toggle-btn.active {
+html[data-scrapbook] .scrap-page .team-page .toggle-btn.active {
   background: #b39a61;
   color: #211d16;
   box-shadow: none;
 }
-html[data-scrapbook] .team-page .pcard {
+html[data-scrapbook] .scrap-page .team-page .pcard {
+  position: relative;
   background: #222123 !important;
   border-radius: 1px;
   box-shadow: 3px 5px 0 #0003;
 }
-html[data-scrapbook] .team-page .pcard-name {
+html[data-scrapbook] .scrap-page .team-page .pcard-name {
   color: #e6e0d5;
 }
-html[data-scrapbook] .team-page .pcard-role {
+html[data-scrapbook] .scrap-page .team-page .pcard-role {
   color: #b8b0a3;
 }
-html[data-scrapbook] .team-page .pcard-sub {
+html[data-scrapbook] .scrap-page .team-page .pcard-sub {
   color: #a9a39b;
 }
-html[data-scrapbook] .team-page .grid-pcard .pcard-avatar {
+html[data-scrapbook] .scrap-page .team-page .grid-pcard .pcard-avatar {
   border-radius: 1px;
   border-color: #756b5d;
 }
-html[data-scrapbook] .team-page .grid-pcard::before {
+html[data-scrapbook] .scrap-page .team-page .grid-pcard::before {
   content: '';
   position: absolute;
   top: -7px;
@@ -431,51 +432,51 @@ html[data-scrapbook] .team-page .grid-pcard::before {
   transform: rotate(-4deg);
   z-index: 2;
 }
-html[data-scrapbook] .team-page .compact-mode .grid-pcard::before {
+html[data-scrapbook] .scrap-page .team-page .compact-mode .grid-pcard::before {
   content: none;
 }
-html[data-scrapbook] .team-page .section-title {
+html[data-scrapbook] .scrap-page .team-page .section-title {
   font:
     500 33px/1.2 'Caveat',
     cursive;
   border-color: #756b5d60;
   color: #c7ba98;
 }
-html[data-scrapbook] .team-page .org-canvas {
+html[data-scrapbook] .scrap-page .team-page .org-canvas {
   border-color: #756b5d50;
   background-color: #141416;
 }
-html[data-scrapbook] .team-page .org-chart-bg {
+html[data-scrapbook] .scrap-page .team-page .org-chart-bg {
   background-image: radial-gradient(#b0a17b22 1px, transparent 1px);
   background-size: 20px 20px;
 }
-html[data-scrapbook] .team-page .modal-backdrop {
+html[data-scrapbook] .scrap-page .team-page .modal-backdrop {
   z-index: 100;
   background: #000b;
 }
-html[data-scrapbook] .team-page .modal-content {
+html[data-scrapbook] .scrap-page .team-page .modal-content {
   background: #222123;
   border-color: #756b5d;
   border-radius: 2px;
 }
-html[data-scrapbook] .team-page .modal-close {
+html[data-scrapbook] .scrap-page .team-page .modal-close {
   background: #222123;
   color: #e6e0d5;
 }
-html[data-scrapbook] .team-page #modal-role {
+html[data-scrapbook] .scrap-page .team-page #modal-role {
   color: #e18a73;
 }
-html[data-scrapbook] .team-page .modal-sub-badge {
+html[data-scrapbook] .scrap-page .team-page .modal-sub-badge {
   background: #3b352d;
   color: #c7ba98;
 }
-html[data-scrapbook] .team-page .field-value {
+html[data-scrapbook] .scrap-page .team-page .field-value {
   color: #d7d1c6;
 }
-html[data-scrapbook] .team-page .modal-divider {
+html[data-scrapbook] .scrap-page .team-page .modal-divider {
   background: #756b5d50;
 }
-html[data-scrapbook] .team-page .social-btn {
+html[data-scrapbook] .scrap-page .team-page .social-btn {
   background: #29272a;
   border-color: #756b5d60;
   color: #c7ba98;

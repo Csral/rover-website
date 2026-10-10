@@ -1,0 +1,48 @@
+---
+import GlobeFallback from './GlobeFallback.astro';
+import ink from '~/data/hero-ink.json';
+---
+
+<div class="hero-type">
+  <h1 class="kinetic-title" aria-label="Team Odyssey">
+    <span class="team-word" aria-hidden="true">
+      <span class="hero-letter letter-t">T</span><span class="orbit-pair"
+        ><span class="hero-letter letter-e">e</span><span class="hero-letter letter-a">a</span></span
+      ><span class="hero-letter letter-m">m</span>
+    </span>
+    <span class="odyssey-word" aria-hidden="true">
+      <span class="earth-letter hero-letter"><span class="earth-fallback"><GlobeFallback /></span></span><span
+        class="hero-letter letter-d">d</span
+      ><span class="hero-letter letter-y-first">
+        <span class="y-fill">y</span>
+        <svg class="y-drawing" viewBox="0 0 60 100" aria-hidden="true">
+          <path class="y-arm" d="M8 25 28 68"></path><path class="y-stem" d="M50 25 28 77Q23 87 9 87"></path>
+        </svg>
+      </span><span class="hero-letter letter-s-first">s</span><span class="hero-letter letter-s-second">s</span><span
+        class="hero-letter letter-e-last">e</span
+      ><span class="hero-letter letter-y-last">
+        <span class="y-reel"><span>y</span><span aria-hidden="true">y</span><span aria-hidden="true">y</span></span>
+      </span>
+    </span>
+  </h1>
+  <div class="title-sweep" aria-hidden="true"></div>
+</div>
+<div class="hero-annotation">
+  <span class="typed-note handwritten" aria-label="that's us">that's us</span>
+  <svg class="rotating-arrow" viewBox="0 0 240 180" aria-hidden="true">
+    <path class="arrow-line" d="M210 130C166 132 91 80 38 25"></path>
+    <path class="arrow-head" d="M55 28 38 25 41 43"></path>
+  </svg>
+  <svg class="return-arrow" viewBox="0 0 240 180" aria-hidden="true">
+    <path class="return-line" d="M210 130C161 131 89 78 38 25"></path>
+    <path class="return-head" d="M55 28 38 25 41 43"></path>
+  </svg>
+</div>
+<a class="hero-sticky" href="#about" aria-label="Scroll to the scrapbook">
+  <span class="tape" aria-hidden="true"></span><span class="handwritten">Scroll away</span>
+</a>
+<div class="hero-apology">
+  <svg class="pen-note" viewBox={`0 0 ${ink.width} ${ink.height}`} role="img" aria-label={ink.text}>
+    {ink.paths.map((d) => <path d={d} />)}
+  </svg>
+</div>

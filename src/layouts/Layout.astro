@@ -1,5 +1,12 @@
 ---
 import '~/assets/styles/tailwind.css';
+import '@fontsource/barlow-condensed/600.css';
+import '@fontsource/barlow-condensed/700.css';
+import '@fontsource/dm-sans/400.css';
+import '@fontsource/dm-sans/500.css';
+import '@fontsource/dm-sans/700.css';
+import '@fontsource/caveat/500.css';
+import '~/assets/styles/scrapbook.css';
 
 import { I18N } from 'astrowind:config';
 
@@ -27,7 +34,7 @@ const { language, textDirection } = I18N;
 ---
 
 <!doctype html>
-<html lang={language} dir={textDirection} class="2xl:text-[20px] scroll-smooth">
+<html lang={language} dir={textDirection} class="dark scroll-smooth" data-scrapbook>
   <head>
     <CommonMeta />
     <Favicons />
@@ -42,6 +49,7 @@ const { language, textDirection } = I18N;
   </head>
 
   <body class="antialiased text-default bg-page tracking-tight">
+    <a class="scrap-skip" href="#page-content">Skip to content</a>
     <slot />
 
     <ScrollIndicator />

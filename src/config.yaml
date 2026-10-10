@@ -9,7 +9,7 @@ metadata:
   title:
     default: 'Team Odyssey'
     template: '%s — Team Odyssey'
-  description: "The official website for the Rover team at Amrita Bengaluru"
+  description: 'The official website for the Rover team at Amrita Bengaluru'
   robots:
     index: true
     follow: true
@@ -63,4 +63,4 @@ analytics:
       id: null # or "G-XXXXXXXXXX"
 
 ui:
-  theme: 'system' # Values: "system" | "light" | "dark" | "light:only" | "dark:only"
+  theme: 'dark:only' # The scrapbook uses dark paper throughout.

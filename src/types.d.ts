@@ -133,6 +133,8 @@ export interface Stat {
 }
 
 export interface Item {
+  href?: string;
+  target?: string;
   title?: string;
   name?: string;
   devHandle?: string;
