@@ -1,0 +1,56 @@
+---
+import { Image } from 'astro:assets';
+import { initials, avatarGradient, photoPosition, type MemberProfile } from '~/utils/team-directory';
+
+interface Props {
+  member: MemberProfile;
+  color: string;
+  class?: string;
+  subdivision?: string;
+  showSubdivision?: boolean;
+  strength?: number;
+}
+
+const {
+  member,
+  color,
+  class: className,
+  subdivision = member.subdivision,
+  showSubdivision = false,
+  strength = 65,
+} = Astro.props;
+const gradient = avatarGradient(color, strength);
+---
+
+<button
+  type="button"
+  class:list={['pcard interactive-card', className]}
+  style={`--accent:${color}`}
+  data-member-id={member.id}
+  data-subdivision={subdivision}
+  data-avatar-gradient={gradient}
+  aria-label={`Details for ${member.name}`}
+  aria-haspopup="dialog"
+>
+  <span class="pcard-info">
+    <span class="pcard-name">{member.name}</span>
+    <span class="pcard-role">{member.role}</span>
+    {showSubdivision && subdivision && <span class="pcard-sub">{subdivision}</span>}
+  </span>
+  <span class="pcard-avatar" style={!member.photoResolved ? `background:${gradient}` : undefined}>
+    {
+      member.photoResolved ? (
+        <Image
+          class="pcard-avatar-image"
+          src={member.photoResolved}
+          alt=""
+          width={320}
+          loading="lazy"
+          style={`object-position:${photoPosition(member)}`}
+        />
+      ) : (
+        initials(member.name)
+      )
+    }
+  </span>
+</button>

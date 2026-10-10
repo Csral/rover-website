@@ -1,0 +1,151 @@
+---
+import { Icon } from 'astro-icon/components';
+import MemberCard from './MemberCard.astro';
+import { teamColors, type TeamDirectory } from '~/utils/team-directory';
+interface Props {
+  directory: TeamDirectory;
+}
+const {
+  directory: { mentors, technicalLead, administrativeLead, teams, legacyGroups },
+} = Astro.props;
+const views = [
+  { mode: 'org', label: 'Org Chart', icon: 'tabler:hierarchy' },
+  { mode: 'grid', label: 'Grid', icon: 'tabler:layout-grid' },
+  { mode: 'compact', label: 'Compact', icon: 'tabler:list' },
+];
+---
+
+<div id="team-legacy" hidden>
+  <div class="view-toggle" role="group" aria-label="View mode">
+    {
+      views.map(({ mode, label, icon }) => (
+        <button
+          type="button"
+          id={`btn-${mode}`}
+          data-legacy-view={mode}
+          class:list={['toggle-btn', { active: mode === 'grid' }]}
+          aria-pressed={mode === 'grid'}
+        >
+          <Icon name={icon} width={15} height={15} />
+          {label}
+        </button>
+      ))
+    }
+  </div>
+  <div id="view-org" class="view-pane org-wrap" hidden>
+    {
+      mentors.length > 0 && (
+        <div class="mentor-corner">
+          <p class="mentor-label">Faculty Mentors</p>
+          <div class="mentor-stack">
+            {mentors.map((member) => (
+              <MemberCard member={member} color={teamColors.mentors} class="mentor-card" />
+            ))}
+          </div>
+        </div>
+      )
+    }
+    <div
+      class="org-canvas org-chart-bg"
+      tabindex="0"
+      role="region"
+      aria-label="Team organisation chart, scroll horizontally to see every team"
+    >
+      <div class="org-tree-wrapper">
+        <div class="org-root-row">
+          {
+            technicalLead && (
+              <div class="root-node-container">
+                <MemberCard member={technicalLead} color={teamColors.leadership} class="root-card leadership-card" />
+                {administrativeLead && (
+                  <div class="staff-node">
+                    <div class="staff-connector-h" aria-hidden="true" />
+                    <MemberCard
+                      member={administrativeLead}
+                      color={teamColors.leadership}
+                      class="staff-card leadership-card"
+                    />
+                  </div>
+                )}
+              </div>
+            )
+          }
+        </div>
+        <div class="main-trunk-line" aria-hidden="true"></div>
+        <div class="org-branches-row">
+          {
+            teams
+              .filter((team) => team.lead)
+              .map((team) => (
+                <div class="org-branch-col">
+                  <div class="branch-connector-v" aria-hidden="true" />
+                  <MemberCard
+                    member={team.lead!}
+                    color={team.color}
+                    class="branch-lead-card"
+                    subdivision={team.label}
+                    showSubdivision
+                  />
+                  {(team.managers.length > 0 || team.roster.length > 0) && (
+                    <div class="subordinates-list" style={`--accent-color:${team.color}`}>
+                      {team.managers.map((member) => (
+                        <div class="subordinate-item">
+                          <MemberCard
+                            member={member}
+                            color={team.color}
+                            class="pm-card pm-highlight"
+                            subdivision={team.label}
+                            strength={50}
+                          />
+                        </div>
+                      ))}
+                      {team.roster
+                        .filter((member) => member.role === 'Member')
+                        .map((member) => (
+                          <div class="subordinate-item">
+                            <MemberCard
+                              member={member}
+                              color={team.color}
+                              class="mem-card"
+                              subdivision={team.label}
+                              strength={35}
+                            />
+                          </div>
+                        ))}
+                    </div>
+                  )}
+                </div>
+              ))
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="view-grid" class="view-pane">
+    {
+      legacyGroups.map((group) => (
+        <section class="grid-section">
+          <h2 class="section-title" style={`border-bottom-color:${group.color}33`}>
+            {group.id !== 'mentors' && group.id !== 'leadership' && (
+              <span class="section-dot" style={`background:${group.color}`} />
+            )}
+            {group.label}
+          </h2>
+          <div class="member-grid">
+            {group.members.map((member) => (
+              <MemberCard
+                member={member}
+                color={group.color}
+                class="grid-pcard"
+                subdivision={
+                  group.id === 'mentors' ? undefined : group.id === 'leadership' ? member.subdivision : group.label
+                }
+                showSubdivision={group.id === 'leadership'}
+              />
+            ))}
+          </div>
+        </section>
+      ))
+    }
+  </div>
+</div>

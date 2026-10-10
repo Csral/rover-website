@@ -1,5 +1,39 @@
 ---
-import TeamPage from './team.astro';
+import Layout from '~/layouts/PageLayout.astro';
+import TeamJournal from '~/components/scrapbook/TeamJournal.astro';
+import StitchedViewButton from '~/components/scrapbook/StitchedViewButton.astro';
+import LegacyTeamViews from '~/components/team/LegacyTeamViews.astro';
+import MemberDialog from '~/components/team/MemberDialog.astro';
+import { getTeamDirectory } from '~/utils/team-directory';
+import '~/assets/styles/team.css';
+
+const metadata = {
+  title: 'Our Team',
+  description: 'Meet Team Odyssey, the students and mentors building Skanda at Amrita Bengaluru.',
+};
+const directory = await getTeamDirectory();
+const profilesJson = JSON.stringify(directory.profiles).replace(/</g, '\\u003c');
 ---
 
-<TeamPage />
+<Layout metadata={metadata}>
+  <div class="team-page" data-team-page>
+    <header class="team-header">
+      <div class="team-header-text">
+        <p class="tagline">Our People</p>
+        <h1>Meet Team Odyssey</h1>
+        <p class="subtitle">The students and mentors behind Skanda.</p>
+      </div>
+      <StitchedViewButton />
+    </header>
+    <TeamJournal groups={directory.journalGroups} />
+    <LegacyTeamViews directory={directory} />
+    <MemberDialog />
+    <script id="team-profiles" type="application/json" is:inline set:html={profilesJson} />
+  </div>
+</Layout>
+
+<script>
+  import { initTeam } from '~/scripts/team';
+  initTeam();
+  document.addEventListener('astro:page-load', initTeam);
+</script>

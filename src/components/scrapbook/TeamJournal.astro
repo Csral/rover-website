@@ -1,14 +1,9 @@
 ---
 import { Image } from 'astro:assets';
-import type { TeamMember } from '~/data/teams';
+import type { TeamGroup } from '~/utils/team-directory';
 
 export interface Props {
-  groups: {
-    id: string;
-    label: string;
-    color: string;
-    members: (TeamMember & { photoResolved?: ImageMetadata })[];
-  }[];
+  groups: TeamGroup[];
 }
 
 const { groups } = Astro.props;
