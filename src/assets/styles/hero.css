@@ -7,8 +7,8 @@
 }
 .intro-stage {
   position: relative;
-  height: 100svh;
-  min-height: 700px;
+  height: calc(100svh - var(--home-nav-height));
+  min-height: 0;
   overflow: hidden;
   border: 0;
   border-radius: 0;
@@ -38,7 +38,7 @@
   position: absolute;
   left: 14%;
   right: 8%;
-  top: 23%;
+  top: calc(23svh - var(--home-nav-height));
   display: block;
   z-index: 3;
   perspective: none;
@@ -167,7 +167,7 @@
 .typed-note {
   position: absolute;
   left: 248px;
-  top: 122px;
+  top: 102px;
   width: 210px;
   font-size: 33px;
   white-space: nowrap;
@@ -298,9 +298,6 @@
   display: block;
 }
 @media (max-width: 700px) {
-  .intro-stage {
-    min-height: 760px;
-  }
   .cover-label {
     top: 30px;
     font-size: 8px;
@@ -311,7 +308,7 @@
   .hero-type {
     left: 7%;
     right: 4%;
-    top: 27%;
+    top: calc(27svh - var(--home-nav-height));
   }
   .kinetic-title {
     font-size: clamp(53px, 12vw, 84px);
@@ -327,7 +324,7 @@
   }
   .typed-note {
     left: 160px;
-    top: 78px;
+    top: 64px;
     width: 145px;
     font-size: 25px;
   }

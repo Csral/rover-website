@@ -1,5 +1,6 @@
 :root {
   color-scheme: dark;
+  --home-nav-height: 72px;
   --ink: #e6e0d5;
   --red: #e18a73;
   --muted: #a9a39b;
@@ -70,10 +71,12 @@ button {
   position: relative;
   z-index: 10;
   width: 100%;
+  height: var(--home-nav-height);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 26px 5.5%;
+  padding: 0 5.5%;
+  background: var(--paper);
   color: #ece8dd;
 }
 .wordmark {
@@ -280,21 +283,23 @@ h2 {
   stroke-width: 2;
 }
 .youtube-annotation {
-  position: relative;
-  bottom: -60px;
-  left: 45px;
-
   display: flex;
-  align-items: flex-end;
-  gap: 15px;
-
+  align-items: center;
+  gap: 18px;
+  margin: 22px 0 0 32px;
+  max-width: calc(100% - 32px);
   width: fit-content;
-
   color: var(--red);
-  font-size: 22px;
+  font-size: clamp(22px, 2vw, 30px);
+  line-height: 1.2;
+}
+.youtube-annotation > svg.scribble-arrow {
+  flex: 0 0 84px;
+  width: 84px;
 }
 .youtube-annotation-text {
-  margin-bottom: 2px;
+  font-size: inherit;
+  min-width: 0;
 }
 .paper-edge {
   position: absolute;
@@ -744,8 +749,11 @@ h2 {
   html {
     scroll-padding-top: 25px;
   }
+  :root {
+    --home-nav-height: 64px;
+  }
   .home-header {
-    padding: 20px 6%;
+    padding: 0 6%;
   }
   .wordmark {
     font-size: 25px;
@@ -810,9 +818,14 @@ h2 {
     font-size: 22px;
   }
   .youtube-annotation {
-    position: relative;
-    bottom: -65px;
-    font-size: 22px;
+    margin: 18px 0 0;
+    max-width: 100%;
+    gap: 10px;
+    font-size: 24px;
+  }
+  .youtube-annotation > svg.scribble-arrow {
+    flex-basis: 54px;
+    width: 54px;
   }
   .section-heading {
     align-items: start;
@@ -971,6 +984,25 @@ h2 {
     gap: 18px;
     flex-wrap: wrap;
     width: 100%;
+  }
+}
+@media (max-width: 380px) {
+  .home-header nav {
+    gap: 10px;
+  }
+  .home-header .nav-contact {
+    border: 0;
+    padding: 8px 0;
+  }
+  .nav-contact span {
+    display: none;
+  }
+  .youtube-annotation {
+    font-size: 22px;
+  }
+  .youtube-annotation > svg.scribble-arrow {
+    flex-basis: 42px;
+    width: 42px;
   }
 }
 @media (prefers-reduced-motion: reduce) {

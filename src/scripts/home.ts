@@ -201,8 +201,8 @@ export function initHome() {
             4.45
           )
           .to(q('.title-sweep'), { opacity: 0, duration: 0.15 }, 5.45)
-          .to(q('.rotating-arrow .arrow-line'), { drawSVG: '0% 100%', duration: 0.65 }, 5.6)
-          .to(q('.rotating-arrow .arrow-head'), { drawSVG: '0% 100%', duration: 0.25 }, 6.12)
+          .to(q('.rotating-arrow .arrow-line'), { drawSVG: '0% 100% live', duration: 0.65 }, 5.6)
+          .to(q('.rotating-arrow .arrow-head'), { drawSVG: '0% 100% live', duration: 0.25 }, 6.12)
           .set(note, { autoAlpha: 1 }, 5.85)
           .to(
             typing,
@@ -291,8 +291,9 @@ export function initHome() {
             },
             8.7
           )
-          .to(q('.return-arrow .return-line'), { drawSVG: '0% 100%', duration: 0.85, ease: 'none' }, 8.7)
-          .to(q('.return-arrow .return-head'), { drawSVG: '0% 100%', duration: 0.25, ease: 'none' }, 9.5);
+          .to(q('.return-arrow .return-line'), { drawSVG: '0% 100% live', duration: 0.85, ease: 'none' }, 8.7)
+          .to(q('.return-arrow .return-head'), { drawSVG: '0% 100% live', duration: 0.25, ease: 'none' }, 9.5)
+          .set(arrowPaths, { clearProps: 'strokeDasharray,strokeDashoffset' }, 9.75);
         inkPaths.forEach((path, index) => {
           const at = 8.7 + index * 0.055;
           sequence!

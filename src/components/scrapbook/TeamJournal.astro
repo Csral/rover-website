@@ -55,9 +55,6 @@ let noteNumber = 0;
             return (
               <article class:list={['journal-person', { 'note-right': number % 2 === 0 }]}>
                 <div class="portrait-note" style={`--note-turn: ${number % 2 === 0 ? '3deg' : '-3deg'}`}>
-                  <span class="note-number" aria-hidden="true">
-                    No. {String(number).padStart(2, '0')}
-                  </span>
                   {member.photoResolved ? (
                     <Image
                       src={member.photoResolved}
@@ -203,12 +200,6 @@ let noteNumber = 0;
   .journal-person:hover .portrait-note {
     transform: rotate(0);
   }
-  .note-number {
-    display: block;
-    font-family: 'Caveat', cursive;
-    font-size: 18px;
-    padding: 0 0 6px;
-  }
   .journal-portrait {
     width: 152px;
     height: 138px;
@@ -314,9 +305,6 @@ let noteNumber = 0;
     .portrait-initials {
       height: 80px;
       font-size: 38px;
-    }
-    .note-number {
-      font-size: 14px;
     }
     .note-signature {
       font-size: 19px;

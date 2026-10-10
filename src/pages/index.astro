@@ -23,10 +23,15 @@ const milestones = [
 
 <Layout>
   <main>
+    <header class="home-header">
+      <a class="wordmark" href="/" aria-label="Team Odyssey home">odyssey<span class="wordmark-dot">.</span></a>
+      <nav aria-label="Main navigation">
+        <a href="#about">The rover</a><a href="/teams">The team</a><a href="/blog">Field notes</a>
+        <a class="nav-contact" href="#contact">Say hello <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
     <section class="intro" aria-label="Introducing Team Odyssey">
       <div class="intro-stage">
-        <div class="cover-label">Hello there</div>
-        <div class="smoke-fallback" aria-hidden="true"></div>
         <HeroTitle />
         <!-- <button
           class="motion-toggle"
@@ -44,13 +49,6 @@ const milestones = [
       </div>
     </section>
     <div class="scrapbook">
-      <header class="home-header">
-        <a class="wordmark" href="/" aria-label="Team Odyssey home">odyssey<span class="wordmark-dot">.</span></a>
-        <nav aria-label="Main navigation">
-          <a href="#about">The rover</a><a href="/teams">The team</a><a href="/blog">Field notes</a>
-          <a class="nav-contact" href="#contact">Say hello <span aria-hidden="true">↗</span></a>
-        </nav>
-      </header>
       <section id="about" class="about spread" aria-labelledby="about-title">
         <div class="spread-top"><span>Team Odyssey</span><span>Bengaluru, India</span></div>
         <div class="about-copy">
