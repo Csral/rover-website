@@ -148,15 +148,6 @@
   display: block;
   height: 1.15em;
 }
-.title-sweep {
-  position: absolute;
-  inset: -20% auto -10% -30%;
-  width: 4%;
-  transform: rotate(45deg);
-  background: linear-gradient(90deg, transparent, #ffd58916, transparent);
-  pointer-events: none;
-  opacity: 0;
-}
 .hero-annotation {
   position: absolute;
   z-index: 4;

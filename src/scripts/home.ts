@@ -91,7 +91,7 @@ export function initHome() {
           orbitX = (e.offsetLeft + e.offsetWidth / 2 + a.offsetLeft + a.offsetWidth / 2) / 2;
           eRadius = orbitX - e.offsetLeft - e.offsetWidth / 2;
           aRadius = a.offsetLeft + a.offsetWidth / 2 - orbitX;
-          if (!animated || (sequence && sequence.time() >= 8.4)) settleArrow();
+          if (!animated || (sequence && sequence.time() >= sequence.labels.annotations + 2.8)) settleArrow();
         });
         resize.observe(stage!);
         if (!animated) {
@@ -118,7 +118,6 @@ export function initHome() {
           .set(q('.y-drawing'), { opacity: 1 })
           .set(q('.y-fill'), { opacity: 0 })
           .set(q('.y-reel'), { yPercent: 0 })
-          .set(q('.title-sweep'), { opacity: 0, xPercent: 0 })
           .set(q('.hero-sticky .tape'), { scaleX: 0 })
           .set(team, { x: () => e.offsetWidth + a.offsetWidth })
           .to(team, { x: 0, duration: 1.2, ease: 'power2.inOut' }, 0.25)
@@ -170,40 +169,12 @@ export function initHome() {
           )
           .to(s1, { scaleX: 1, rotation: 0, duration: 0.5, ease: 'back.out(1.4)' }, 3.77);
 
-        // A shared x+y coordinate orders the illumination along a 45-degree wavefront.
-        const bounds = q('.kinetic-title').getBoundingClientRect();
-        const diagonal = letters.map((letter) => {
-          const r = letter.getBoundingClientRect();
-          return { letter, distance: r.left - bounds.left + r.width / 2 + r.top - bounds.top + r.height / 2 };
-        });
-        const min = Math.min(...diagonal.map(({ distance }) => distance));
-        const range = Math.max(...diagonal.map(({ distance }) => distance)) - min || 1;
-        diagonal.forEach(({ letter, distance }) => {
-          const at = 4.45 + ((distance - min) / range) * 0.9;
-          if (letter.classList.contains('earth-letter') && scene) {
-            sequence!
-              .to(scene.atmosphere, { lightLevel: 1.8, duration: 0.09 }, at)
-              .to(scene.atmosphere, { lightLevel: 0.9, duration: 0.09 }, at + 0.09)
-              .to(scene.atmosphere, { lightLevel: 1.7, duration: 0.09 }, at + 0.18)
-              .to(scene.atmosphere, { lightLevel: 1.1, duration: 0.3 }, at + 0.27);
-          }
-          sequence!
-            .to(letter, { color: '#fff8de', duration: 0.09 }, at)
-            .to(letter, { color: '#b2a88e', duration: 0.09 }, at + 0.09)
-            .to(letter, { color: '#fff0c5', duration: 0.09 }, at + 0.18)
-            .to(letter, { color: '#dfd3b8', duration: 0.3 }, at + 0.27);
-        });
+        // Start the notes as soon as the last letter settles.
+        sequence.addLabel('annotations');
         sequence
-          .fromTo(
-            q('.title-sweep'),
-            { x: 0, opacity: 0 },
-            { x: () => bounds.width * 1.4, opacity: 1, duration: 1.1, ease: 'none' },
-            4.45
-          )
-          .to(q('.title-sweep'), { opacity: 0, duration: 0.15 }, 5.45)
-          .to(q('.rotating-arrow .arrow-line'), { drawSVG: '0% 100% live', duration: 0.65 }, 5.6)
-          .to(q('.rotating-arrow .arrow-head'), { drawSVG: '0% 100% live', duration: 0.25 }, 6.12)
-          .set(note, { autoAlpha: 1 }, 5.85)
+          .to(q('.rotating-arrow .arrow-line'), { drawSVG: '0% 100% live', duration: 0.65 }, 'annotations')
+          .to(q('.rotating-arrow .arrow-head'), { drawSVG: '0% 100% live', duration: 0.25 }, 'annotations+=0.52')
+          .set(note, { autoAlpha: 1 }, 'annotations+=0.1')
           .to(
             typing,
             {
@@ -214,7 +185,7 @@ export function initHome() {
                 note.textContent = firstNote.slice(0, Math.round(typing.count));
               },
             },
-            5.85
+            'annotations+=0.1'
           )
           // The stroke buckles first, then gravity pulls its tail and swings its tip down.
           .to(
@@ -224,7 +195,7 @@ export function initHome() {
               duration: 0.24,
               ease: 'power1.inOut',
             },
-            7.25
+            'annotations+=1.65'
           )
           .to(
             q('.rotating-arrow .arrow-head'),
@@ -233,9 +204,9 @@ export function initHome() {
               duration: 0.24,
               ease: 'power1.inOut',
             },
-            7.25
+            'annotations+=1.65'
           )
-          .to(q('.rotating-arrow'), { rotation: 8, y: 7, duration: 0.24, ease: 'power1.in' }, 7.25)
+          .to(q('.rotating-arrow'), { rotation: 8, y: 7, duration: 0.24, ease: 'power1.in' }, 'annotations+=1.65')
           .to(
             q('.rotating-arrow'),
             {
@@ -245,7 +216,7 @@ export function initHome() {
               duration: 0.66,
               ease: 'power2.in',
             },
-            7.49
+            'annotations+=1.89'
           )
           .to(
             q('.rotating-arrow .arrow-line'),
@@ -254,7 +225,7 @@ export function initHome() {
               duration: 0.58,
               ease: 'power2.inOut',
             },
-            7.49
+            'annotations+=1.89'
           )
           .to(
             q('.rotating-arrow .arrow-head'),
@@ -263,7 +234,7 @@ export function initHome() {
               duration: 0.58,
               ease: 'power2.inOut',
             },
-            7.49
+            'annotations+=1.89'
           )
           .to(
             q('.rotating-arrow'),
@@ -274,11 +245,11 @@ export function initHome() {
               duration: 0.24,
               ease: 'power2.out',
             },
-            8.15
+            'annotations+=2.55'
           )
-          .to(q('.hero-sticky'), { autoAlpha: 1, duration: 0.2 }, 8.42)
-          .set(q('.hero-sticky .tape'), { scaleX: 1 }, 8.42)
-          .set(typing, { count: 0 }, 8.7)
+          .to(q('.hero-sticky'), { autoAlpha: 1, duration: 0.2 }, 'annotations+=2.82')
+          .set(q('.hero-sticky .tape'), { scaleX: 1 }, 'annotations+=2.82')
+          .set(typing, { count: 0 }, 'annotations+=3.1')
           .to(
             typing,
             {
@@ -289,13 +260,21 @@ export function initHome() {
                 note.textContent = finalNote.slice(0, Math.round(typing.count));
               },
             },
-            8.7
+            'annotations+=3.1'
           )
-          .to(q('.return-arrow .return-line'), { drawSVG: '0% 100% live', duration: 0.85, ease: 'none' }, 8.7)
-          .to(q('.return-arrow .return-head'), { drawSVG: '0% 100% live', duration: 0.25, ease: 'none' }, 9.5)
-          .set(arrowPaths, { clearProps: 'strokeDasharray,strokeDashoffset' }, 9.75);
+          .to(
+            q('.return-arrow .return-line'),
+            { drawSVG: '0% 100% live', duration: 0.85, ease: 'none' },
+            'annotations+=3.1'
+          )
+          .to(
+            q('.return-arrow .return-head'),
+            { drawSVG: '0% 100% live', duration: 0.25, ease: 'none' },
+            'annotations+=3.9'
+          )
+          .set(arrowPaths, { clearProps: 'strokeDasharray,strokeDashoffset' }, 'annotations+=4.15');
         inkPaths.forEach((path, index) => {
-          const at = 8.7 + index * 0.055;
+          const at = sequence!.labels.annotations + 3.1 + index * 0.055;
           sequence!
             .to(path, { drawSVG: '0% 100%', duration: 0.2, ease: 'none' }, at)
             .to(path, { fillOpacity: 1, duration: 0.1 }, at + 0.1);
