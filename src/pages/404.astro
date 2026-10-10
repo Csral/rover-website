@@ -1,27 +1,21 @@
 ---
-import Layout from "~/layouts/PageLayout.astro";
+import Layout from '~/layouts/PageLayout.astro';
 
 const metadata = {
-  title: "404 — Page Not Found",
+  title: 'Page not found',
+  robots: { index: false },
 };
 ---
 
 <Layout metadata={metadata}>
-
-  <section class="flex flex-col items-center justify-center min-h-[70vh] gap-6 px-6 text-center">
-
-    <h1 class="text-8xl font-bold text-primary">404</h1>
-
-    <p class="text-2xl font-semibold">Page not found.</p>
-
-    <p class="text-lg text-muted dark:text-slate-400 max-w-md">
-      This page doesn't exist or was moved.
-    </p>
-
-    <a href="/" class="text-primary underline hover:opacity-80 transition-opacity">
-      Back to home
-    </a>
-
+  <section class="missing-page" aria-labelledby="missing-title">
+    <div class="missing-note">
+      <span class="tape" aria-hidden="true"></span>
+      <p class="pencil-note">A page out of place.</p>
+      <span class="missing-number" aria-hidden="true">404</span>
+      <h1 id="missing-title">Page not found.</h1>
+      <p>This page doesn't exist or was moved.</p>
+      <a class="ink-link" href="/">Back to the records <span aria-hidden="true">↗</span></a>
+    </div>
   </section>
-
 </Layout>

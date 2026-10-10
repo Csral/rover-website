@@ -1,6 +1,6 @@
 site:
   name: 'Team Odyssey'
-  site: 'https://teamodyssey.space/'
+  site: 'https://records.teamodyssey.space/'
   base: '/'
   trailingSlash: false
 
@@ -9,7 +9,7 @@ metadata:
   title:
     default: 'Team Odyssey'
     template: '%s — Team Odyssey'
-  description: "The official website for the Rover team at Amrita Bengaluru"
+  description: 'The Team Odyssey archive. Past seasons and the current team, kept in one scrapbook.'
   robots:
     index: true
     follow: true
@@ -63,4 +63,4 @@ analytics:
       id: null # or "G-XXXXXXXXXX"
 
 ui:
-  theme: 'system' # Values: "system" | "light" | "dark" | "light:only" | "dark:only"
+  theme: 'dark:only' # Values: "system" | "light" | "dark" | "light:only" | "dark:only"

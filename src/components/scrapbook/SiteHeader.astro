@@ -1,0 +1,40 @@
+---
+const isArchive = Astro.url.pathname === '/';
+const links = [
+  { text: 'The rover', href: 'https://teamodyssey.space/#about' },
+  { text: 'The team', href: 'https://teamodyssey.space/teams' },
+  { text: 'Field notes', href: 'https://teamodyssey.space/blog' },
+  { text: 'Records', href: '/' },
+];
+---
+
+<header class="scrap-nav">
+  <a class="scrap-wordmark" href="https://teamodyssey.space/" aria-label="Team Odyssey home">
+    odyssey<span>.</span>
+  </a>
+  <nav class="desktop-links" aria-label="Main navigation">
+    {
+      links.map(({ text, href }) => (
+        <a href={href} aria-current={href === '/' && isArchive ? 'page' : undefined}>
+          {text}
+        </a>
+      ))
+    }
+    <a class="scrap-contact-link" href="https://teamodyssey.space/contact"
+      >Say hello <span aria-hidden="true">↗</span></a
+    >
+  </nav>
+  <details class="mobile-links">
+    <summary>Menu <span aria-hidden="true">＋</span></summary>
+    <nav aria-label="Mobile navigation">
+      {
+        links.map(({ text, href }) => (
+          <a href={href} aria-current={href === '/' && isArchive ? 'page' : undefined}>
+            {text}
+          </a>
+        ))
+      }
+      <a href="https://teamodyssey.space/contact">Say hello <span aria-hidden="true">↗</span></a>
+    </nav>
+  </details>
+</header>

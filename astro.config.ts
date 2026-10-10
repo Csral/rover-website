@@ -13,7 +13,6 @@ import type { AstroIntegration } from 'astro';
 
 import astrowind from './vendor/integration';
 
-
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const hasExternalScripts = false;
@@ -22,7 +21,7 @@ const whenExternalScripts = (items: (() => AstroIntegration) | (() => AstroInteg
 
 export default defineConfig({
   output: 'static',
-  site: 'https://teamodyssey.space',
+  site: 'https://records.teamodyssey.space',
   integrations: [
     tailwind({
       applyBaseStyles: false,
@@ -73,7 +72,6 @@ export default defineConfig({
   image: {
     domains: ['cdn.pixabay.com'],
   },
-
 
   vite: {
     resolve: {
