@@ -1,5 +1,6 @@
 ---
 import '~/assets/styles/tailwind.css';
+import '~/assets/styles/paper.css';
 import '@fontsource/barlow-condensed/600.css';
 import '@fontsource/barlow-condensed/700.css';
 import '@fontsource/dm-sans/400.css';
@@ -18,7 +19,6 @@ import Metadata from '~/components/common/Metadata.astro';
 import SiteVerification from '~/components/common/SiteVerification.astro';
 import Analytics from '~/components/common/Analytics.astro';
 import BasicScripts from '~/components/common/BasicScripts.astro';
-import ScrollIndicator from '~/components/common/ScrollIndicator.astro';
 
 // Comment the line below to disable View Transitions
 import { ClientRouter } from 'astro:transitions';
@@ -52,7 +52,6 @@ const { language, textDirection } = I18N;
     <a class="scrap-skip" href="#page-content">Skip to content</a>
     <slot />
 
-    <ScrollIndicator />
     <BasicScripts />
   </body>
 </html>

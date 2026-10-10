@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 const subsystems = [
   {
     name: 'Mechanical',
+    id: 'mechanical',
     mark: '↻',
     title: 'Give it a way to move.',
     description:
@@ -12,6 +13,7 @@ const subsystems = [
   },
   {
     name: 'Electrical',
+    id: 'electrical',
     mark: 'ϟ',
     title: 'Bring the machine to life.',
     description:
@@ -20,6 +22,7 @@ const subsystems = [
   },
   {
     name: 'Computer science',
+    id: 'computer-science',
     mark: '</>',
     title: 'Teach it what comes next.',
     description:
@@ -28,6 +31,7 @@ const subsystems = [
   },
   {
     name: 'Science',
+    id: 'science',
     mark: '⚗',
     title: 'Look closer at the ground.',
     description:
@@ -36,6 +40,7 @@ const subsystems = [
   },
   {
     name: 'Media',
+    id: 'media',
     mark: '✳',
     title: 'Tell the story behind it.',
     description:
@@ -114,7 +119,7 @@ export default function SubsystemNotebook() {
                   <li key={tag}>{tag}</li>
                 ))}
               </ul>
-              <a className="ink-link" href="/team">
+              <a className="ink-link" href={`/teams#${active.id}`}>
                 {`Meet the ${active.name === 'Computer science' ? 'CS' : active.name.toLowerCase()} team`}
                 <span aria-hidden="true">↗</span>
               </a>

@@ -8,7 +8,7 @@ export const headerData = {
     },
     {
       text: 'Team',
-      href: '/team',
+      href: '/teams',
     },
     {
       text: 'Blog',
@@ -20,8 +20,8 @@ export const headerData = {
     },
     {
       text: 'Records',
-      href: 'http://records.teamodyssey.space/'
-    }
+      href: 'http://records.teamodyssey.space/',
+    },
   ],
 };
 

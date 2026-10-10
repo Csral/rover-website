@@ -1,8 +1,10 @@
 ---
-const path = Astro.url.pathname;
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isCurrent = (href: string) =>
+  path === href || (href === '/teams' && path === '/team') || (href === '/blog' && path.startsWith('/blog/'));
 const links = [
   { text: 'Home', href: '/' },
-  { text: 'The team', href: '/team' },
+  { text: 'The team', href: '/teams' },
   { text: 'Field notes', href: '/blog' },
   { text: 'Links', href: '/links' },
   { text: 'Records', href: 'http://records.teamodyssey.space/' },
@@ -14,10 +16,7 @@ const links = [
   <nav class="desktop-links" aria-label="Main navigation">
     {
       links.map(({ text, href }) => (
-        <a
-          href={href}
-          aria-current={path === href || (href === '/blog' && path.startsWith('/blog/')) ? 'page' : undefined}
-        >
+        <a href={href} aria-current={isCurrent(href) ? 'page' : undefined}>
           {text}
         </a>
       ))
@@ -29,7 +28,7 @@ const links = [
     <nav aria-label="Mobile navigation">
       {
         links.map(({ text, href }) => (
-          <a href={href} aria-current={path === href ? 'page' : undefined}>
+          <a href={href} aria-current={isCurrent(href) ? 'page' : undefined}>
             {text}
           </a>
         ))

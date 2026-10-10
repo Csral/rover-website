@@ -1,6 +1,5 @@
 :root {
   color-scheme: dark;
-  --paper: #141416;
   --ink: #e6e0d5;
   --red: #e18a73;
   --muted: #a9a39b;
@@ -110,7 +109,7 @@ button {
   position: relative;
   overflow: clip;
   background-color: var(--paper);
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' opacity='.045' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-image: var(--paper-texture);
 }
 
 .spread {
@@ -358,9 +357,9 @@ h2 {
   background-color: var(--white-paper);
   background-image: repeating-linear-gradient(transparent 0 31px, #8b81741c 31px 32px);
   box-shadow:
-    2px 4px 1px #141416,
+    2px 4px 1px var(--paper),
     2px 6px 1px #393331,
-    3px 8px 1px #141416,
+    3px 8px 1px var(--paper),
     3px 20px 25px #0004;
   border: 1px solid var(--rule);
   padding: 50px 60px 45px 100px;

@@ -1,6 +1,9 @@
 ---
 import Layout from '~/layouts/PageLayout.astro';
 import teamData from '~/data/teams';
+import type { TeamMember } from '~/data/teams';
+import TeamJournal from '~/components/scrapbook/TeamJournal.astro';
+import StitchedViewButton from '~/components/scrapbook/StitchedViewButton.astro';
 import { Image } from 'astro:assets';
 
 const teamColors = {
@@ -25,15 +28,8 @@ const metadata = {
   description: 'Meet Team Odyssey, the students and mentors building Skanda at Amrita Bengaluru.',
 };
 
-type Member = {
-  name: string;
-  role: string;
-  subdivision?: string;
-  speciality: string | null;
-  about: string | null;
-  photo?: string | null;
+type Member = TeamMember & {
   photoResolved?: ImageMetadata;
-  socials: { github?: string; linkedin?: string; email?: string; website?: string };
 };
 
 // Vite glob to find all images inside src/data/profilepic/
@@ -101,6 +97,35 @@ for (const sub of subdivisionMap) {
   );
 }
 
+const groupIds: Record<string, string> = {
+  'CS and AI': 'computer-science',
+  Science: 'science',
+  Electrical: 'electrical',
+  Mechanical: 'mechanical',
+  Media: 'media',
+};
+const uniqueMembers = (members: Member[]) => [...new Map(members.map((member) => [member.name, member])).values()];
+const assignedLeads = new Set(subdivisionMap.map((sub) => sub.teamLeadName));
+const journalGroups = [
+  { id: 'mentors', label: 'Faculty mentors', color: mentorColor, members: mentors },
+  {
+    id: 'leadership',
+    label: 'Leadership',
+    color: leadershipColor,
+    members: allLeads.filter((lead) => !assignedLeads.has(lead.name)),
+  },
+  ...subdivisionMap.map((sub) => ({
+    id: groupIds[sub.key],
+    label: sub.label,
+    color: sub.color,
+    members: uniqueMembers([
+      ...teamLeads.filter((lead) => lead.name === sub.teamLeadName),
+      ...allPMs.filter((member) => member.subdivision === sub.label),
+      ...resolvedSubdivisions[sub.key],
+    ]),
+  })),
+].filter((group) => group.members.length > 0);
+
 function initials(name: string) {
   return name
     .split(' ')
@@ -119,7 +144,7 @@ function photoPosition(member: Member) {
 }
 ---
 
-<Layout metadata={metadata} showToc={false}>
+<Layout metadata={metadata}>
   <div class="team-page">
     {/* PAGE HEADER */}
     <div class="team-header">
@@ -129,6 +154,10 @@ function photoPosition(member: Member) {
         <p class="subtitle">The students and mentors behind Skanda.</p>
       </div>
 
+      <StitchedViewButton />
+    </div>
+    <TeamJournal groups={journalGroups} />
+    <div id="team-legacy" hidden>
       {/* VIEW TOGGLE */}
       <div class="view-toggle" role="group" aria-label="View mode">
         <button id="btn-org" class="toggle-btn" aria-pressed="false">
@@ -168,433 +197,330 @@ function photoPosition(member: Member) {
           Compact
         </button>
       </div>
-    </div>
-
-    {/* ══════════════════ ORG CHART VIEW ══════════════════ */}
-    <div id="view-org" class="view-pane org-wrap hidden">
-      {/* Mentors float top-right */}
-      {
-        mentors.length > 0 && (
-          <div class="mentor-corner">
-            <span class="mentor-label" style={`color:${mentorColor}`}>
-              Faculty Mentors
-            </span>
-            {mentors.map((mentor) => (
-              <div
-                class="pcard mentor-card interactive-card"
-                style={`--accent:${mentorColor}`}
-                data-name={mentor.name}
-                data-role={mentor.role}
-                data-speciality={mentor.speciality || ''}
-                data-about={mentor.about || ''}
-                data-photo={mentor.photoResolved?.src || ''}
-                data-github={mentor.socials.github}
-                data-linkedin={mentor.socials.linkedin}
-                data-email={mentor.socials.email}
-                data-website={mentor.socials.website}
-                data-subdivision=""
-                data-avatar-gradient={avatarGradient(mentorColor)}
-              >
-                <div class="pcard-info">
-                  <span class="pcard-name">{mentor.name}</span>
-                  <span class="pcard-role">{mentor.role}</span>
-                </div>
+      {/* ══════════════════ ORG CHART VIEW ══════════════════ */}
+      <div id="view-org" class="view-pane org-wrap hidden">
+        {/* Mentors float top-right */}
+        {
+          mentors.length > 0 && (
+            <div class="mentor-corner">
+              <span class="mentor-label" style={`color:${mentorColor}`}>
+                Faculty Mentors
+              </span>
+              {mentors.map((mentor) => (
                 <div
-                  class="pcard-avatar"
-                  style={!mentor.photoResolved ? `background:${avatarGradient(mentorColor)}` : undefined}
-                >
-                  {mentor.photoResolved ? (
-                    <Image
-                      class="pcard-avatar-image"
-                      src={mentor.photoResolved}
-                      alt=""
-                      width={640}
-                      quality="high"
-                      style={`object-position:${photoPosition(mentor)}`}
-                    />
-                  ) : (
-                    initials(mentor.name)
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        )
-      }
-
-      {/* Interactive Diagramming Grid Canvas */}
-      <div class="org-canvas org-chart-bg">
-        <div class="org-tree-wrapper">
-          {/* ── LEVEL 1: Technical Lead (Ekansh) ── */}
-          <div class="org-root-row">
-            {
-              techLead && (
-                <div class="root-node-container">
-                  <div
-                    class="pcard root-card interactive-card leadership-card"
-                    style={`--accent:${leadershipColor}`}
-                    data-name={techLead.name}
-                    data-role={techLead.role}
-                    data-speciality={techLead.speciality || ''}
-                    data-about={techLead.about || ''}
-                    data-photo={techLead.photoResolved?.src || ''}
-                    data-github={techLead.socials.github}
-                    data-linkedin={techLead.socials.linkedin}
-                    data-email={techLead.socials.email}
-                    data-subdivision=""
-                    data-avatar-gradient={avatarGradient(leadershipColor)}
-                  >
-                    <div class="pcard-info">
-                      <span class="pcard-name">{techLead.name}</span>
-                      <span class="pcard-role">{techLead.role}</span>
-                    </div>
-                    <div
-                      class="pcard-avatar"
-                      style={!techLead.photoResolved ? `background:${avatarGradient(leadershipColor)}` : undefined}
-                    >
-                      {techLead.photoResolved ? (
-                        <Image
-                          class="pcard-avatar-image"
-                          src={techLead.photoResolved}
-                          alt=""
-                          width={640}
-                          quality="high"
-                          style={`object-position:${photoPosition(techLead)}`}
-                        />
-                      ) : (
-                        initials(techLead.name)
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Administrative Lead connected as staff/assistant node (Karen Schuler style) */}
-                  {adminLead && (
-                    <div class="staff-node">
-                      <div class="staff-connector-h" />
-                      <div
-                        class="pcard staff-card interactive-card leadership-card"
-                        style={`--accent:${leadershipColor}`}
-                        data-name={adminLead.name}
-                        data-role={adminLead.role}
-                        data-speciality={adminLead.speciality || ''}
-                        data-about={adminLead.about || ''}
-                        data-photo={adminLead.photoResolved?.src || ''}
-                        data-github={adminLead.socials.github}
-                        data-linkedin={adminLead.socials.linkedin}
-                        data-email={adminLead.socials.email}
-                        data-subdivision=""
-                        data-avatar-gradient={avatarGradient(leadershipColor)}
-                      >
-                        <div class="pcard-info">
-                          <span class="pcard-name">{adminLead.name}</span>
-                          <span class="pcard-role">{adminLead.role}</span>
-                        </div>
-                        <div
-                          class="pcard-avatar"
-                          style={!adminLead.photoResolved ? `background:${avatarGradient(leadershipColor)}` : undefined}
-                        >
-                          {adminLead.photoResolved ? (
-                            <Image
-                              class="pcard-avatar-image"
-                              src={adminLead.photoResolved}
-                              alt=""
-                              width={640}
-                              quality="high"
-                              style={`object-position:${photoPosition(adminLead)}`}
-                            />
-                          ) : (
-                            initials(adminLead.name)
-                          )}
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              )
-            }
-          </div>
-
-          {/* Vertical connector line from Tech Lead to horizontal row */}
-          <div class="main-trunk-line"></div>
-
-          {/* ── LEVEL 2: Team Leads and Subdivisions ── */}
-          <div class="org-branches-row">
-            {
-              subdivisionMap.map((sub) => {
-                const tl = teamLeads.find((t) => t.name === sub.teamLeadName);
-                if (!tl) return null;
-                const members = resolvedSubdivisions[sub.key] ?? [];
-                const pms = allPMs.filter((m) => m.subdivision === sub.label);
-                const mems = members.filter((m) => m.role === 'Member');
-
-                return (
-                  <div class="org-branch-col">
-                    {/* Vertical connector from the parent horizontal bridge line */}
-                    <div class="branch-connector-v" />
-
-                    {/* Team Lead Card */}
-                    <div
-                      class="pcard branch-lead-card interactive-card"
-                      style={`--accent: ${sub.color}`}
-                      data-name={tl.name}
-                      data-role="Team Lead"
-                      data-speciality={tl.speciality || ''}
-                      data-about={tl.about || ''}
-                      data-photo={tl.photoResolved?.src || ''}
-                      data-github={tl.socials.github}
-                      data-linkedin={tl.socials.linkedin}
-                      data-email={tl.socials.email}
-                      data-subdivision={sub.label}
-                      data-avatar-gradient={avatarGradient(sub.color)}
-                    >
-                      <div class="pcard-info">
-                        <span class="pcard-name">{tl.name}</span>
-                        <span class="pcard-role">Team Lead</span>
-                        <span class="pcard-sub">{sub.label}</span>
-                      </div>
-                      <div
-                        class="pcard-avatar"
-                        style={!tl.photoResolved ? `background:${avatarGradient(sub.color)}` : undefined}
-                      >
-                        {tl.photoResolved ? (
-                          <Image
-                            class="pcard-avatar-image"
-                            src={tl.photoResolved}
-                            alt=""
-                            width={640}
-                            quality="high"
-                            style={`object-position:${photoPosition(tl)}`}
-                          />
-                        ) : (
-                          initials(tl.name)
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Subordinates (PMs and Members) in stacked lists with side lines */}
-                    {(pms.length > 0 || mems.length > 0) && (
-                      <div class="subordinates-list" style={`--accent-color: ${sub.color}`}>
-                        {/* Project Managers Section */}
-                        {pms.map((pm) => (
-                          <div class="subordinate-item">
-                            <div
-                              class="pcard pm-card interactive-card pm-highlight"
-                              style={`--accent: ${sub.color}`}
-                              data-name={pm.name}
-                              data-role="Project Manager"
-                              data-speciality={pm.speciality || ''}
-                              data-about={pm.about || ''}
-                              data-photo={pm.photoResolved?.src || ''}
-                              data-github={pm.socials.github}
-                              data-linkedin={pm.socials.linkedin}
-                              data-email={pm.socials.email}
-                              data-subdivision={sub.label}
-                              data-avatar-gradient={avatarGradient(sub.color, 50)}
-                            >
-                              <div class="pcard-info">
-                                <span class="pcard-name">{pm.name}</span>
-                                <span class="pcard-role">Project Manager</span>
-                              </div>
-                              <div
-                                class="pcard-avatar"
-                                style={!pm.photoResolved ? `background:${avatarGradient(sub.color, 50)}` : undefined}
-                              >
-                                {pm.photoResolved ? (
-                                  <Image
-                                    class="pcard-avatar-image"
-                                    src={pm.photoResolved}
-                                    alt=""
-                                    width={640}
-                                    quality="high"
-                                    style={`object-position:${photoPosition(pm)}`}
-                                  />
-                                ) : (
-                                  initials(pm.name)
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-
-                        {/* Members Section */}
-                        {mems.map((m) => (
-                          <div class="subordinate-item">
-                            <div
-                              class="pcard mem-card interactive-card"
-                              style={`--accent: ${sub.color}`}
-                              data-name={m.name}
-                              data-role="Member"
-                              data-speciality={m.speciality || ''}
-                              data-about={m.about || ''}
-                              data-photo={m.photoResolved?.src || ''}
-                              data-github={m.socials.github}
-                              data-linkedin={m.socials.linkedin}
-                              data-email={m.socials.email}
-                              data-subdivision={sub.label}
-                              data-avatar-gradient={avatarGradient(sub.color, 35)}
-                            >
-                              <div class="pcard-info">
-                                <span class="pcard-name">{m.name}</span>
-                                <span class="pcard-role">Member</span>
-                              </div>
-                              <div
-                                class="pcard-avatar"
-                                style={!m.photoResolved ? `background:${avatarGradient(sub.color, 35)}` : undefined}
-                              >
-                                {m.photoResolved ? (
-                                  <Image
-                                    class="pcard-avatar-image"
-                                    src={m.photoResolved}
-                                    alt=""
-                                    width={640}
-                                    quality="high"
-                                    style={`object-position:${photoPosition(m)}`}
-                                  />
-                                ) : (
-                                  initials(m.name)
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                );
-              })
-            }
-          </div>
-        </div>
-      </div>
-    </div>
-
-    {/* ══════════════════ GRID VIEW ══════════════════ */}
-    <div id="view-grid" class="view-pane">
-      {
-        mentors.length > 0 && (
-          <section class="grid-section">
-            <h2 class="section-title" style={`border-bottom-color:${mentorColor}33`}>
-              Faculty Mentors
-            </h2>
-            <div class="member-grid">
-              {mentors.map((m) => (
-                <div
-                  class="pcard grid-pcard interactive-card"
+                  class="pcard mentor-card interactive-card"
                   style={`--accent:${mentorColor}`}
-                  data-name={m.name}
-                  data-role={m.role}
-                  data-speciality={m.speciality || ''}
-                  data-about={m.about || ''}
-                  data-photo={m.photoResolved?.src || ''}
+                  data-name={mentor.name}
+                  data-role={mentor.role}
+                  data-speciality={mentor.speciality || ''}
+                  data-about={mentor.about || ''}
+                  data-photo={mentor.photoResolved?.src || ''}
+                  data-github={mentor.socials.github}
+                  data-linkedin={mentor.socials.linkedin}
+                  data-email={mentor.socials.email}
+                  data-website={mentor.socials.website}
                   data-subdivision=""
-                  data-github={m.socials.github}
-                  data-linkedin={m.socials.linkedin}
-                  data-email={m.socials.email}
-                  data-website={m.socials.website}
                   data-avatar-gradient={avatarGradient(mentorColor)}
                 >
                   <div class="pcard-info">
-                    <span class="pcard-name">{m.name}</span>
-                    <span class="pcard-role">{m.role}</span>
+                    <span class="pcard-name">{mentor.name}</span>
+                    <span class="pcard-role">{mentor.role}</span>
                   </div>
                   <div
                     class="pcard-avatar"
-                    style={!m.photoResolved ? `background:${avatarGradient(mentorColor)}` : undefined}
+                    style={!mentor.photoResolved ? `background:${avatarGradient(mentorColor)}` : undefined}
                   >
-                    {m.photoResolved ? (
+                    {mentor.photoResolved ? (
                       <Image
                         class="pcard-avatar-image"
-                        src={m.photoResolved}
+                        src={mentor.photoResolved}
                         alt=""
                         width={640}
                         quality="high"
-                        style={`object-position:${photoPosition(m)}`}
+                        style={`object-position:${photoPosition(mentor)}`}
                       />
                     ) : (
-                      initials(m.name)
+                      initials(mentor.name)
                     )}
                   </div>
                 </div>
               ))}
             </div>
-          </section>
-        )
-      }
+          )
+        }
 
-      <section class="grid-section">
-        <h2 class="section-title" style={`border-bottom-color:${leadershipColor}33`}>Leadership</h2>
-        <div class="member-grid">
-          {
-            allLeads.map((m) => (
-              <div
-                class="pcard grid-pcard interactive-card"
-                style={`--accent:${leadershipColor}`}
-                data-name={m.name}
-                data-role={m.role}
-                data-speciality={m.speciality || ''}
-                data-about={m.about || ''}
-                data-photo={m.photoResolved?.src || ''}
-                data-subdivision={m.subdivision || ''}
-                data-github={m.socials.github}
-                data-linkedin={m.socials.linkedin}
-                data-email={m.socials.email}
-                data-avatar-gradient={avatarGradient(leadershipColor)}
-              >
-                <div class="pcard-info">
-                  <span class="pcard-name">{m.name}</span>
-                  <span class="pcard-role">{m.role}</span>
-                  {m.subdivision && <span class="pcard-sub">{m.subdivision}</span>}
-                </div>
-                <div
-                  class="pcard-avatar"
-                  style={!m.photoResolved ? `background:${avatarGradient(leadershipColor)}` : undefined}
-                >
-                  {m.photoResolved ? (
-                    <Image
-                      class="pcard-avatar-image"
-                      src={m.photoResolved}
-                      alt=""
-                      width={640}
-                      quality="high"
-                      style={`object-position:${photoPosition(m)}`}
-                    />
-                  ) : (
-                    initials(m.name)
-                  )}
-                </div>
-              </div>
-            ))
-          }
+        {/* Interactive Diagramming Grid Canvas */}
+        <div class="org-canvas org-chart-bg">
+          <div class="org-tree-wrapper">
+            {/* ── LEVEL 1: Technical Lead (Ekansh) ── */}
+            <div class="org-root-row">
+              {
+                techLead && (
+                  <div class="root-node-container">
+                    <div
+                      class="pcard root-card interactive-card leadership-card"
+                      style={`--accent:${leadershipColor}`}
+                      data-name={techLead.name}
+                      data-role={techLead.role}
+                      data-speciality={techLead.speciality || ''}
+                      data-about={techLead.about || ''}
+                      data-photo={techLead.photoResolved?.src || ''}
+                      data-github={techLead.socials.github}
+                      data-linkedin={techLead.socials.linkedin}
+                      data-email={techLead.socials.email}
+                      data-subdivision=""
+                      data-avatar-gradient={avatarGradient(leadershipColor)}
+                    >
+                      <div class="pcard-info">
+                        <span class="pcard-name">{techLead.name}</span>
+                        <span class="pcard-role">{techLead.role}</span>
+                      </div>
+                      <div
+                        class="pcard-avatar"
+                        style={!techLead.photoResolved ? `background:${avatarGradient(leadershipColor)}` : undefined}
+                      >
+                        {techLead.photoResolved ? (
+                          <Image
+                            class="pcard-avatar-image"
+                            src={techLead.photoResolved}
+                            alt=""
+                            width={640}
+                            quality="high"
+                            style={`object-position:${photoPosition(techLead)}`}
+                          />
+                        ) : (
+                          initials(techLead.name)
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Administrative Lead connected as staff/assistant node (Karen Schuler style) */}
+                    {adminLead && (
+                      <div class="staff-node">
+                        <div class="staff-connector-h" />
+                        <div
+                          class="pcard staff-card interactive-card leadership-card"
+                          style={`--accent:${leadershipColor}`}
+                          data-name={adminLead.name}
+                          data-role={adminLead.role}
+                          data-speciality={adminLead.speciality || ''}
+                          data-about={adminLead.about || ''}
+                          data-photo={adminLead.photoResolved?.src || ''}
+                          data-github={adminLead.socials.github}
+                          data-linkedin={adminLead.socials.linkedin}
+                          data-email={adminLead.socials.email}
+                          data-subdivision=""
+                          data-avatar-gradient={avatarGradient(leadershipColor)}
+                        >
+                          <div class="pcard-info">
+                            <span class="pcard-name">{adminLead.name}</span>
+                            <span class="pcard-role">{adminLead.role}</span>
+                          </div>
+                          <div
+                            class="pcard-avatar"
+                            style={
+                              !adminLead.photoResolved ? `background:${avatarGradient(leadershipColor)}` : undefined
+                            }
+                          >
+                            {adminLead.photoResolved ? (
+                              <Image
+                                class="pcard-avatar-image"
+                                src={adminLead.photoResolved}
+                                alt=""
+                                width={640}
+                                quality="high"
+                                style={`object-position:${photoPosition(adminLead)}`}
+                              />
+                            ) : (
+                              initials(adminLead.name)
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )
+              }
+            </div>
+
+            {/* Vertical connector line from Tech Lead to horizontal row */}
+            <div class="main-trunk-line"></div>
+
+            {/* ── LEVEL 2: Team Leads and Subdivisions ── */}
+            <div class="org-branches-row">
+              {
+                subdivisionMap.map((sub) => {
+                  const tl = teamLeads.find((t) => t.name === sub.teamLeadName);
+                  if (!tl) return null;
+                  const members = resolvedSubdivisions[sub.key] ?? [];
+                  const pms = allPMs.filter((m) => m.subdivision === sub.label);
+                  const mems = members.filter((m) => m.role === 'Member');
+
+                  return (
+                    <div class="org-branch-col">
+                      {/* Vertical connector from the parent horizontal bridge line */}
+                      <div class="branch-connector-v" />
+
+                      {/* Team Lead Card */}
+                      <div
+                        class="pcard branch-lead-card interactive-card"
+                        style={`--accent: ${sub.color}`}
+                        data-name={tl.name}
+                        data-role="Team Lead"
+                        data-speciality={tl.speciality || ''}
+                        data-about={tl.about || ''}
+                        data-photo={tl.photoResolved?.src || ''}
+                        data-github={tl.socials.github}
+                        data-linkedin={tl.socials.linkedin}
+                        data-email={tl.socials.email}
+                        data-subdivision={sub.label}
+                        data-avatar-gradient={avatarGradient(sub.color)}
+                      >
+                        <div class="pcard-info">
+                          <span class="pcard-name">{tl.name}</span>
+                          <span class="pcard-role">Team Lead</span>
+                          <span class="pcard-sub">{sub.label}</span>
+                        </div>
+                        <div
+                          class="pcard-avatar"
+                          style={!tl.photoResolved ? `background:${avatarGradient(sub.color)}` : undefined}
+                        >
+                          {tl.photoResolved ? (
+                            <Image
+                              class="pcard-avatar-image"
+                              src={tl.photoResolved}
+                              alt=""
+                              width={640}
+                              quality="high"
+                              style={`object-position:${photoPosition(tl)}`}
+                            />
+                          ) : (
+                            initials(tl.name)
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Subordinates (PMs and Members) in stacked lists with side lines */}
+                      {(pms.length > 0 || mems.length > 0) && (
+                        <div class="subordinates-list" style={`--accent-color: ${sub.color}`}>
+                          {/* Project Managers Section */}
+                          {pms.map((pm) => (
+                            <div class="subordinate-item">
+                              <div
+                                class="pcard pm-card interactive-card pm-highlight"
+                                style={`--accent: ${sub.color}`}
+                                data-name={pm.name}
+                                data-role="Project Manager"
+                                data-speciality={pm.speciality || ''}
+                                data-about={pm.about || ''}
+                                data-photo={pm.photoResolved?.src || ''}
+                                data-github={pm.socials.github}
+                                data-linkedin={pm.socials.linkedin}
+                                data-email={pm.socials.email}
+                                data-subdivision={sub.label}
+                                data-avatar-gradient={avatarGradient(sub.color, 50)}
+                              >
+                                <div class="pcard-info">
+                                  <span class="pcard-name">{pm.name}</span>
+                                  <span class="pcard-role">Project Manager</span>
+                                </div>
+                                <div
+                                  class="pcard-avatar"
+                                  style={!pm.photoResolved ? `background:${avatarGradient(sub.color, 50)}` : undefined}
+                                >
+                                  {pm.photoResolved ? (
+                                    <Image
+                                      class="pcard-avatar-image"
+                                      src={pm.photoResolved}
+                                      alt=""
+                                      width={640}
+                                      quality="high"
+                                      style={`object-position:${photoPosition(pm)}`}
+                                    />
+                                  ) : (
+                                    initials(pm.name)
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+
+                          {/* Members Section */}
+                          {mems.map((m) => (
+                            <div class="subordinate-item">
+                              <div
+                                class="pcard mem-card interactive-card"
+                                style={`--accent: ${sub.color}`}
+                                data-name={m.name}
+                                data-role="Member"
+                                data-speciality={m.speciality || ''}
+                                data-about={m.about || ''}
+                                data-photo={m.photoResolved?.src || ''}
+                                data-github={m.socials.github}
+                                data-linkedin={m.socials.linkedin}
+                                data-email={m.socials.email}
+                                data-subdivision={sub.label}
+                                data-avatar-gradient={avatarGradient(sub.color, 35)}
+                              >
+                                <div class="pcard-info">
+                                  <span class="pcard-name">{m.name}</span>
+                                  <span class="pcard-role">Member</span>
+                                </div>
+                                <div
+                                  class="pcard-avatar"
+                                  style={!m.photoResolved ? `background:${avatarGradient(sub.color, 35)}` : undefined}
+                                >
+                                  {m.photoResolved ? (
+                                    <Image
+                                      class="pcard-avatar-image"
+                                      src={m.photoResolved}
+                                      alt=""
+                                      width={640}
+                                      quality="high"
+                                      style={`object-position:${photoPosition(m)}`}
+                                    />
+                                  ) : (
+                                    initials(m.name)
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })
+              }
+            </div>
+          </div>
         </div>
-      </section>
+      </div>
 
-      {
-        subdivisionMap.map((sub) => {
-          const pms = allPMs.filter((m) => m.subdivision === sub.label);
-          const members = resolvedSubdivisions[sub.key] ?? [];
-          const allSubMembers = [...pms, ...members];
-          if (!allSubMembers.length) return null;
-          return (
+      {/* ══════════════════ GRID VIEW ══════════════════ */}
+      <div id="view-grid" class="view-pane">
+        {
+          mentors.length > 0 && (
             <section class="grid-section">
-              <h2 class="section-title" style={`border-bottom-color:${sub.color}33`}>
-                <span class="section-dot" style={`background:${sub.color}`} />
-                {sub.label}
+              <h2 class="section-title" style={`border-bottom-color:${mentorColor}33`}>
+                Faculty Mentors
               </h2>
               <div class="member-grid">
-                {allSubMembers.map((m) => (
+                {mentors.map((m) => (
                   <div
                     class="pcard grid-pcard interactive-card"
-                    style={`--accent:${sub.color}`}
+                    style={`--accent:${mentorColor}`}
                     data-name={m.name}
                     data-role={m.role}
                     data-speciality={m.speciality || ''}
                     data-about={m.about || ''}
                     data-photo={m.photoResolved?.src || ''}
-                    data-subdivision={sub.label}
+                    data-subdivision=""
                     data-github={m.socials.github}
                     data-linkedin={m.socials.linkedin}
                     data-email={m.socials.email}
-                    data-avatar-gradient={avatarGradient(sub.color)}
+                    data-website={m.socials.website}
+                    data-avatar-gradient={avatarGradient(mentorColor)}
                   >
                     <div class="pcard-info">
                       <span class="pcard-name">{m.name}</span>
@@ -602,7 +528,7 @@ function photoPosition(member: Member) {
                     </div>
                     <div
                       class="pcard-avatar"
-                      style={!m.photoResolved ? `background:${avatarGradient(sub.color)}` : undefined}
+                      style={!m.photoResolved ? `background:${avatarGradient(mentorColor)}` : undefined}
                     >
                       {m.photoResolved ? (
                         <Image
@@ -621,12 +547,116 @@ function photoPosition(member: Member) {
                 ))}
               </div>
             </section>
-          );
-        })
-      }
-    </div>
+          )
+        }
 
-    {/* ══════════════════ MEMBER DETAIL MODAL ══════════════════ */}
+        <section class="grid-section">
+          <h2 class="section-title" style={`border-bottom-color:${leadershipColor}33`}>Leadership</h2>
+          <div class="member-grid">
+            {
+              allLeads.map((m) => (
+                <div
+                  class="pcard grid-pcard interactive-card"
+                  style={`--accent:${leadershipColor}`}
+                  data-name={m.name}
+                  data-role={m.role}
+                  data-speciality={m.speciality || ''}
+                  data-about={m.about || ''}
+                  data-photo={m.photoResolved?.src || ''}
+                  data-subdivision={m.subdivision || ''}
+                  data-github={m.socials.github}
+                  data-linkedin={m.socials.linkedin}
+                  data-email={m.socials.email}
+                  data-avatar-gradient={avatarGradient(leadershipColor)}
+                >
+                  <div class="pcard-info">
+                    <span class="pcard-name">{m.name}</span>
+                    <span class="pcard-role">{m.role}</span>
+                    {m.subdivision && <span class="pcard-sub">{m.subdivision}</span>}
+                  </div>
+                  <div
+                    class="pcard-avatar"
+                    style={!m.photoResolved ? `background:${avatarGradient(leadershipColor)}` : undefined}
+                  >
+                    {m.photoResolved ? (
+                      <Image
+                        class="pcard-avatar-image"
+                        src={m.photoResolved}
+                        alt=""
+                        width={640}
+                        quality="high"
+                        style={`object-position:${photoPosition(m)}`}
+                      />
+                    ) : (
+                      initials(m.name)
+                    )}
+                  </div>
+                </div>
+              ))
+            }
+          </div>
+        </section>
+
+        {
+          subdivisionMap.map((sub) => {
+            const pms = allPMs.filter((m) => m.subdivision === sub.label);
+            const members = resolvedSubdivisions[sub.key] ?? [];
+            const allSubMembers = [...pms, ...members];
+            if (!allSubMembers.length) return null;
+            return (
+              <section class="grid-section">
+                <h2 class="section-title" style={`border-bottom-color:${sub.color}33`}>
+                  <span class="section-dot" style={`background:${sub.color}`} />
+                  {sub.label}
+                </h2>
+                <div class="member-grid">
+                  {allSubMembers.map((m) => (
+                    <div
+                      class="pcard grid-pcard interactive-card"
+                      style={`--accent:${sub.color}`}
+                      data-name={m.name}
+                      data-role={m.role}
+                      data-speciality={m.speciality || ''}
+                      data-about={m.about || ''}
+                      data-photo={m.photoResolved?.src || ''}
+                      data-subdivision={sub.label}
+                      data-github={m.socials.github}
+                      data-linkedin={m.socials.linkedin}
+                      data-email={m.socials.email}
+                      data-avatar-gradient={avatarGradient(sub.color)}
+                    >
+                      <div class="pcard-info">
+                        <span class="pcard-name">{m.name}</span>
+                        <span class="pcard-role">{m.role}</span>
+                      </div>
+                      <div
+                        class="pcard-avatar"
+                        style={!m.photoResolved ? `background:${avatarGradient(sub.color)}` : undefined}
+                      >
+                        {m.photoResolved ? (
+                          <Image
+                            class="pcard-avatar-image"
+                            src={m.photoResolved}
+                            alt=""
+                            width={640}
+                            quality="high"
+                            style={`object-position:${photoPosition(m)}`}
+                          />
+                        ) : (
+                          initials(m.name)
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            );
+          })
+        }
+      </div>
+
+      {/* ══════════════════ MEMBER DETAIL MODAL ══════════════════ */}
+    </div>
     <div id="member-modal" class="modal-backdrop hidden" aria-modal="true" role="dialog" aria-labelledby="modal-name">
       <div class="modal-content">
         <button class="modal-close" aria-label="Close details">&times;</button>
@@ -729,6 +759,45 @@ function photoPosition(member: Member) {
 <script is:inline>
   (function () {
     function setupPage() {
+      var page = document.querySelector('.team-page');
+      if (!page || page.dataset.teamReady) return;
+      page.dataset.teamReady = 'true';
+      var styleButton = document.getElementById('btn-team-style');
+      var modern = document.getElementById('team-modern');
+      var legacy = document.getElementById('team-legacy');
+      function setStyle(isLegacy) {
+        modern.hidden = isLegacy;
+        legacy.hidden = !isLegacy;
+        styleButton.setAttribute('aria-pressed', String(isLegacy));
+        styleButton.setAttribute('aria-label', 'Switch to ' + (isLegacy ? 'Modern' : 'Legacy') + ' view');
+        styleButton.querySelector('[data-mode="modern"]').classList.toggle('selected', !isLegacy);
+        styleButton.querySelector('[data-mode="legacy"]').classList.toggle('selected', isLegacy);
+      }
+      styleButton.addEventListener('click', function () {
+        setStyle(styleButton.getAttribute('aria-pressed') !== 'true');
+      });
+      function openLinkedTeam() {
+        var id;
+        try {
+          id = decodeURIComponent(window.location.hash.slice(1));
+        } catch {
+          return;
+        }
+        var target = document.getElementById(id);
+        if (target && modern.contains(target)) {
+          setStyle(false);
+          target.scrollIntoView({ block: 'start', behavior: 'instant' });
+        }
+      }
+      openLinkedTeam();
+      window.addEventListener('hashchange', openLinkedTeam);
+      document.addEventListener(
+        'astro:before-swap',
+        function cleanup() {
+          window.removeEventListener('hashchange', openLinkedTeam);
+        },
+        { once: true }
+      );
       // ── View Switcher ──
       var btnOrg = document.getElementById('btn-org');
       var btnGrid = document.getElementById('btn-grid');
@@ -947,10 +1016,19 @@ function photoPosition(member: Member) {
 
     // Bind to Astro view transition hook so it fires on AJAX navigations
     document.addEventListener('astro:page-load', setupPage);
+    setupPage();
   })();
 </script>
 
 <style>
+  #team-modern[hidden],
+  #team-legacy[hidden] {
+    display: none !important;
+  }
+  #team-legacy > .view-toggle {
+    width: fit-content;
+    margin: 0 32px 40px auto;
+  }
   /* ─── Page base ──────────────────────────────────────────────────────────── */
   .team-page {
     min-height: 100vh;

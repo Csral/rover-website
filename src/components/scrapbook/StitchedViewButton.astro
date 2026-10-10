@@ -1,0 +1,124 @@
+<div class="view-stitch">
+  <button
+    id="btn-team-style"
+    type="button"
+    aria-pressed="false"
+    aria-controls="team-modern team-legacy"
+    aria-label="Switch to Legacy view"
+  >
+    <svg viewBox="0 0 80 80" width="72" height="72" aria-hidden="true">
+      <circle class="button-rim" cx="40" cy="40" r="35"></circle>
+      <circle class="button-face" cx="40" cy="40" r="29"></circle>
+      <g fill="#272722" stroke="#7b6b48" stroke-width="2">
+        <circle cx="31" cy="31" r="5"></circle><circle cx="49" cy="31" r="5"></circle>
+        <circle cx="31" cy="49" r="5"></circle><circle cx="49" cy="49" r="5"></circle>
+      </g>
+      <g fill="none" stroke="#ddd6b6" stroke-width="2.4" stroke-linecap="round">
+        <path d="M30 30L50 50M31 29L51 49M48 30L30 49M49 31L31 50"></path>
+      </g>
+    </svg>
+    <span class="view-names"
+      ><span data-mode="modern" class="selected">Modern</span><span class="view-separator" aria-hidden="true">/</span
+      ><span data-mode="legacy">Legacy</span></span
+    >
+  </button>
+  <span class="stitch-caption">a different way to look at us</span>
+</div>
+
+<style>
+  .view-stitch {
+    align-self: center;
+    position: relative;
+    padding: 12px 20px;
+    border: 1px dashed #827b5c8c;
+    transform: rotate(2deg);
+    background: #2423229c;
+  }
+  .view-stitch::before,
+  .view-stitch::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 2px;
+    background: #c4bfa0;
+    transform: rotate(-40deg);
+    top: 4px;
+    left: -8px;
+    box-shadow: 0 2px 2px #0008;
+  }
+  .view-stitch::after {
+    top: auto;
+    left: auto;
+    bottom: 4px;
+    right: -8px;
+  }
+  button {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    color: #b6b0a1;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    font: inherit;
+  }
+  svg {
+    flex: 0 0 72px;
+    filter: drop-shadow(2px 4px 2px #0009);
+    transition: transform 0.2s ease;
+  }
+  .button-rim {
+    fill: #8f7d52;
+    stroke: #d2b774;
+    stroke-width: 2;
+  }
+  .button-face {
+    fill: #b39b62;
+    stroke: #736241;
+    stroke-width: 1;
+  }
+  button:hover svg {
+    transform: rotate(-12deg);
+  }
+  button:active svg {
+    transform: rotate(-8deg) translateY(2px);
+  }
+  .view-names {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    font-size: 14px;
+  }
+  .view-names .selected {
+    color: #e6e0d5;
+    border-bottom: 1px solid #e18a73;
+  }
+  .view-separator {
+    color: #77705e;
+  }
+  .stitch-caption {
+    display: block;
+    margin-top: 4px;
+    font-family: 'Caveat', cursive;
+    font-size: 19px;
+    color: #b0b292;
+    text-align: center;
+  }
+  @media (max-width: 640px) {
+    .view-stitch {
+      align-self: flex-start;
+      padding: 8px 14px;
+    }
+    svg {
+      width: 54px;
+      height: 54px;
+      flex-basis: 54px;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    svg {
+      transition: none;
+    }
+  }
+</style>

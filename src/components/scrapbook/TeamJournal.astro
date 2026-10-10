@@ -1,0 +1,349 @@
+---
+import { Image } from 'astro:assets';
+import type { TeamMember } from '~/data/teams';
+
+export interface Props {
+  groups: {
+    id: string;
+    label: string;
+    color: string;
+    members: (TeamMember & { photoResolved?: ImageMetadata })[];
+  }[];
+}
+
+const { groups } = Astro.props;
+const initials = (name: string) =>
+  name
+    .split(' ')
+    .map((word) => word[0])
+    .slice(0, 2)
+    .join('');
+const socialLabels = { github: 'GitHub', linkedin: 'LinkedIn', email: 'Email', website: 'Website' };
+const noteName = (name: string) => name.split(' ').find((word) => word.replaceAll('.', '').length > 2) || name;
+let noteNumber = 0;
+---
+
+<div id="team-modern" class="team-journal">
+  <nav class="journal-index" aria-label="Jump to a team">
+    {groups.map((group) => <a href={`#${group.id}`}>{group.label}</a>)}
+  </nav>
+  {
+    groups.map((group, groupIndex) => (
+      <section
+        id={group.id}
+        class="journal-group"
+        aria-labelledby={`${group.id}-heading`}
+        style={`--note-accent: ${group.color}`}
+      >
+        <header class="journal-heading">
+          <span class="chapter-number" aria-hidden="true">
+            {String(groupIndex + 1).padStart(2, '0')}
+          </span>
+          <h2 id={`${group.id}-heading`}>{group.label}</h2>
+          <span class="member-count">{group.members.length} people</span>
+        </header>
+        <div class="journal-people">
+          {group.members.map((member) => {
+            const number = ++noteNumber;
+            const socials = Object.entries(member.socials).filter(
+              ([key, value]) =>
+                value &&
+                (key === 'email'
+                  ? value.includes('@')
+                  : /^https?:\/\//.test(value) && !/^https?:\/\/(github\.com|linkedin\.com)\/?$/.test(value))
+            );
+            return (
+              <article class:list={['journal-person', { 'note-right': number % 2 === 0 }]}>
+                <div class="portrait-note" style={`--note-turn: ${number % 2 === 0 ? '3deg' : '-3deg'}`}>
+                  <span class="note-number" aria-hidden="true">
+                    No. {String(number).padStart(2, '0')}
+                  </span>
+                  {member.photoResolved ? (
+                    <Image
+                      src={member.photoResolved}
+                      alt={member.name}
+                      width={156}
+                      height={156}
+                      loading="lazy"
+                      class="journal-portrait"
+                    />
+                  ) : (
+                    <span class="portrait-initials" aria-hidden="true">
+                      {initials(member.name)}
+                    </span>
+                  )}
+                  <span class="note-signature">{noteName(member.name)}</span>
+                </div>
+                <div class="person-details">
+                  <p class="person-role">{member.role}</p>
+                  <h3>{member.name}</h3>
+                  {member.speciality && <p class="person-speciality">{member.speciality}</p>}
+                  {member.about && <p class="person-about">{member.about}</p>}
+                  {socials.length > 0 && (
+                    <ul class="person-links" aria-label={`Connect with ${member.name}`}>
+                      {socials.map(([key, value]) => (
+                        <li>
+                          <a
+                            href={key === 'email' ? `mailto:${value}` : value}
+                            target={key === 'email' ? undefined : '_blank'}
+                            rel={key === 'email' ? undefined : 'noopener noreferrer'}
+                          >
+                            {socialLabels[key as keyof typeof socialLabels]} <span aria-hidden="true">↗</span>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </section>
+    ))
+  }
+</div>
+
+<style>
+  .team-journal {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 32px 64px;
+  }
+  .journal-index {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 24px;
+    padding: 8px 0 38px;
+    font-size: 14px;
+    color: #c7c2b5;
+  }
+  .journal-index a {
+    border-bottom: 1px solid #827b5c;
+    padding: 4px 0;
+  }
+  .journal-index a:hover {
+    color: #e18a73;
+  }
+  .journal-group {
+    scroll-margin-top: 15px;
+    margin-bottom: 64px;
+  }
+  .journal-heading {
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    padding: 20px 0;
+    border-block: 1px solid #aca18c35;
+  }
+  .journal-heading h2 {
+    font-family: 'Caveat', cursive;
+    font-weight: 500;
+    font-size: 42px;
+    color: var(--note-accent);
+    margin: 0;
+  }
+  .chapter-number {
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: #a49a88;
+  }
+  .member-count {
+    margin-left: auto;
+    color: #a49a88;
+    font-size: 12px;
+  }
+  .journal-people {
+    padding: 28px 0 0;
+  }
+  .journal-person {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr);
+    gap: clamp(32px, 5vw, 70px);
+    align-items: center;
+    max-width: 850px;
+    min-height: 210px;
+    padding: 25px 0 35px;
+    margin-right: auto;
+  }
+  .journal-person.note-right {
+    grid-template-columns: minmax(0, 1fr) 180px;
+    margin-left: auto;
+    margin-right: 0;
+  }
+  .note-right .portrait-note {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .note-right .person-details {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .portrait-note {
+    position: relative;
+    width: 176px;
+    padding: 12px 12px 6px;
+    background: #b29c68;
+    color: #27251f;
+    transform: rotate(var(--note-turn));
+    box-shadow: 3px 5px 12px #0005;
+    transition: transform 0.2s ease;
+  }
+  .portrait-note::before {
+    content: '';
+    position: absolute;
+    width: 62px;
+    height: 20px;
+    top: -10px;
+    left: 56px;
+    background: #c3b893b3;
+    clip-path: polygon(0 8%, 97% 0, 100% 85%, 3% 100%);
+    transform: rotate(-5deg);
+  }
+  .journal-person:hover .portrait-note {
+    transform: rotate(0);
+  }
+  .note-number {
+    display: block;
+    font-family: 'Caveat', cursive;
+    font-size: 18px;
+    padding: 0 0 6px;
+  }
+  .journal-portrait {
+    width: 152px;
+    height: 138px;
+    object-fit: cover;
+    object-position: center 24%;
+    filter: saturate(0.65);
+  }
+  .portrait-initials {
+    display: grid;
+    place-items: center;
+    height: 116px;
+    background: #252523;
+    color: #d7c9a4;
+    font-family: 'Caveat', cursive;
+    font-size: 54px;
+  }
+  .note-signature {
+    display: block;
+    text-align: center;
+    font-family: 'Caveat', cursive;
+    font-size: 25px;
+    padding-top: 5px;
+  }
+  .person-role {
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 10px;
+    color: var(--note-accent);
+    margin: 0 0 8px;
+  }
+  .person-details h3 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(22px, 2.4vw, 30px);
+    line-height: 1.25;
+    margin: 0 0 10px;
+    font-weight: 500;
+  }
+  .person-speciality {
+    font-family: 'Caveat', cursive;
+    font-size: 25px;
+    color: #c7c4a7;
+    margin: 0 0 8px;
+  }
+  .person-about {
+    font-size: 14px;
+    line-height: 1.75;
+    color: #bcb7af;
+    max-width: 480px;
+    margin: 0;
+  }
+  .person-links {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin: 16px 0 0;
+    gap: 10px 20px;
+    font-size: 12px;
+  }
+  .person-links a {
+    color: #d6baa3;
+    border-bottom: 1px solid #d6baa34d;
+    padding-bottom: 3px;
+  }
+  .person-links a:hover {
+    color: #e18a73;
+  }
+  @media (max-width: 640px) {
+    .team-journal {
+      padding: 0 24px 32px;
+    }
+    .journal-heading {
+      gap: 10px;
+    }
+    .journal-heading h2 {
+      font-size: 32px;
+    }
+    .journal-person {
+      grid-template-columns: 106px minmax(0, 1fr);
+      gap: 22px;
+      min-height: 165px;
+      padding-block: 24px;
+      align-items: start;
+    }
+    .journal-person.note-right {
+      grid-template-columns: minmax(0, 1fr) 106px;
+    }
+    .portrait-note {
+      width: 106px;
+      padding: 8px;
+      margin-top: 8px;
+    }
+    .portrait-note::before {
+      width: 42px;
+      left: 32px;
+      height: 15px;
+      top: -7px;
+    }
+    .journal-portrait {
+      width: 90px;
+      height: 94px;
+    }
+    .portrait-initials {
+      height: 80px;
+      font-size: 38px;
+    }
+    .note-number {
+      font-size: 14px;
+    }
+    .note-signature {
+      font-size: 19px;
+    }
+    .person-details h3 {
+      font-size: 20px;
+      overflow-wrap: anywhere;
+    }
+    .person-speciality {
+      font-size: 21px;
+      line-height: 1.2;
+    }
+    .person-about {
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .person-links {
+      gap: 10px 12px;
+    }
+    .member-count {
+      font-size: 10px;
+      white-space: nowrap;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .portrait-note {
+      transition: none;
+    }
+  }
+</style>
