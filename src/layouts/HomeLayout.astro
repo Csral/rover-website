@@ -1,0 +1,30 @@
+---
+import '@fontsource/barlow-condensed/600.css';
+import '@fontsource/barlow-condensed/700.css';
+import '@fontsource/dm-sans/400.css';
+import '@fontsource/dm-sans/500.css';
+import '@fontsource/dm-sans/700.css';
+import '@fontsource/caveat/500.css';
+import CommonMeta from '~/components/common/CommonMeta.astro';
+import Metadata from '~/components/common/Metadata.astro';
+import Favicons from '~/components/Favicons.astro';
+import '~/assets/styles/home.css';
+---
+
+<!doctype html>
+<html lang="en" data-home>
+  <head>
+    <CommonMeta />
+    <Favicons />
+    <Metadata
+      title="Team Odyssey"
+      ignoreTitleTemplate
+      description="Meet Skanda and the students building it. Team Odyssey is the rover team at Amrita's Bengaluru campus."
+    />
+    <meta name="theme-color" content="#171716" />
+  </head>
+  <body>
+    <a class="skip-link" href="#about">Skip to the scrapbook</a>
+    <slot />
+  </body>
+</html>

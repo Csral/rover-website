@@ -1,484 +1,248 @@
 ---
-import Layout from "~/layouts/PageLayout.astro";
+import { Image } from 'astro:assets';
+import Layout from '~/layouts/HomeLayout.astro';
+import SubsystemNotebook from '~/components/home/SubsystemNotebook';
+import roverPhoto from '~/assets/images/rover-sunrise.jpeg';
+import teamPhoto from '~/assets/images/rover-team.jpeg';
+import armPhoto from '~/assets/images/october-arm-post/arm.jpg';
+import powerPhoto from '~/assets/images/october-power-distribution/cover.jpeg';
+import { sponsors } from '~/data/sponsors';
+import { footerData } from '~/navigation';
 
-import Hero from "~/components/widgets/Hero.astro";
-import Content from "~/components/widgets/Content.astro";
-import Features3 from "~/components/widgets/Features3.astro";
-import Steps2 from "~/components/widgets/Steps2.astro";
-import ContactUs from "~/components/widgets/Contact.astro";
-import Sponsors from "~/components/widgets/Sponsors.astro";
-import { YouTube } from "astro-embed";
-
-const metadata = {
-  title: "Team Odyssey",
-};
-
-const items = [
-  {
-    title: "bla bla 1",
-    details: [
-      "meow meowwww",
-      "meow",
-    ],
-  },
-  {
-    title: "bla bla 2",
-    details: [
-      "meow meoww",
-      "meow meoww",
-    ],
-  },
-  {
-    title: "bla bla 3",
-    details: [
-      "meow meoww",
-      "meow meoww",
-    ],
-  },
-  {
-    title: "bla bla 4",
-    details: [
-      "meow meoww",
-      "meow meoww",
-    ],
-  },
-  {
-    title: "bla bla 5",
-    details: [
-        "meow meoww one.",
-        "meow meoww two.",
-    ],
-  },
-    {
-    title: "bla bla 6",
-    details: [
-        "meow meoww one.",
-        "meow meoww two.",
-    ],
-  },
-    {
-    title: "bla bla 7",
-    details: [
-        "meow meoww one.",
-        "meow meoww two.",
-    ],
-  },
-    {
-    title: "bla bla 8",
-    details: [
-        "meow meoww one.",
-        "meow meoww two.",
-    ],
-  },
-     {
-    title: "bla bla 9",
-    details: [
-        "meow meoww one.",
-        "meow meoww two.",
-    ],
-  },
+const sponsorImages = import.meta.glob<{ default: ImageMetadata }>('/src/data/sponsor-logo/*.png', { eager: true });
+const milestones = [
+  { year: '2020', result: '6th', event: 'Indian Rover Design Challenge' },
+  { year: '2020', result: 'Top 20', event: 'International Rover Challenge' },
+  { year: '2024', result: '23rd', event: 'ISRO Rover Challenge' },
+  { year: '2025', result: 'Finalists', event: 'International Rover Challenge', note: '17th in the SDDR phase' },
 ];
-
 ---
 
-<Layout metadata={metadata}>
-  <!-- Main Hero -->
-  <Hero
-    tagline="Team Odyssey"
-    actions={[
-      { text: "Learn more", href: "#about" },
-    ]}
-    image={{
-      src: "~/assets/images/rover.png",
-      alt: "Team Odyssey rover",
-      width: 1368,
-      height: 1544,
-      aspectRatio: "1368:1544",
-      layout: "responsive",
-      class: "mx-auto w-full h-auto max-w-4xl object-contain",
-    }}
-  >
-    <Fragment slot="title">
-      Meet our rover <span class="text-secondary dark:text-white">Skanda</span>
-    </Fragment>
-
-    <Fragment slot="subtitle">
-      Hey there, we're the official rover team at Amrita University Bangalore.
-      We're finalists for IRC 2026.
-    </Fragment>
-
-    <Fragment slot="image"> </Fragment>
-  </Hero>
-
-  <!-- About The Rover (Side-by-side) -->
-  <Content
-    id="about"
-    image={{
-      src: '~/assets/images/rover-sunrise.jpeg',
-      alt: 'Team Odyssey Rover at Sunrise',
-    }}
-  >
-    <Fragment slot="content">
-      <p class="text-base text-secondary dark:text-blue-200 font-bold tracking-wide uppercase mb-2">
-        About The Rover
-      </p>
-      <h2 class="text-4xl md:text-5xl font-bold tracking-tighter mb-4 font-heading text-heading">
-        <span class="text-accent dark:text-white">Skanda</span>
-      </h2>
-      <p class="text-lg text-muted dark:text-slate-400">
-        A rover capable of excelling in the IRC's diverse tasks, including extreme terrain navigation, equipment
-        servicing, autonomous operations, and scientific analysis. Our design integrates advanced mechanical systems,
-        robust electronics, and intelligent algorithms, reflecting our commitment to interdisciplinary excellence and the
-        spirit of exploration.
-      </p>
-    </Fragment>
-  </Content>
-
-  <!-- <section class="wwd" id="what-we-do">
-    <div class="wwd__inner">
-      <h2 class="wwd__heading">What we do</h2>
-
-      <div class="wwd__grid">
-        {
-          items.map((item) => (
-            <details class="folder">
-              <summary class="folder__head">
-                <span class="folder__title">{item.title}</span>
-              </summary>
-              <div class="folder__details">
-                {item.details.map((p) => (
-                  <p>{p}</p>
-                ))}
-              </div>
-            </details>
-          ))
-        }
+<Layout>
+  <header class="home-header">
+    <a class="wordmark" href="/" aria-label="Team Odyssey home">odyssey<span class="wordmark-dot">.</span></a>
+    <nav aria-label="Main navigation">
+      <a href="#about">The rover</a><a href="/team">The team</a><a href="/blog">Field notes</a>
+      <a class="nav-contact" href="#contact">Say hello <span aria-hidden="true">↗</span></a>
+    </nav>
+  </header>
+  <main>
+    <section class="intro" aria-label="Introducing Team Odyssey">
+      <div class="intro-stage">
+        <div class="stage-grid" aria-hidden="true"></div>
+        <div class="smoke-fallback" aria-hidden="true"></div><div class="smoke-canvas" aria-hidden="true"></div>
+        <div class="light-beam" aria-hidden="true"></div>
+        <div class="workshop-lamp" aria-hidden="true">
+          <div class="lamp-head"><i class="lamp-led"></i></div><div class="lamp-arm"></div><div class="lamp-foot"></div>
+        </div>
+        <div class="hero-content">
+          <p class="hero-location"><span class="status-dot" aria-hidden="true"></span> Amrita Bengaluru / Rover team</p>
+          <div class="hero-type">
+            <div class="initials" aria-hidden="true">
+              <span class="initial initial-t">T</span><span class="initial initial-o">O</span>
+            </div>
+            <h1 class="full-name" aria-label="Team Odyssey">
+              <span class="name-team">Team</span><span class="name-odyssey"
+                >Odyssey<span class="title-period">.</span></span
+              >
+            </h1>
+          </div>
+          <div class="hero-bottom">
+            <p>Built on Earth.<br />Made for the unknown.</p>
+            <a class="scroll-cue" href="#about"
+              ><span class="scroll-line" aria-hidden="true"></span> Scroll to turn the lights on <span
+                aria-hidden="true">↓</span
+              ></a
+            >
+            <span class="hero-note">a few students. one big odyssey.</span>
+          </div>
+        </div>
+        <div class="light-wash" aria-hidden="true"></div>
+        <button class="motion-toggle" type="button" aria-pressed="false">Pause atmosphere</button>
       </div>
-    </div>
-  </section> -->
-
-  <!-- Meet Our Team -->
-  <Features3
-    title="Meet our team"
-    columns={3}
-    isBeforeContent={true}
-    items={[
-      {
-        title: 'CS Subsystem',
-        description: 'The CS Subsystem is in charge of programming the primitives for the rover to issue directions.',
-        icon: 'tabler:device-desktop',
-      },
-      {
-        title: 'Mechanical Subsystem',
-        description: 'Responsible for physical build of the rover and ensures its movement and tolerance.',
-        icon: 'tabler:settings',
-      },
-      {
-        title: 'Electrical Subsystem',
-        description: 'Integrating sensors, power management and stable communication.',
-        icon: 'tabler:bolt',
-      },
-      {
-        title: 'Science Subsystem',
-        description: 'Performs data analysis and gathers insights from the samples gathered by the rover.',
-        icon: 'tabler:flask',
-      },
-      {
-        title: 'Media Subsystem',
-        description: 'Responsible for outreach, sponsorships, social media management, and documenting the rover journey.',
-        icon: 'tabler:camera',
-      },
-    ]}
-    image={{
-      src: '~/assets/images/rover-team.jpeg',
-      alt: 'Team Odyssey members posing together',
-      width: 1920,
-      height: 1080,
-      aspectRatio: '16:9',
-      objectPosition: 'center 65%',
-      style: 'max-width: 1080px; margin: 0 auto; display: block;',
-    }}
-  >
-    <Fragment slot="subtitle">
-      We're a rag-tag team of students, working across departments to bring Skanda to life.
-      <div class="mt-4">
-        <a
-          href="/team"
-          class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-white bg-primary hover:bg-primary/90 transition shadow font-medium"
+    </section>
+    <div class="scrapbook">
+      <section id="about" class="about spread" aria-labelledby="about-title">
+        <div class="spread-top"><span>Team Odyssey / The scrapbook</span><span>Bengaluru, India</span></div>
+        <div class="about-copy">
+          <span class="handwritten margin-note">It started with a “what if?”</span>
+          <h2 id="about-title">A little dust.<br />A lot of possibility.</h2>
+          <p>
+            We're Team Odyssey, the official rover team at Amrita's Bengaluru campus. A rag-tag bunch of students from
+            different departments, building a rover together.
+          </p>
+          <p>
+            Meet <strong>Skanda</strong>. Built for rough terrain, equipment servicing, autonomous operations, and
+            scientific analysis. Every wire, wheel, and line of code has a story behind it.
+          </p>
+          <a class="ink-link" href="#the-build">Open the build notes <span aria-hidden="true">↘</span></a>
+        </div>
+        <div class="rover-collage">
+          <figure class="polaroid rover-print">
+            <span class="tape tape-top" aria-hidden="true"></span><div class="rover-photo-crop">
+              <Image
+                src={roverPhoto}
+                alt="Skanda rover with its arm extended on red dirt at a test site"
+                widths={[540, 810]}
+                sizes="(max-width: 700px) 85vw, 42vw"
+                loading="eager"
+              />
+            </div><figcaption class="handwritten">Skanda, in its natural habitat.</figcaption>
+          </figure>
+          <div class="challenge-stamp">
+            <span>International<br />Rover Challenge</span><strong>2026</strong><span>Finalists</span>
+          </div>
+          <span class="handwritten rover-annotation"
+            >yes, we built this! <svg viewBox="0 0 100 60" aria-hidden="true"
+              ><path d="M5 8Q80 0 85 47m-14-7 14 9 5-17"></path></svg
+            ></span
+          >
+        </div>
+        <div class="paper-edge" aria-hidden="true"></div>
+      </section>
+      <section id="the-build" class="build spread" aria-labelledby="build-title">
+        <div class="section-heading">
+          <div>
+            <p class="small-note">Inside the workshop</p><h2 id="build-title">Many minds.<br />One machine.</h2>
+          </div><p>Five subsystems, working as one.<br />Pick a tab. See what goes into Skanda.</p>
+        </div>
+        <SubsystemNotebook client:visible />
+        <noscript
+          ><div class="notebook-fallback">
+            <h3>The five subsystems</h3><p>
+              Computer science programs the rover. Mechanical builds its structure and movement. Electrical integrates
+              sensors, power, and communications. Science analyses samples. Media handles outreach, sponsorships, and
+              documentation.
+            </p><a href="/team">Meet the team</a>
+          </div></noscript
         >
-          View Full Team &rarr;
-        </a>
-      </div>
-    </Fragment>
-    <Fragment slot="caption">
-      <p class="text-center text-sm italic text-muted dark:text-slate-400 mt-2">IRC 2026 Team</p>
-    </Fragment>
-  </Features3>
-
-  <!-- Achievements -->
-  <Steps2
-    title="Achievements"
-    subtitle="Our team proudly secured 6th place in IRDC 2020 and ranked among the top 20 in IRC 2020, showcasing consistent performance on global platforms. We placed 23rd in the ISRO Rover Challenge 2024 and recently qualified for the IRC 2025 finals, ranking 17th in the SDDR phase. These milestones reflect our dedication to innovation, engineering excellence, and collaborative problem-solving."
-    isReversed={true}
-    items={[
-      {
-        title: '6th place in IRDC 2020',
-        description: '',
-        icon: 'tabler:award',
-      },
-      {
-        title: 'Top 20 in IRC 2020',
-        description: '',
-        icon: 'tabler:award',
-      },
-      {
-        title: '17th place in IRC 2025',
-        description: '',
-        icon: 'tabler:award',
-      },
-    ]}
-  />
-
-  <!-- Watch a Video (Smaller, Embed Left, Text Right) -->
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 py-12 md:py-16">
-    <div class="flex flex-col md:flex-row items-center gap-8 lg:gap-12 bg-gray-50 dark:bg-slate-800/50 p-6 md:p-8 rounded-2xl border border-gray-200 dark:border-slate-700/60 shadow-sm">
-      <div class="w-full md:w-1/2 max-w-lg rounded-xl overflow-hidden shadow-md">
-        <YouTube
-          id="kf187VukHJA"
-          title="IRC (International Rover Challenge) | Team Odyssey | AVVB | Rover Functionality Demonstration |"
-        />
-        <style is:inline>
-          lite-youtube {
-            margin: 0 auto;
-            max-width: 100%;
-          }
-        </style>
-      </div>
-
-      <div class="w-full md:w-1/2 text-left">
-        <h3 class="text-2xl md:text-3xl font-bold tracking-tight text-gray-900 dark:text-white mb-3">
-          Watch a Video
-        </h3>
-        <p class="text-base text-muted dark:text-slate-300 leading-relaxed">
-          Check out this introductory video going over the various subsystems and the efforts taken so far to bring Skanda to life.
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <!-- Our Sponsors Section -->
-  <Sponsors />
-
-  <!-- Find & Contact Us Side-by-Side Section -->
-  <section id="contact" class="max-w-7xl mx-auto px-4 sm:px-6 py-12 md:py-16 not-prose">
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
-      
-      <!-- Left Column: Find Us Cards & Google Maps Embed -->
-      <div class="flex flex-col gap-6">
-        <div>
-          <p class="text-base text-secondary dark:text-blue-200 font-bold tracking-wide uppercase">Get in touch</p>
-          <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-gray-900 dark:text-white mt-1 mb-4">Find Us</h2>
+        <div class="build-scraps">
+          <figure class="small-print">
+            <Image src={armPhoto} alt="Skanda's robotic arm during development" width={440} loading="lazy" /><figcaption
+              class="handwritten"
+            >
+              A helping hand. Literally.
+            </figcaption>
+          </figure>
+          <a class="lined-note" href="/blog"
+            ><span class="handwritten">From our workbench</span><h3>The details<br />are in the notes.</h3><p>
+              Arm design, power distribution, science, and everything we're figuring out along the way.
+            </p><span class="ink-link">Read the field notes <span aria-hidden="true">↗</span></span></a
+          >
+          <figure class="small-print power-print">
+            <Image
+              src={powerPhoto}
+              alt="The rover's power distribution electronics on the workbench"
+              width={440}
+              loading="lazy"
+            /><figcaption class="handwritten">Getting our wires crossed.</figcaption>
+          </figure>
         </div>
-
-        <!-- Location Cards Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div class="p-5 rounded-xl bg-white dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700/60 shadow-sm flex flex-col gap-2">
-            <div class="flex items-center gap-3 text-primary">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 flex-shrink-0" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
-                <path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z" />
-              </svg>
-              <h4 class="font-bold text-lg text-gray-900 dark:text-white">Our Location</h4>
-            </div>
-            <p class="text-sm text-muted dark:text-slate-300 leading-relaxed">
-              Amrita School of Engineering, Amrita Nagar, Choodasandra, Junnasandra, Bengaluru, Karnataka 560035
-            </p>
-          </div>
-
-          <div class="p-5 rounded-xl bg-white dark:bg-slate-800/80 border border-gray-200 dark:border-slate-700/60 shadow-sm flex flex-col gap-2">
-            <div class="flex items-center gap-3 text-primary">
-              <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 flex-shrink-0" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                <path d="M3 7a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v10a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2v-10z" />
-                <path d="M3 7l9 6l9 -6" />
-              </svg>
-              <h4 class="font-bold text-lg text-gray-900 dark:text-white">Email Us</h4>
-            </div>
-            <p class="text-sm text-muted dark:text-slate-300 leading-relaxed">
-              Reach out to us at:<br/>
-              <a href="mailto:rover_avvb@blr.amrita.edu" class="text-primary underline font-medium">rover_avvb@blr.amrita.edu</a>
-            </p>
-          </div>
-        </div>
-
-        <!-- Google Maps Embed -->
-        <div class="rounded-xl overflow-hidden shadow-md border border-gray-200 dark:border-gray-700/60">
-          <iframe
-            src="https://maps.google.com/maps?q=Amrita%20Nagar,%20Choodasandra,%20Junnasandra,%20Bengaluru,%20Karnataka%20560035&t=&z=15&ie=UTF8&iwloc=&output=embed"
-            width="100%"
-            height="340"
-            style="border:0;"
-            allowfullscreen=""
+      </section>
+      <section class="team-spread spread" aria-labelledby="team-title">
+        <figure class="polaroid team-print">
+          <span class="tape tape-top" aria-hidden="true"></span><Image
+            src={teamPhoto}
+            alt="Team Odyssey students together at Amrita's Bengaluru campus"
+            widths={[640, 1080]}
+            sizes="(max-width: 700px) 90vw, 55vw"
             loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"
-            title="Amrita Nagar Google Map Location"
-          ></iframe>
+          /><figcaption class="handwritten">The people behind the rover. IRC 2026.</figcaption>
+        </figure>
+        <div class="team-copy">
+          <p class="small-note">Meet the crew</p><h2 id="team-title">It takes<br />a whole team.</h2><p>
+            Different departments. Different ways of thinking. The same dusty shoes at the end of a test run.
+          </p><p>We're the students who bring Skanda to life, from the first sketch to the field.</p><a
+            class="ink-link"
+            href="/team">Meet everyone <span aria-hidden="true">↗</span></a
+          ><span class="handwritten team-scribble">some assembly (and coffee) required</span>
         </div>
-      </div>
-
-      <!-- Right Column: Contact Us Form -->
-      <div class="w-full">
-        <ContactUs
-          id="contact-form"
-          title="Contact Us"
-          subtitle="Have questions or want to get in touch with Team Odyssey? Drop us a message below."
-          inputs={[
-            {
-              type: 'text',
-              name: 'name',
-              label: 'Name',
-            },
-            {
-              type: 'email',
-              name: 'email',
-              label: 'Email',
-            },
-          ]}
-          textarea={{
-            label: 'Message',
-          }}
-          disclaimer={{
-            label:
-              'By submitting this contact form, you acknowledge and agree to the collection of your personal information to respond to your query.',
-          }}
-          button="Send Message"
-          description="We typically respond within 24–48 business hours."
-        />
-      </div>
-
+      </section>
+      <section class="records spread" aria-labelledby="records-title">
+        <div class="section-heading">
+          <div><p class="small-note">Saved for the scrapbook</p><h2 id="records-title">A few milestones.</h2></div><a
+            class="ink-link"
+            href="http://records.teamodyssey.space/">Our records <span aria-hidden="true">↗</span></a
+          >
+        </div>
+        <div class="milestone-list">
+          {
+            milestones.map((milestone) => (
+              <article class="milestone">
+                <>
+                  <span class="milestone-year">{milestone.year}</span>
+                  <h3>{milestone.result}</h3>
+                  <p>
+                    {milestone.event}
+                    {milestone.note && <small>{milestone.note}</small>}
+                  </p>
+                </>
+              </article>
+            ))
+          }
+        </div>
+        <a
+          class="film-note"
+          href="https://www.youtube.com/watch?v=kf187VukHJA"
+          target="_blank"
+          rel="noopener noreferrer"
+          ><span class="play-icon" aria-hidden="true">▶</span><div>
+            <h3>See Skanda in action.</h3><p>Our rover functionality demo, from subsystems to the field.</p>
+          </div><span class="film-duration">Watch the film <span aria-hidden="true">↗</span></span></a
+        >
+      </section>
+      <section id="sponsors" class="sponsors spread" aria-labelledby="sponsors-title">
+        <div>
+          <p class="small-note">With a little help</p><h2 id="sponsors-title">Part of our story.</h2><p>
+            Thank you to the sponsors helping us bring Skanda to life.
+          </p>
+        </div>
+        <div class="sponsor-logos">
+          {
+            sponsors.map((sponsor) => (
+              <a href={sponsor.website} target="_blank" rel="noopener noreferrer">
+                <Image
+                  src={sponsorImages[`/src/data/sponsor-logo/${sponsor.logo}`].default}
+                  alt={sponsor.name}
+                  width={220}
+                  loading="lazy"
+                />
+              </a>
+            ))
+          }
+        </div>
+      </section>
+      <section id="contact" class="contact spread" aria-labelledby="contact-title">
+        <div>
+          <span class="handwritten">There's room for you in the story.</span><h2 id="contact-title">
+            Let's make<br />something move.
+          </h2><a class="contact-email" href="mailto:rover_avvb@blr.amrita.edu"
+            >rover_avvb@blr.amrita.edu <span aria-hidden="true">↗</span></a
+          >
+        </div>
+        <address class="address-note">
+          <span class="tape" aria-hidden="true"></span><span class="handwritten">Find us at the workshop</span><p>
+            Amrita School of Engineering<br />Amrita Nagar, Choodasandra<br />Junnasandra, Bengaluru<br />Karnataka
+            560035
+          </p><a
+            class="ink-link"
+            href="https://www.google.com/maps/search/?api=1&query=Amrita+School+of+Engineering+Bengaluru"
+            target="_blank"
+            rel="noopener noreferrer">Get directions <span aria-hidden="true">↗</span></a
+          >
+        </address>
+      </section>
+      <footer class="home-footer spread">
+        <a class="wordmark" href="/">odyssey.</a><p>Built by students. Going places.</p><div>
+          {footerData.socialLinks.map((link) => <a href={link.href}>{link.ariaLabel}</a>)}<a href="/links">More links</a
+          >
+        </div><span>© {new Date().getFullYear()} Team Odyssey</span>
+      </footer>
     </div>
-  </section>
+  </main>
 </Layout>
-
-<style>
-  .wwd {
-    --wwd-blue: #0546a0;
-    --wwd-card: #c4a82b;
-    --wwd-ink: #111111;
-    --wwd-ink-soft: #444444;
-    --wwd-rule: #e4e4e4;
-    --wwd-tab: 24px; /* height of the folder tab */
-    padding: 4rem 1.5rem;
-  }
-
-  .wwd__inner {
-    max-width: 1200px;
-    margin-inline: auto;
-  }
-
-  .wwd__heading {
-    color: var(--aw-color-text-heading);
-    margin: 0 0 3rem;
-    font-size: clamp(2.25rem, 5vw, 3.5rem);
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    line-height: 1.05;
-  }
-
-  .wwd__grid {
-    display: grid;
-    grid-template-columns: repeat(3, 170px);
-    justify-content: center;
-    gap: 1.5rem;
-    align-items: start; /* keeps closed cards short when a sibling opens */
-  }
-
-  /*  folder shape  */
-  .folder {
-    position: relative;
-    margin-top: var(--wwd-tab);
-    background: var(--wwd-card);
-    color: var(--wwd-ink);
-    border-radius: 14px;
-    border: 2px solid #000;
-    border-top-left-radius: 0; /* squared where the tab meets the body */
-  }
-
-  .folder::before {
-    content: "";
-    position: absolute;
-    top: calc(var(--wwd-tab) * -1);
-    left: 0;
-    width: 55%;
-    height: calc(var(--wwd-tab) + 4px); 
-    background: var(--wwd-card);
-    border-radius: 14px 14px 0 0;
-    border-top: 2px solid #000;
-  }
-
-  /*  clickable head  */
-  .folder__head {
-    position: relative;
-    display: block;
-    padding: 2rem 4rem 2rem 2rem;
-    cursor: pointer;
-    list-style: none;
-  }
-
-  .folder__head::-webkit-details-marker {
-    display: none;
-  }
-
-  .folder__head::after {
-    content: "+";
-    position: absolute;
-    top: 1.1rem;
-    right: 1.1rem;
-    font-size: 1.25rem;
-    line-height: 1;
-    color: var(--wwd-blue);
-  }
-
-  .folder[open] .folder__head::after {
-    content: "\2212"; /* minus sign */
-  }
-
-  .folder__head:focus-visible {
-    outline: 3px solid #ffd400;
-    outline-offset: 2px;
-    border-radius: 12px;
-  }
-
-  .folder__title {
-    display: block;
-    margin-bottom: 0.6rem;
-    font-weight: 700;
-    font-size: 1rem;
-  }
-
-  .folder__summary {
-    display: block;
-    font-size: 0.95rem;
-    line-height: 1.5;
-    color: var(--wwd-ink-soft);
-  }
-
-  /*  expanded content  */
-  .folder__details {
-    margin: 0 1.25rem;
-    padding: 1rem 0 1.25rem;
-    border-top: 1px solid var(--wwd-rule);
-    font-size: 0.9rem;
-    line-height: 1.6;
-    color: var(--wwd-ink-soft);
-  }
-
-  .folder__details p {
-    margin: 0 0 0.75rem;
-  }
-
-  .folder__details p:last-child {
-    margin-bottom: 0;
-  }
-</style>
+<script>
+  import { initHome } from '~/scripts/home';
+  initHome();
+  document.addEventListener('astro:page-load', initHome);
+</script>

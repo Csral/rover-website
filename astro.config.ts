@@ -9,6 +9,7 @@ import mdx from '@astrojs/mdx';
 import partytown from '@astrojs/partytown';
 import icon from 'astro-icon';
 import compress from 'astro-compress';
+import react from '@astrojs/react';
 import type { AstroIntegration } from 'astro';
 
 import astrowind from './vendor/integration';
@@ -25,6 +26,7 @@ export default defineConfig({
   output: 'static',
   site: 'https://teamodyssey.space',
   integrations: [
+    react(),
     tailwind({
       applyBaseStyles: false,
     }),
@@ -58,6 +60,8 @@ export default defineConfig({
       HTML: {
         'html-minifier-terser': {
           removeAttributeQuotes: false,
+          // React uses comment markers to separate text nodes during hydration.
+          removeComments: false,
         },
       },
       Image: false,
