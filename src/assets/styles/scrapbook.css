@@ -3,9 +3,9 @@ html[data-scrapbook] {
   --aw-font-sans: 'DM Sans', sans-serif;
   --aw-font-serif: 'DM Sans', sans-serif;
   --aw-font-heading: 'Barlow Condensed', sans-serif;
-  --aw-color-primary: #e18a73;
-  --aw-color-secondary: #b0b292;
-  --aw-color-accent: #c6ae7b;
+  --aw-color-primary: #2b7fee;
+  --aw-color-secondary: #6f94c7;
+  --aw-color-accent: #4f91eb;
   --aw-color-text-heading: #e6e0d5;
   --aw-color-text-default: #d7d1c6;
   --aw-color-text-muted: #a9a39b;
@@ -44,11 +44,11 @@ p {
   text-wrap: pretty;
 }
 ::selection {
-  background: #b5705f;
+  background: #2468c7;
   color: #fff1df;
 }
 :focus-visible {
-  outline: 2px solid #e18a73;
+  outline: 2px solid #2b7fee;
   outline-offset: 6px;
 }
 .scrap-skip {
@@ -134,7 +134,7 @@ p {
   font:
     500 28px/1.2 'Caveat',
     cursive;
-  color: #b0b292;
+  color: #6f94c7;
 }
 .archive-intro {
   display: flex;
@@ -176,7 +176,7 @@ p {
   width: 130px;
   height: 90px;
   margin: 12px 0 0 -30px;
-  stroke: #b0b292;
+  stroke: #6f94c7;
   stroke-width: 1.7;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -215,7 +215,7 @@ p {
 .season-cover {
   background: #b39a61;
   background-image: var(--paper-texture);
-  color: #252016;
+  color: #111b29;
   padding: 28px 28px 23px;
   transform: rotate(-2deg);
   aspect-ratio: 1 / 1.05;
@@ -226,7 +226,7 @@ p {
   content: '';
   position: absolute;
   inset: 12px;
-  border: 1px solid #25201630;
+  border: 1px solid #111b2930;
   pointer-events: none;
 }
 .cover-caption {
@@ -272,8 +272,8 @@ p {
   place-content: center;
   width: 86px;
   height: 86px;
-  border: 1px solid #25201680;
-  outline: 1px solid #25201680;
+  border: 1px solid #111b2980;
+  outline: 1px solid #111b2980;
   outline-offset: -6px;
   border-radius: 50%;
   font:
@@ -307,8 +307,8 @@ p {
   position: absolute;
   top: 30px;
   left: -15px;
-  color: #252016;
-  background: #b0b292;
+  color: #111b29;
+  background: #6f94c7;
   padding: 8px 15px;
   font:
     500 22px/1 'Caveat',
@@ -428,7 +428,7 @@ p {
   font:
     600 130px/1 'Barlow Condensed',
     sans-serif;
-  color: #b39a61;
+  color: #4d78b3;
 }
 .missing-note h1 {
   font:

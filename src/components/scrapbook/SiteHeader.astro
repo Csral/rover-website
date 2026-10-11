@@ -1,4 +1,6 @@
 ---
+import Logo from "../Logo.astro";
+
 const isArchive = Astro.url.pathname === '/';
 const links = [
   { text: 'The rover', href: 'https://teamodyssey.space/#about' },
@@ -10,7 +12,7 @@ const links = [
 
 <header class="scrap-nav">
   <a class="scrap-wordmark" href="https://teamodyssey.space/" aria-label="Team Odyssey home">
-    odyssey<span>.</span>
+    <Logo />
   </a>
   <nav class="desktop-links" aria-label="Main navigation">
     {
