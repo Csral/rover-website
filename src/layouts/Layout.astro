@@ -1,24 +1,21 @@
 ---
 import '~/assets/styles/tailwind.css';
 import '~/assets/styles/paper.css';
-import '@fontsource/barlow-condensed/600.css';
-import '@fontsource/barlow-condensed/700.css';
-import '@fontsource/dm-sans/400.css';
-import '@fontsource/dm-sans/500.css';
-import '@fontsource/dm-sans/700.css';
-import '@fontsource/caveat/500.css';
+import '@fontsource/barlow-condensed/latin-600.css';
+import '@fontsource/barlow-condensed/latin-700.css';
+import '@fontsource/dm-sans/latin-400.css';
+import '@fontsource/dm-sans/latin-500.css';
+import '@fontsource/dm-sans/latin-700.css';
+import '@fontsource/caveat/latin-500.css';
 import '~/assets/styles/scrapbook.css';
 
 import { I18N } from 'astrowind:config';
 
 import CommonMeta from '~/components/common/CommonMeta.astro';
 import Favicons from '~/components/Favicons.astro';
-import CustomStyles from '~/components/CustomStyles.astro';
-import ApplyColorMode from '~/components/common/ApplyColorMode.astro';
 import Metadata from '~/components/common/Metadata.astro';
 import SiteVerification from '~/components/common/SiteVerification.astro';
 import Analytics from '~/components/common/Analytics.astro';
-import BasicScripts from '~/components/common/BasicScripts.astro';
 
 // Comment the line below to disable View Transitions
 import { ClientRouter } from 'astro:transitions';
@@ -38,8 +35,6 @@ const { language, textDirection } = I18N;
   <head>
     <CommonMeta />
     <Favicons />
-    <CustomStyles />
-    <ApplyColorMode />
     <Metadata {...metadata} />
     <SiteVerification />
     <Analytics />
@@ -52,6 +47,10 @@ const { language, textDirection } = I18N;
     <a class="scrap-skip" href="#page-content">Skip to content</a>
     <slot />
 
-    <BasicScripts />
+    <script>
+      import { initReveals } from '~/scripts/reveal';
+      initReveals();
+      document.addEventListener('astro:page-load', initReveals);
+    </script>
   </body>
 </html>

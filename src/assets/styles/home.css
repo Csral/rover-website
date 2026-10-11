@@ -2,7 +2,7 @@
   color-scheme: dark;
   --home-nav-height: 72px;
   --ink: #e6e0d5;
-  --red: #e18a73;
+  --red: #2b7fee;
   --muted: #a9a39b;
   --white-paper: #222123;
   --rule: #56504a;
@@ -693,25 +693,10 @@ h2 {
   padding: 25px;
   line-height: 1.8;
 }
-@media (min-width: 1600px) {
-  .hero-content {
-    max-width: 1600px;
-    margin: auto;
-  }
-}
 @media (max-width: 1050px) {
   .spread {
     padding-left: 40px;
     padding-right: 40px;
-  }
-  .hero-content {
-    padding-top: 70px;
-  }
-  .hero-note {
-    display: none;
-  }
-  .hero-bottom {
-    grid-template-columns: 1fr 1fr;
   }
   .about,
   .team-spread,
@@ -1009,8 +994,5 @@ h2 {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
-  }
-  .motion-toggle {
-    display: none;
   }
 }

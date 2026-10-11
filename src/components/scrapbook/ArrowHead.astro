@@ -39,24 +39,12 @@ const scaleY = flipY ? -1 : 1;
   `}
 >
   <defs>
-    <marker
-      id={markerId}
-      markerWidth="8"
-      markerHeight="8"
-      refX="6"
-      refY="4"
-      orient="auto"
-      markerUnits="strokeWidth"
-    >
-      <path class="arrow-head" d="M0 0 L7 4 L0 8" />
+    <marker id={markerId} markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto" markerUnits="strokeWidth">
+      <path class="arrow-head" d="M0 0 L7 4 L0 8"></path>
     </marker>
   </defs>
 
-  <path
-    class="arrow-curve"
-    d={path}
-    marker-end={`url(#${markerId})`}
-  />
+  <path class="arrow-curve" d={path} marker-end={`url(#${markerId})`}></path>
 </svg>
 
 <style>

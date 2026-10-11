@@ -32,50 +32,29 @@ export type ImagesOptimizer = (
   width?: number,
   height?: number,
   format?: string
-) => Promise<Array<{ src: string; width: number }>>;
+) => Promise<Array<{ src: string; width: number; height?: number }>>;
 
 /* ******* */
 const config = {
-  // FIXME: Use this when image.width is minor than deviceSizes
-  imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-
-  deviceSizes: [
-    640, // older and lower-end phones
-    750, // iPhone 6-8
-    828, // iPhone XR/11
-    960, // older horizontal phones
-    1080, // iPhone 6-8 Plus
-    1280, // 720p
-    1668, // Various iPads
-    1920, // 1080p
-    2048, // QXGA
-    2560, // WQXGA
-    3200, // QHD+
-    3840, // 4K
-    4480, // 4.5K
-    5120, // 5K
-    6016, // 6K
-  ],
-
-  formats: ['image/webp'],
+  deviceSizes: [320, 480, 640, 960, 1280, 1600, 1920],
 };
 
 const computeHeight = (width: number, aspectRatio: number) => {
-  return Math.floor(width / aspectRatio);
+  return Math.max(1, Math.round(width / aspectRatio));
 };
 
 const parseAspectRatio = (aspectRatio: number | string | null | undefined): number | undefined => {
-  if (typeof aspectRatio === 'number') return aspectRatio;
+  if (typeof aspectRatio === 'number') return Number.isFinite(aspectRatio) && aspectRatio > 0 ? aspectRatio : undefined;
 
   if (typeof aspectRatio === 'string') {
-    const match = aspectRatio.match(/(\d+)\s*[/:]\s*(\d+)/);
+    const match = aspectRatio.match(/^\s*(\d*\.?\d+)\s*[/:]\s*(\d*\.?\d+)\s*$/);
 
     if (match) {
       const [, num, den] = match.map(Number);
-      if (den && !isNaN(num)) return num / den;
+      if (den > 0 && num > 0) return num / den;
     } else {
-      const numericValue = parseFloat(aspectRatio);
-      if (!isNaN(numericValue)) return numericValue;
+      const numericValue = Number(aspectRatio);
+      if (Number.isFinite(numericValue) && numericValue > 0) return numericValue;
     }
   }
 
@@ -225,7 +204,15 @@ export const astroAssetsOptimizer: ImagesOptimizer = async (
 
   return Promise.all(
     breakpoints.map(async (w: number) => {
-      const result = await getImage({ src: image, width: w, inferSize: true, ...(format ? { format: format } : {}) });
+      const height = _width && _height ? Math.max(1, Math.round((w * _height) / _width)) : undefined;
+      if (typeof image === 'string' && !/^https?:\/\//.test(image)) return { src: image, width: w, height };
+      const result = await getImage({
+        src: image,
+        width: w,
+        ...(height ? { height, fit: 'cover' as const } : {}),
+        inferSize: true,
+        ...(format ? { format } : {}),
+      });
 
       return {
         src: result?.src,
@@ -289,17 +276,16 @@ export async function getImagesOptimized(
   }: ImageProps,
   transform: ImagesOptimizer = () => Promise.resolve([])
 ): Promise<{ src: string; attributes: HTMLAttributes<'img'> }> {
+  width = Number(width) > 0 && Number.isFinite(Number(width)) ? Number(width) : undefined;
+  height = Number(height) > 0 && Number.isFinite(Number(height)) ? Number(height) : undefined;
+  aspectRatio = parseAspectRatio(aspectRatio);
   if (typeof image !== 'string') {
-    width ||= Number(image.width) || undefined;
-    height ||= typeof width === 'number' ? computeHeight(width, image.width / image.height) : undefined;
+    width ||= image.width;
+    if (!height && !aspectRatio) height = width ? computeHeight(width, image.width / image.height) : undefined;
   }
-
-  width = (width && Number(width)) || undefined;
-  height = (height && Number(height)) || undefined;
 
   widths ||= config.deviceSizes;
   sizes ||= getSizes(Number(width) || undefined, layout);
-  aspectRatio = parseAspectRatio(aspectRatio);
 
   // Calculate dimensions from aspect ratio
   if (aspectRatio) {
@@ -325,14 +311,36 @@ export async function getImagesOptimized(
   }
 
   let breakpoints = getBreakpoints({ width: width, breakpoints: widths, layout: layout });
-  breakpoints = [...new Set(breakpoints)].sort((a, b) => a - b);
+  breakpoints = [
+    ...new Set(
+      breakpoints
+        .filter((value) => Number.isFinite(value) && value > 0)
+        .map((value) =>
+          Math.max(
+            1,
+            Math.round(
+              typeof image === 'string'
+                ? value
+                : Math.min(value, image.width, height && width ? (image.height * width) / height : image.width)
+            )
+          )
+        )
+    ),
+  ].sort((a, b) => a - b);
 
-  const srcset = (await transform(image, breakpoints, Number(width) || undefined, Number(height) || undefined, format))
-    .map(({ src, width }) => `${src} ${width}w`)
-    .join(', ');
+  const transformed = await transform(
+    image,
+    breakpoints,
+    Number(width) || undefined,
+    Number(height) || undefined,
+    format
+  );
+  const srcset = transformed.map(({ src, width }) => `${src} ${width}w`).join(', ');
 
   return {
-    src: typeof image === 'string' ? image : image.src,
+    src:
+      (transformed.find((entry) => entry.width >= Number(width || 0)) || transformed.at(-1))?.src ||
+      (typeof image === 'string' ? image : image.src),
     attributes: {
       width: width,
       height: height,

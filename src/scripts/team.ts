@@ -2,11 +2,14 @@ import type { TeamDirectory } from '~/utils/team-directory';
 
 type LegacyView = 'org' | 'grid' | 'compact';
 let dispose: (() => void) | undefined;
+let currentPage: HTMLElement | null = null;
 
 export function initTeam() {
-  dispose?.();
   const page = document.querySelector<HTMLElement>('[data-team-page]');
+  if (page && page === currentPage) return;
+  dispose?.();
   if (!page) return;
+  currentPage = page;
   const find = <T extends Element = HTMLElement>(selector: string) => page.querySelector<T>(selector)!;
   const controller = new AbortController();
   const { signal } = controller;
@@ -163,6 +166,7 @@ export function initTeam() {
       document.body.style.overflow = previousOverflow;
     }
     controller.abort();
+    currentPage = null;
     dispose = undefined;
   };
   openLinkedTeam();

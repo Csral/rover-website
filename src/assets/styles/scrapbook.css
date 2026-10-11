@@ -7,6 +7,7 @@ html[data-scrapbook] {
   --aw-color-secondary: #b0b292;
   --aw-color-accent: #c6ae7b;
   --aw-color-text-heading: #e6e0d5;
+  --aw-color-text-page: #e6e0d5;
   --aw-color-text-default: #d7d1c6;
   --aw-color-text-muted: #a9a39b;
   --aw-color-bg-page: var(--paper);
@@ -165,14 +166,6 @@ html[data-scrapbook] .prose hr {
 }
 html[data-scrapbook] .scrap-page .text-justify {
   text-align: left;
-}
-html[data-scrapbook] :is(#on-this-page-desktop, #on-this-page-drawer) {
-  background: #222123;
-  border-color: #756b5d60;
-  border-radius: 2px;
-}
-html[data-scrapbook] :is(#on-this-page-desktop, #on-this-page-drawer) a {
-  color: #b8b0a3;
 }
 html[data-scrapbook] .btn {
   border-radius: 1px;
@@ -441,5 +434,24 @@ html[data-scrapbook] .post-print img {
 @media (prefers-reduced-motion: reduce) {
   html[data-scrapbook] {
     scroll-behavior: auto;
+  }
+}
+@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+  [data-reveal-state='pending'] {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+  [data-reveal-state='shown'] {
+    animation: scrap-reveal 550ms ease-out both;
+  }
+}
+@keyframes scrap-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(2rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

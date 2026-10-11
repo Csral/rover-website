@@ -1,21 +1,23 @@
 import gsap from 'gsap';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 import { MorphSVGPlugin } from 'gsap/MorphSVGPlugin';
-import type { createHeroScene } from './smoke';
+import type { createHeroScene } from './hero-scene';
 
 gsap.registerPlugin(DrawSVGPlugin, MorphSVGPlugin);
 type HeroScene = NonNullable<ReturnType<typeof createHeroScene>>;
 let cleanup: (() => void) | undefined;
+let currentStage: HTMLElement | null = null;
 
 export function initHome() {
-  cleanup?.();
   const stage = document.querySelector<HTMLElement>('.intro-stage');
+  if (stage && stage === currentStage) return;
+  cleanup?.();
   if (!stage) return;
+  currentStage = stage;
   const note = stage.querySelector<HTMLElement>('.typed-note')!;
   const media = gsap.matchMedia();
   let scene: HeroScene | undefined;
   let sequence: gsap.core.Timeline | undefined;
-  let fog: gsap.core.Tween | undefined;
   let disposed = false;
 
   media.add(
@@ -279,37 +281,30 @@ export function initHome() {
             .to(path, { drawSVG: '0% 100%', duration: 0.2, ease: 'none' }, at)
             .to(path, { fillOpacity: 1, duration: 0.1 }, at + 0.1);
         });
-        fog = gsap.to('.intro .smoke-fallback', {
-          y: -35,
-          opacity: 0.45,
-          duration: 7,
-          repeat: -1,
-          yoyo: true,
-          ease: 'sine.inOut',
-        });
       }
 
-      void Promise.all([document.fonts.ready, import('./smoke')])
-        .then(([, { createHeroScene }]) => {
-          if (!active || disposed) return;
-          try {
-            scene = createHeroScene(stage!, animated);
-          } catch {
-            /* The inline geographic globe remains visible. */
-          }
-          context.add(choreograph);
-        })
-        .catch(() => {
-          if (active && !disposed) context.add(choreograph);
-        });
+      void document.fonts.ready.then(() => {
+        if (active && !disposed) context.add(choreograph);
+      });
+      if (animated)
+        void import('./hero-scene')
+          .then(({ createHeroScene }) => {
+            if (!active || disposed) return;
+            try {
+              scene = createHeroScene(stage!, animated);
+            } catch {
+              /* The inline geographic globe remains visible. */
+            }
+          })
+          .catch(() => {
+            /* The geographic SVG remains visible when WebGL is unavailable. */
+          });
 
       return () => {
         active = false;
         resize?.disconnect();
         sequence?.kill();
-        fog?.kill();
         sequence = undefined;
-        fog = undefined;
         scene?.dispose();
         scene = undefined;
         stage.classList.remove('kinetic-loading');
@@ -324,6 +319,7 @@ export function initHome() {
   cleanup = () => {
     disposed = true;
     media.revert();
+    currentStage = null;
     cleanup = undefined;
   };
   document.addEventListener('astro:before-swap', cleanup, { once: true });

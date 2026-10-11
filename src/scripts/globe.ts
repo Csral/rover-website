@@ -92,14 +92,13 @@ export function createGlobe() {
   group.add(grid);
   return {
     group,
-    update(radius: number, lightLevel: number, time: number, pixelRatio: number) {
-      group.scale.setScalar(radius);
+    update(time: number, pixelRatio: number) {
       group.rotation.y = -0.28 + time * 0.014;
-      pointMaterial.uniforms.uLight.value = lightLevel;
-      pointMaterial.uniforms.uSize.value = Math.max(1.2, Math.min(2.2, radius * 0.012)) * pixelRatio;
-      glowMaterial.uniforms.uLight.value = lightLevel;
+      pointMaterial.uniforms.uLight.value = 1.1;
+      pointMaterial.uniforms.uSize.value = 1.2 * pixelRatio;
+      glowMaterial.uniforms.uLight.value = 1.1;
       glowMaterial.uniforms.uSize.value = pointMaterial.uniforms.uSize.value * 3.5;
-      gridMaterial.opacity = 0.4 * lightLevel;
+      gridMaterial.opacity = 0.44;
     },
     dispose() {
       sphereGeometry.dispose();

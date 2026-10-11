@@ -20,20 +20,6 @@
 .intro-stage::after {
   content: none;
 }
-.cover-label {
-  position: absolute;
-  top: 40px;
-  left: 8%;
-  z-index: 4;
-  font-size: 10px;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: #a49a88;
-}
-.cover-label span {
-  margin-left: 12px;
-  color: #756f66;
-}
 .hero-type {
   position: absolute;
   left: 14%;
@@ -233,71 +219,7 @@
   stroke-width: 0.55;
   stroke-linecap: round;
 }
-.smoke-canvas {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-}
-.smoke-canvas canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-.smoke-fallback {
-  position: absolute;
-  inset: 20% 15% 0 0;
-  opacity: 0.25;
-  background: radial-gradient(ellipse at 35% 80%, #97362b24, transparent 60%);
-  pointer-events: none;
-}
-.motion-toggle {
-  position: absolute;
-  z-index: 7;
-  bottom: 22px;
-  right: 24px;
-  border: 0;
-  background: transparent;
-  color: #a9916e;
-  width: 44px;
-  height: 44px;
-  padding: 12px;
-  opacity: 0.6;
-}
-.motion-toggle svg {
-  width: 100%;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.5;
-}
-.hero-replay {
-  position: absolute;
-  z-index: 7;
-  bottom: 22px;
-  right: 72px;
-  width: 44px;
-  height: 44px;
-  color: #a9916e;
-  border: 0;
-  background: transparent;
-  font-size: 23px;
-  opacity: 0.6;
-}
-.play-symbol,
-.is-paused .pause-symbol {
-  display: none;
-}
-.is-paused .play-symbol {
-  display: block;
-}
 @media (max-width: 700px) {
-  .cover-label {
-    top: 30px;
-    font-size: 8px;
-  }
-  .cover-label span {
-    margin-left: 6px;
-  }
   .hero-type {
     left: 7%;
     right: 4%;
@@ -341,11 +263,5 @@
     left: 7%;
     width: 84%;
     bottom: 55px;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .motion-toggle,
-  .hero-replay {
-    display: none;
   }
 }

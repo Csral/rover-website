@@ -14,32 +14,32 @@ export function createHeroScene(stage: HTMLElement, animated: boolean) {
   camera.position.z = 4;
   const globe = createGlobe();
   scene.add(globe.group);
-  const atmosphere = { lightLevel: 1.1 };
   let frame = 0,
     last = 0,
     time = 0;
-  let paused = !animated,
-    visible = true,
+  let visible = true,
     disposed = false,
     contextLost = false;
   function draw() {
     if (disposed || contextLost) return;
-    globe.update(1, atmosphere.lightLevel, time, renderer.getPixelRatio());
+    globe.update(time, renderer.getPixelRatio());
     renderer.render(scene, camera);
   }
   function render(now: number) {
     frame = 0;
-    if (disposed || paused || !visible || document.hidden || contextLost) return;
-    if (last) time += Math.min((now - last) / 1000, 0.1);
-    last = now;
-    draw();
+    if (disposed || !animated || !visible || document.hidden || contextLost) return;
+    if (!last || now - last >= 1000 / 30) {
+      if (last) time += Math.min((now - last) / 1000, 0.1);
+      last = now;
+      draw();
+    }
     frame = requestAnimationFrame(render);
   }
   function update() {
     cancelAnimationFrame(frame);
     frame = 0;
     last = 0;
-    if (!disposed && !paused && visible && !document.hidden && !contextLost) frame = requestAnimationFrame(render);
+    if (!disposed && animated && visible && !document.hidden && !contextLost) frame = requestAnimationFrame(render);
   }
   const resize = new ResizeObserver(() => {
     if (disposed) return;
@@ -56,7 +56,15 @@ export function createHeroScene(stage: HTMLElement, animated: boolean) {
     letter.classList.remove('globe-ready');
     update();
   };
+  const onContextRestored = () => {
+    if (disposed) return;
+    contextLost = false;
+    draw();
+    letter.classList.add('globe-ready');
+    update();
+  };
   renderer.domElement.addEventListener('webglcontextlost', onContextLost);
+  renderer.domElement.addEventListener('webglcontextrestored', onContextRestored);
   renderer.setSize(letter.clientWidth, letter.clientHeight, false);
   draw();
   letter.classList.add('globe-ready');
@@ -65,12 +73,6 @@ export function createHeroScene(stage: HTMLElement, animated: boolean) {
   document.addEventListener('visibilitychange', update);
   update();
   return {
-    atmosphere,
-    setPaused(value: boolean) {
-      paused = value;
-      draw();
-      update();
-    },
     dispose() {
       disposed = true;
       cancelAnimationFrame(frame);
@@ -78,6 +80,7 @@ export function createHeroScene(stage: HTMLElement, animated: boolean) {
       observer.disconnect();
       document.removeEventListener('visibilitychange', update);
       renderer.domElement.removeEventListener('webglcontextlost', onContextLost);
+      renderer.domElement.removeEventListener('webglcontextrestored', onContextRestored);
       letter.classList.remove('globe-ready');
       globe.dispose();
       renderer.dispose();

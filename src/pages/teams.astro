@@ -5,10 +5,12 @@ import StitchedViewButton from '~/components/scrapbook/StitchedViewButton.astro'
 import LegacyTeamViews from '~/components/team/LegacyTeamViews.astro';
 import MemberDialog from '~/components/team/MemberDialog.astro';
 import { getTeamDirectory } from '~/utils/team-directory';
+import { getCanonical } from '~/utils/permalinks';
 import '~/assets/styles/team.css';
 
 const metadata = {
   title: 'Our Team',
+  canonical: String(getCanonical('/teams')),
   description: 'Meet Team Odyssey, the students and mentors building Skanda at Amrita Bengaluru.',
 };
 const directory = await getTeamDirectory();

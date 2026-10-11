@@ -42,4 +42,3 @@ Planetary rovers like Curiosity and Perseverance rely on this same principle. Th
 # Conclusion
 
 The differential bar mechanism might look small, but it plays a massive role in the rover’s ability to move confidently over unpredictable terrain. It’s a perfect reminder that the smartest engineering isn’t always the most complex — sometimes, it’s just the most elegant.
-

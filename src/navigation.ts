@@ -1,32 +1,6 @@
 import { getAsset } from './utils/permalinks';
 
-export const headerData = {
-  links: [
-    {
-      text: 'Home',
-      href: '/',
-    },
-    {
-      text: 'Team',
-      href: '/teams',
-    },
-    {
-      text: 'Blog',
-      href: '/blog',
-    },
-    {
-      text: 'Links',
-      href: '/links',
-    },
-    {
-      text: 'Records',
-      href: 'http://records.teamodyssey.space/',
-    },
-  ],
-};
-
 export const footerData = {
-  links: [{}, {}, {}, {}],
   socialLinks: [
     { ariaLabel: 'Instagram', icon: 'tabler:brand-instagram', href: 'https://www.instagram.com/teamodysseyhq' },
     {
