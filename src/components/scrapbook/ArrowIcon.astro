@@ -1,0 +1,32 @@
+---
+interface Props {
+  direction?: 'north-east' | 'south-east' | 'clockwise';
+}
+
+const { direction = 'north-east' } = Astro.props;
+const paths = {
+  'north-east': 'M5 19 19 5M5 5h14v14',
+  'south-east': 'M5 5 19 19M5 19h14V5',
+  clockwise: 'M20 7V2m0 5h-5M20 7a9 9 0 1 0 1 9',
+};
+---
+
+<svg class="arrow-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+  <path
+    d={paths[direction]}
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.6"
+    stroke-linecap="round"
+    stroke-linejoin="round"></path>
+</svg>
+
+<style>
+  .arrow-icon {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    flex: none;
+    vertical-align: -0.125em;
+  }
+</style>

@@ -1,4 +1,5 @@
 ---
+import ArrowIcon from '~/components/scrapbook/ArrowIcon.astro';
 import Logo from '../Logo.astro';
 
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
@@ -25,7 +26,7 @@ const links = [
         </a>
       ))
     }
-    <a class="scrap-contact-link" href="/contact">Say hello <span aria-hidden="true">↗</span></a>
+    <a class="scrap-contact-link" href="/contact">Say hello <span aria-hidden="true"><ArrowIcon /></span></a>
   </nav>
   <details class="mobile-links">
     <summary>Menu <span aria-hidden="true">＋</span></summary>
@@ -37,7 +38,7 @@ const links = [
           </a>
         ))
       }
-      <a href="/contact">Say hello ↗</a>
+      <a href="/contact">Say hello <ArrowIcon /></a>
     </nav>
   </details>
 </header>

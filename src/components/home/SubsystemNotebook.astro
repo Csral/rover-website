@@ -1,9 +1,10 @@
 ---
+import ArrowIcon from '~/components/scrapbook/ArrowIcon.astro';
 const subsystems = [
   {
     name: 'Mechanical',
     id: 'mechanical',
-    mark: '↻',
+    mark: null,
     title: 'Give it a way to move.',
     description:
       'The physical build of Skanda, from its chassis and wheels to the robotic arm. The mechanical team makes sure the rover moves, reaches, and holds up on difficult terrain.',
@@ -88,11 +89,13 @@ const subsystems = [
             </ul>
             <a class="ink-link" href={`/teams#${subsystem.id}`}>
               Meet the {subsystem.name === 'Computer science' ? 'CS' : subsystem.name.toLowerCase()} team
-              <span aria-hidden="true">↗</span>
+              <span aria-hidden="true">
+                <ArrowIcon />
+              </span>
             </a>
           </div>
           <div class="subsystem-doodle" aria-hidden="true">
-            <span>{subsystem.mark}</span>
+            <span>{subsystem.mark ?? <ArrowIcon direction="clockwise" />}</span>
             <span class="handwritten">
               {subsystem.name === 'Mechanical' ? 'Built to get a little dusty.' : 'One piece of the bigger picture.'}
             </span>

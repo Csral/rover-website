@@ -1,4 +1,5 @@
 ---
+import ArrowIcon from '~/components/scrapbook/ArrowIcon.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { footerData } from '~/navigation';
 const metadata = { title: 'Contact', description: 'Get in touch with Team Odyssey at Amrita Bengaluru.' };
@@ -15,12 +16,16 @@ const metadata = { title: 'Contact', description: 'Get in touch with Team Odysse
     <div class="contact-spread">
       <div>
         <h2>A note to the team.</h2><a class="contact-mail" href="mailto:rover_avvb@blr.amrita.edu"
-          >rover_avvb@blr.amrita.edu ↗</a
+          >rover_avvb@blr.amrita.edu <ArrowIcon /></a
         ><nav class="contact-socials" aria-label="Team social accounts">
           {
             footerData.socialLinks
               .filter((link) => link.ariaLabel !== 'RSS')
-              .map((link) => <a href={link.href}>{link.ariaLabel} ↗</a>)
+              .map((link) => (
+                <a href={link.href}>
+                  {link.ariaLabel} <ArrowIcon />
+                </a>
+              ))
           }
         </nav>
       </div>
@@ -30,7 +35,7 @@ const metadata = { title: 'Contact', description: 'Get in touch with Team Odysse
         </p><a
           href="https://www.google.com/maps/search/?api=1&query=Amrita+School+of+Engineering+Bengaluru"
           target="_blank"
-          rel="noopener noreferrer">Get directions ↗</a
+          rel="noopener noreferrer">Get directions <ArrowIcon /></a
         >
       </address>
     </div>

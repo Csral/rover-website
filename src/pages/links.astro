@@ -1,4 +1,5 @@
 ---
+import ArrowIcon from '~/components/scrapbook/ArrowIcon.astro';
 import Layout from '~/layouts/PageLayout.astro';
 import { Icon } from 'astro-icon/components';
 import { footerData } from '~/navigation';
@@ -37,7 +38,9 @@ const links = [
             <>
               <Icon name={link.icon} width={27} height={27} />
               <h2>{link.title}</h2>
-              <span aria-hidden="true">↗</span>
+              <span aria-hidden="true">
+                <ArrowIcon />
+              </span>
             </>
           </a>
         ))
