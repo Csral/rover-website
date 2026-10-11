@@ -12,7 +12,7 @@ cmap = font.getBestCmap()
 scale = 40 / font["head"].unitsPerEm
 x = 0
 paths = []
-sentence = "Sorry for the mess, we are still working on it."
+sentence = "Always working on our rover..."
 for char in sentence:
     name = cmap[ord(char)]
     pen = SVGPathPen(glyphs)

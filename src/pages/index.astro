@@ -2,7 +2,7 @@
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import Layout from '~/layouts/HomeLayout.astro';
-import SubsystemNotebook from '~/components/home/SubsystemNotebook';
+import SubsystemNotebook from '~/components/home/SubsystemNotebook.astro';
 import HeroTitle from '~/components/home/HeroTitle.astro';
 import roverPhoto from '~/assets/images/rover-sunrise.jpeg';
 import teamPhoto from '~/assets/images/rover-team.jpeg';
@@ -10,6 +10,7 @@ import armPhoto from '~/assets/images/october-arm-post/arm.jpg';
 import powerPhoto from '~/assets/images/october-power-distribution/cover.jpeg';
 import { sponsors } from '~/data/sponsors';
 import { footerData } from '~/navigation';
+import Logo from '~/components/Logo.astro';
 
 import ArrowHead from '~/components/scrapbook/ArrowHead.astro';
 
@@ -25,7 +26,9 @@ const milestones = [
 <Layout>
   <main>
     <header class="home-header">
-      <a class="wordmark" href="/" aria-label="Team Odyssey home">odyssey<span class="wordmark-dot">.</span></a>
+      <a class="wordmark" href="/" aria-label="Team Odyssey home">
+        <Logo />
+      </a>
       <nav aria-label="Main navigation">
         <a href="#about">The rover</a><a href="/teams">The team</a><a href="/blog">Field notes</a>
         <a class="nav-contact" href="#contact">Say hello <span aria-hidden="true">↗</span></a>
@@ -81,7 +84,7 @@ const milestones = [
             <p class="small-note">Inside the workshop</p><h2 id="build-title">Many minds.<br />One machine.</h2>
           </div><p>Five subsystems, working as one.<br />Pick a tab. See what goes into Skanda.</p>
         </div>
-        <SubsystemNotebook client:visible />
+        <SubsystemNotebook />
         <noscript
           ><div class="notebook-fallback">
             <h3>The five subsystems</h3><p>
@@ -209,7 +212,9 @@ const milestones = [
         </address>
       </section>
       <footer class="home-footer spread">
-        <a class="wordmark" href="/">odyssey.</a><p>Built by students.</p><div>
+        <a class="scrap-wordmark" href="/" aria-label="Team Odyssey home">
+          <Logo />
+        </a><p>Built by students.</p><div>
           {footerData.socialLinks.map((link) => <a href={link.href}>{link.ariaLabel}</a>)}<a href="/links">More links</a
           >
         </div><span>© {new Date().getFullYear()} Team Odyssey</span>

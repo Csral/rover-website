@@ -93,7 +93,7 @@ export function createGlobe() {
   return {
     group,
     update(time: number, pixelRatio: number) {
-      group.rotation.y = -0.28 + time * 0.014;
+      group.rotation.y = -0.28 + time * 0.06;
       pointMaterial.uniforms.uLight.value = 1.1;
       pointMaterial.uniforms.uSize.value = 1.2 * pixelRatio;
       glowMaterial.uniforms.uLight.value = 1.1;

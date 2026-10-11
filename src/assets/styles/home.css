@@ -1,11 +1,13 @@
 :root {
   color-scheme: dark;
   --home-nav-height: 72px;
+
   --ink: #e6e0d5;
-  --red: #2b7fee;
+
   --muted: #a9a39b;
   --white-paper: #222123;
   --rule: #56504a;
+
   font-family: 'DM Sans', sans-serif;
   color: var(--ink);
   background: var(--paper);
@@ -85,7 +87,7 @@ button {
   letter-spacing: -2px;
 }
 .wordmark-dot {
-  color: #c66451;
+  color: var(--red);
 }
 .home-header nav {
   display: flex;
@@ -97,7 +99,7 @@ button {
   padding: 10px 0;
 }
 .home-header nav a:hover {
-  color: #edaa94;
+  color: var(--blue-light);
 }
 .home-header .nav-contact {
   margin-left: 22px;
@@ -208,7 +210,7 @@ h2 {
   aspect-ratio: 0.82;
   overflow: hidden;
   position: relative;
-  background: #bc9276;
+  background: var(--blue-surface-strong);
 }
 .rover-photo-crop img {
   width: 100%;
@@ -322,6 +324,7 @@ h2 {
   color: var(--muted);
 }
 .notebook {
+  display: block;
   transform: rotate(-0.8deg);
   margin: 10px 0 65px;
 }
@@ -347,15 +350,9 @@ h2 {
   color: var(--ink);
   font-weight: 700;
 }
-.notebook-tabs button > span:not(.tab-paper) {
+.notebook-tabs button > span {
   position: relative;
   z-index: 1;
-}
-.tab-paper {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: var(--white-paper);
 }
 .notebook-page {
   min-height: 390px;
@@ -377,7 +374,7 @@ h2 {
   top: 0;
   bottom: 0;
   width: 1px;
-  background: #b84c3b60;
+  background: color-mix(in srgb, var(--red) 38%, transparent);
 }
 .notebook-holes {
   position: absolute;
@@ -400,6 +397,9 @@ h2 {
   grid-template-columns: 1.5fr 1fr;
   gap: 50px;
 }
+.notebook-content[hidden] {
+  display: none;
+}
 .notebook-content h3 {
   font:
     600 44px/1.1 'Barlow Condensed',
@@ -419,7 +419,7 @@ h2 {
   padding: 0;
   margin: 22px 0 25px;
   font-size: 11px;
-  color: #b9ad96;
+  color: var(--blue-muted);
 }
 .subsystem-tags li::before {
   content: '+ ';
@@ -429,7 +429,7 @@ h2 {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  color: #b9ad96;
+  color: var(--blue-muted);
   transform: rotate(5deg);
 }
 .subsystem-doodle > span:first-child {
@@ -467,13 +467,13 @@ h2 {
   transform: rotate(6deg);
 }
 .lined-note {
-  background: #302822;
+  background: var(--blue-surface-strong);
   padding: 25px 30px;
   transform: rotate(2deg);
   box-shadow: 2px 5px 12px #25282110;
 }
 .lined-note .handwritten {
-  color: #c7b08a;
+  color: var(--blue-muted);
   font-size: 24px;
 }
 .lined-note h3 {
@@ -643,16 +643,19 @@ h2 {
 }
 .contact-email {
   font-size: clamp(13px, 1.5vw, 19px);
-  border-bottom: 1px solid var(--ink);
+  border-bottom: 1px solid currentColor;
   padding-bottom: 10px;
   display: inline-block;
+}
+.contact-email:is(:hover, :focus-visible) {
+  color: var(--red);
 }
 .contact-email span {
   margin-left: 20px;
 }
 .address-note {
   padding: 40px;
-  background: #2b2523;
+  background: var(--blue-surface);
   transform: rotate(4deg);
   position: relative;
   font-style: normal;

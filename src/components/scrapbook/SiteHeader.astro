@@ -1,4 +1,6 @@
 ---
+import Logo from '../Logo.astro';
+
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 const isCurrent = (href: string) =>
   path === href || (href === '/teams' && path === '/team') || (href === '/blog' && path.startsWith('/blog/'));
@@ -12,7 +14,9 @@ const links = [
 ---
 
 <header class="scrap-nav">
-  <a class="scrap-wordmark" href="/" aria-label="Team Odyssey home">odyssey<span>.</span></a>
+  <a class="scrap-wordmark" href="/" aria-label="Team Odyssey home">
+    <Logo />
+  </a>
   <nav class="desktop-links" aria-label="Main navigation">
     {
       links.map(({ text, href }) => (

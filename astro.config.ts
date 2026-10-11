@@ -8,7 +8,6 @@ import tailwind from '@astrojs/tailwind';
 import mdx from '@astrojs/mdx';
 import icon from 'astro-icon';
 import compress from 'astro-compress';
-import react from '@astrojs/react';
 
 import astrowind from './vendor/integration';
 
@@ -20,7 +19,6 @@ export default defineConfig({
   output: 'static',
   site: 'https://teamodyssey.space',
   integrations: [
-    react(),
     tailwind({
       applyBaseStyles: false,
     }),

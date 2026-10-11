@@ -3,9 +3,9 @@ html[data-scrapbook] {
   --aw-font-sans: 'DM Sans', sans-serif;
   --aw-font-serif: 'DM Sans', sans-serif;
   --aw-font-heading: 'Barlow Condensed', sans-serif;
-  --aw-color-primary: #e18a73;
-  --aw-color-secondary: #b0b292;
-  --aw-color-accent: #c6ae7b;
+  --aw-color-primary: var(--accent-blue);
+  --aw-color-secondary: var(--blue-secondary);
+  --aw-color-accent: var(--blue-accent);
   --aw-color-text-heading: #e6e0d5;
   --aw-color-text-page: #e6e0d5;
   --aw-color-text-default: #d7d1c6;
@@ -23,11 +23,11 @@ html[data-scrapbook] body {
   letter-spacing: 0;
 }
 html[data-scrapbook] ::selection {
-  background: #b5705f;
+  background: var(--accent-blue-strong);
   color: #fff1df;
 }
 html[data-scrapbook] :focus-visible {
-  outline: 2px solid #e18a73;
+  outline: 2px solid var(--accent-blue);
   outline-offset: 5px;
 }
 .scrap-skip {
@@ -62,7 +62,7 @@ html[data-scrapbook] :focus-visible {
   letter-spacing: -2px;
 }
 .scrap-wordmark span {
-  color: #e18a73;
+  color: var(--accent-blue);
 }
 .desktop-links {
   display: flex;
@@ -75,7 +75,7 @@ html[data-scrapbook] :focus-visible {
 }
 .scrap-nav a:hover,
 .scrap-nav a[aria-current='page'] {
-  color: #e18a73;
+  color: var(--accent-blue);
 }
 .desktop-links .scrap-contact-link {
   border: 1px solid #756b5d;
@@ -114,7 +114,7 @@ html[data-scrapbook] :focus-visible {
   font:
     500 28px/1.2 'Caveat',
     cursive;
-  color: #b0b292;
+  color: var(--blue-secondary);
 }
 html[data-scrapbook] .scrap-page {
   min-height: 70vh;
@@ -149,11 +149,11 @@ html[data-scrapbook] .prose h2 {
   margin-top: 1.6em;
 }
 html[data-scrapbook] .prose a {
-  color: #e18a73;
+  color: var(--accent-blue);
 }
 html[data-scrapbook] .prose :is(blockquote, pre) {
   background: #222123;
-  border-color: #b39a61;
+  border-color: var(--blue-rule);
   border-radius: 1px;
 }
 html[data-scrapbook] .prose img {
@@ -174,7 +174,7 @@ html[data-scrapbook] .btn {
   box-shadow: none;
 }
 html[data-scrapbook] .btn-primary {
-  background: #b5705f;
+  background: var(--accent-blue-strong);
   color: #fff1df;
 }
 .page-spread {
@@ -196,7 +196,7 @@ html[data-scrapbook] .btn-primary {
   margin-bottom: 50px;
 }
 .page-intro .pencil-note {
-  color: #e18a73;
+  color: var(--accent-blue);
   margin-bottom: 15px;
   transform: rotate(-2deg);
   width: fit-content;
@@ -244,10 +244,10 @@ html[data-scrapbook] .btn-primary {
 }
 .contact-mail {
   display: inline-block;
-  color: #e18a73;
+  color: var(--accent-blue);
   font-size: clamp(17px, 2.4vw, 28px);
   margin-top: 12px;
-  border-bottom: 1px solid #e18a7370;
+  border-bottom: 1px solid color-mix(in srgb, var(--accent-blue) 44%, transparent);
   padding-bottom: 10px;
   overflow-wrap: anywhere;
 }
@@ -281,7 +281,7 @@ html[data-scrapbook] .btn-primary {
 .link-scraps a > span:last-child {
   margin-left: auto;
   font-size: 24px;
-  color: #e18a73;
+  color: var(--accent-blue);
 }
 .field-entry {
   position: relative;
@@ -295,7 +295,7 @@ html[data-scrapbook] .btn-primary {
 }
 .field-heading .pencil-note {
   margin-bottom: 16px;
-  color: #e18a73;
+  color: var(--accent-blue);
   transform: rotate(-2deg);
   width: fit-content;
 }
@@ -325,16 +325,16 @@ html[data-scrapbook] .btn-primary {
   font-size: 38px;
 }
 .field-entry h2 a:hover {
-  color: #e18a73;
+  color: var(--accent-blue);
 }
 .field-entry time {
-  color: #b0b292;
+  color: var(--blue-secondary);
 }
 .field-entry [class*='rounded'] {
   border-radius: 0;
 }
 .field-entry footer a {
-  color: #b0b292;
+  color: var(--blue-secondary);
   background: #222123;
   border-color: #756b5d;
 }
@@ -347,7 +347,7 @@ html[data-scrapbook] .btn-primary {
   border-radius: 0;
 }
 .field-card h3 a:hover {
-  color: #e18a73;
+  color: var(--accent-blue);
 }
 html[data-scrapbook] .post-print {
   background: #29272a;
@@ -436,19 +436,19 @@ html[data-scrapbook] .post-print img {
     scroll-behavior: auto;
   }
 }
-@media (min-width: 768px) and (prefers-reduced-motion: no-preference) {
+@media (prefers-reduced-motion: no-preference) {
   [data-reveal-state='pending'] {
     opacity: 0;
-    transform: translateY(2rem);
+    transform: translateY(var(--reveal-distance, 2rem));
   }
   [data-reveal-state='shown'] {
-    animation: scrap-reveal 550ms ease-out both;
+    animation: scrap-reveal var(--reveal-duration, 550ms) ease-out both;
   }
 }
 @keyframes scrap-reveal {
   from {
     opacity: 0;
-    transform: translateY(2rem);
+    transform: translateY(var(--reveal-distance, 2rem));
   }
   to {
     opacity: 1;

@@ -1,4 +1,51 @@
 :root {
+  --color-transition-duration: 150ms;
+  --color-transition-ease: cubic-bezier(0.4, 0, 0.2, 1);
+  --color-transition-properties:
+    color, background-color, border-color, outline-color, text-decoration-color, fill, stroke;
+  --color-transitions:
+    color var(--color-transition-duration) var(--color-transition-ease),
+    background-color var(--color-transition-duration) var(--color-transition-ease),
+    border-color var(--color-transition-duration) var(--color-transition-ease),
+    outline-color var(--color-transition-duration) var(--color-transition-ease),
+    text-decoration-color var(--color-transition-duration) var(--color-transition-ease),
+    fill var(--color-transition-duration) var(--color-transition-ease),
+    stroke var(--color-transition-duration) var(--color-transition-ease);
   --paper: #141416;
+  --accent-blue: #2b7fee;
+  --accent-blue-strong: #2468c7;
+  --blue-secondary: #6f94c7;
+  --blue-accent: #4f91eb;
+  /* Keep the existing ink variable compatible with the home styles. */
+  --red: var(--accent-blue);
+  --blue-dark: color-mix(in oklab, var(--accent-blue) 85%, black);
+  --blue-light: color-mix(in oklab, var(--accent-blue) 75%, white);
+  --blue-muted: color-mix(in oklab, var(--accent-blue) 42%, #a9a39b);
+  --blue-surface: color-mix(in oklab, #222123 92%, var(--accent-blue));
+  --blue-surface-strong: color-mix(in oklab, #222123 87%, var(--accent-blue));
+  --blue-note: #a8c5e8;
+  --blue-note-ink: #12253c;
+  --blue-tape: #b8cce080;
+  --blue-rule: #526d91;
+  --team-leadership: var(--accent-blue);
+  --team-mentors: #9fbce4;
+  --team-computing: #79b3f7;
+  --team-mechanical: var(--blue-accent);
+  --team-science: #8aaeee;
+  --team-electrical: #74a9df;
+  --team-media: #a0bde7;
   --paper-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' opacity='.045' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.transition-colors,
+:where(a, button, summary, input, select, textarea, [data-mode], svg, svg *) {
+  transition-property: var(--color-transition-properties);
+  transition-timing-function: var(--tw-ease, var(--color-transition-ease));
+  transition-duration: var(--tw-duration, var(--color-transition-duration));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --color-transition-duration: 0ms;
+  }
 }

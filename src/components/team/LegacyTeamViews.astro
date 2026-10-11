@@ -125,7 +125,7 @@ const views = [
     {
       legacyGroups.map((group) => (
         <section class="grid-section">
-          <h2 class="section-title" style={`border-bottom-color:${group.color}33`}>
+          <h2 class="section-title" style={`border-bottom-color:color-mix(in srgb, ${group.color} 20%, transparent)`}>
             {group.id !== 'mentors' && group.id !== 'leadership' && (
               <span class="section-dot" style={`background:${group.color}`} />
             )}

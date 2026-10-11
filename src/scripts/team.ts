@@ -90,7 +90,7 @@ export function initTeam() {
         .slice(0, 2)
         .join('')
         .toUpperCase();
-      avatar.style.background = card.dataset.avatarGradient || '#3b352d';
+      avatar.style.background = card.dataset.avatarGradient || 'var(--blue-surface-strong)';
     }
     let hasSocials = false;
     socialLinks.forEach((link) => {

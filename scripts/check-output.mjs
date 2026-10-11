@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse } from 'parse5';
+import ts from 'typescript';
 
 const dist = fileURLToPath(new URL('../dist/', import.meta.url));
 assert(fs.existsSync(dist), 'Run npm run build before checking output');
@@ -84,6 +85,20 @@ const getProfiles = (file) => {
   return JSON.parse(html.match(/<script\b[^>]*id="team-profiles"[^>]*>([\s\S]*?)<\/script>/)[1]);
 };
 assert.deepEqual(getProfiles('team'), getProfiles('teams'), 'The legacy team URL must preserve every profile');
-assert.equal(Object.keys(getProfiles('teams')).length, 50, 'Keep all team profiles');
+const { outputText } = ts.transpileModule(fs.readFileSync(new URL('../src/data/teams.ts', import.meta.url), 'utf8'), {
+  compilerOptions: { target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.ESNext },
+});
+const { default: teamData } = await import(`data:text/javascript;base64,${Buffer.from(outputText).toString('base64')}`);
+const profiles = getProfiles('teams');
+const expectedProfiles = Object.entries(teamData).flatMap(([group, members]) =>
+  members.map((member, index) => [`${group}-${index}`, member])
+);
+assert.equal(Object.keys(profiles).length, expectedProfiles.length, 'Keep every profile from the current team data');
+for (const [id, member] of expectedProfiles) {
+  const fields = Object.fromEntries(Object.keys(member).map((key) => [key, profiles[id]?.[key]]));
+  assert.deepEqual(fields, member, `Preserve the authored data for ${id}`);
+}
 assert.equal(errors.length, 0, errors.join('\n'));
-console.log(`Checked ${htmlFiles.length} HTML files, ${checked} local references, headings, and 50 team profiles.`);
+console.log(
+  `Checked ${htmlFiles.length} HTML files, ${checked} local references, headings, and ${expectedProfiles.length} team profiles.`
+);

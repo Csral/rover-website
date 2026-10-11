@@ -40,7 +40,7 @@ import ink from '~/data/hero-ink.json';
 <a class="hero-sticky" href="#about" aria-label="Scroll to the scrapbook">
   <span class="tape" aria-hidden="true"></span><span class="handwritten">Scroll away</span>
 </a>
-<div class="hero-apology">
+<div class="hero-apology" style={`--ink-width: ${ink.width}px`}>
   <svg class="pen-note" viewBox={`0 0 ${ink.width} ${ink.height}`} role="img" aria-label={ink.text}>
     {ink.paths.map((d) => <path d={d} />)}
   </svg>

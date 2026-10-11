@@ -171,7 +171,7 @@
   transform-origin: 87.5% 72.222%;
 }
 .return-arrow {
-  color: #b0b292;
+  color: var(--blue-muted);
 }
 .hero-sticky {
   position: absolute;
@@ -184,8 +184,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #b39a61;
-  color: #252016;
+  background: var(--blue-note);
+  color: var(--blue-note-ink);
   box-shadow: 4px 9px 15px #0005;
   transform: rotate(5deg);
   clip-path: polygon(0 0, 100% 0, 100% 87%, 90% 100%, 0 100%);
@@ -207,9 +207,10 @@
   z-index: 4;
   left: 8%;
   bottom: 55px;
-  width: min(47vw, 620px);
+  width: min(47vw, var(--ink-width));
+  max-width: var(--ink-width);
   transform: rotate(-2deg);
-  color: #b0b292;
+  color: var(--blue-muted);
 }
 .pen-note {
   width: 100%;

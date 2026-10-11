@@ -22,18 +22,18 @@ export interface TeamDivision extends TeamGroup {
 }
 
 export const teamColors = {
-  leadership: '#e18a73',
-  mentors: '#c7a780',
-  computing: '#9ba68d',
-  mechanical: '#b5705f',
-  science: '#bdab77',
-  electrical: '#9e8877',
-  media: '#b49f9d',
+  leadership: 'var(--team-leadership)',
+  mentors: 'var(--team-mentors)',
+  computing: 'var(--team-computing)',
+  mechanical: 'var(--team-mechanical)',
+  science: 'var(--team-science)',
+  electrical: 'var(--team-electrical)',
+  media: 'var(--team-media)',
 };
 
 const divisions = [
   { key: 'CS and AI', id: 'computer-science', label: 'CS & AI', lead: 'Chaturya', color: teamColors.computing },
-  { key: 'Science', id: 'science', label: 'Science', lead: 'Lohitashwa Talamanchi', color: teamColors.science },
+  { key: 'Science', id: 'science', label: 'Science', lead: 'Rtamanyu', color: teamColors.science },
   { key: 'Electrical', id: 'electrical', label: 'EC & EE', lead: 'Prakhar', color: teamColors.electrical },
   { key: 'Mechanical', id: 'mechanical', label: 'Mechanical', lead: 'M Nikhil', color: teamColors.mechanical },
   { key: 'Media', id: 'media', label: 'Media', lead: 'Pragathi L', color: teamColors.media },

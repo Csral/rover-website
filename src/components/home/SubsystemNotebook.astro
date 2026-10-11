@@ -1,0 +1,177 @@
+---
+const subsystems = [
+  {
+    name: 'Mechanical',
+    id: 'mechanical',
+    mark: '↻',
+    title: 'Give it a way to move.',
+    description:
+      'The physical build of Skanda, from its chassis and wheels to the robotic arm. The mechanical team makes sure the rover moves, reaches, and holds up on difficult terrain.',
+    tags: ['Chassis & suspension', 'Robotic arm', 'Terrain navigation'],
+  },
+  {
+    name: 'Electrical',
+    id: 'electrical',
+    mark: 'ϟ',
+    title: 'Bring the machine to life.',
+    description:
+      'Sensors, power management, and stable communication. The electrical team connects the rover’s systems and keeps power and information flowing where they need to go.',
+    tags: ['Power distribution', 'Sensors', 'Communication'],
+  },
+  {
+    name: 'Computer science',
+    id: 'computer-science',
+    mark: '</>',
+    title: 'Teach it what comes next.',
+    description:
+      'The programs that turn directions into action. The CS team builds the rover’s control software and algorithms for autonomous operations.',
+    tags: ['Rover control', 'Autonomy', 'Algorithms'],
+  },
+  {
+    name: 'Science',
+    id: 'science',
+    mark: '⚗',
+    title: 'Look closer at the ground.',
+    description:
+      'Samples carry clues. The science team gathers and analyses them, designing experiments and turning the rover’s observations into useful insights.',
+    tags: ['Sample collection', 'Scientific analysis', 'Experiments'],
+  },
+  {
+    name: 'Media',
+    id: 'media',
+    mark: '✳',
+    title: 'Tell the story behind it.',
+    description:
+      'Outreach, sponsorships, social media, and documentation. The media team shares the work and connects Team Odyssey with the people who help make it possible.',
+    tags: ['Outreach', 'Sponsorships', 'Documentation'],
+  },
+];
+---
+
+<subsystem-notebook class="notebook">
+  <div class="notebook-tabs" role="tablist" aria-label="Rover subsystems">
+    {
+      subsystems.map((subsystem, index) => (
+        <button
+          id={`subsystem-tab-${index}`}
+          type="button"
+          role="tab"
+          aria-selected={index === 0}
+          aria-controls={`subsystem-panel-${index}`}
+          tabindex={index === 0 ? 0 : -1}
+        >
+          <span>{subsystem.name}</span>
+        </button>
+      ))
+    }
+  </div>
+  <div class="notebook-page">
+    <div class="notebook-holes" aria-hidden="true"><i></i><i></i><i></i></div>
+    {
+      subsystems.map((subsystem, index) => (
+        <div
+          id={`subsystem-panel-${index}`}
+          class="notebook-content"
+          role="tabpanel"
+          aria-labelledby={`subsystem-tab-${index}`}
+          tabindex="0"
+          hidden={index !== 0}
+        >
+          <div>
+            <span class="small-note">{subsystem.name} subsystem</span>
+            <h3>{subsystem.title}</h3>
+            <p>{subsystem.description}</p>
+            <ul class="subsystem-tags">
+              {subsystem.tags.map((tag) => (
+                <li>{tag}</li>
+              ))}
+            </ul>
+            <a class="ink-link" href={`/teams#${subsystem.id}`}>
+              Meet the {subsystem.name === 'Computer science' ? 'CS' : subsystem.name.toLowerCase()} team
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+          <div class="subsystem-doodle" aria-hidden="true">
+            <span>{subsystem.mark}</span>
+            <span class="handwritten">
+              {subsystem.name === 'Mechanical' ? 'Built to get a little dusty.' : 'One piece of the bigger picture.'}
+            </span>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+</subsystem-notebook>
+
+<script>
+  class SubsystemNotebook extends HTMLElement {
+    private controller?: AbortController;
+    private animation?: Animation;
+
+    connectedCallback() {
+      if (this.controller) return;
+      this.controller = new AbortController();
+      const { signal } = this.controller;
+      const tabs = [...this.querySelectorAll<HTMLButtonElement>('[role="tab"]')];
+      const panels = [...this.querySelectorAll<HTMLElement>('[role="tabpanel"]')];
+      const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+      let selected = tabs.findIndex((tab) => tab.getAttribute('aria-selected') === 'true');
+
+      const select = (index: number, focus = false) => {
+        if (focus) tabs[index].focus();
+        if (index === selected) return;
+        this.animation?.cancel();
+        tabs.forEach((tab, i) => {
+          tab.setAttribute('aria-selected', String(i === index));
+          tab.tabIndex = i === index ? 0 : -1;
+          panels[i].hidden = i !== index;
+        });
+        selected = index;
+        if (!reducedMotion.matches) {
+          this.animation = panels[index].animate(
+            [
+              { opacity: 0, transform: 'translateY(6px)' },
+              { opacity: 1, transform: 'translateY(0)' },
+            ],
+            { duration: 180, easing: 'ease-out' }
+          );
+        }
+      };
+      this.addEventListener(
+        'click',
+        (event) => {
+          if (!(event.target instanceof Element)) return;
+          const index = tabs.indexOf(event.target.closest<HTMLButtonElement>('[role="tab"]')!);
+          if (index >= 0) select(index);
+        },
+        { signal }
+      );
+      this.addEventListener(
+        'keydown',
+        (event) => {
+          if (!(event.target instanceof Element)) return;
+          const index = tabs.indexOf(event.target.closest<HTMLButtonElement>('[role="tab"]')!);
+          if (index < 0) return;
+          let next: number;
+          if (event.key === 'ArrowRight') next = (index + 1) % tabs.length;
+          else if (event.key === 'ArrowLeft') next = (index + tabs.length - 1) % tabs.length;
+          else if (event.key === 'Home') next = 0;
+          else if (event.key === 'End') next = tabs.length - 1;
+          else return;
+          event.preventDefault();
+          select(next, true);
+        },
+        { signal }
+      );
+      reducedMotion.addEventListener('change', () => this.animation?.cancel(), { signal });
+    }
+
+    disconnectedCallback() {
+      this.controller?.abort();
+      this.controller = undefined;
+      this.animation?.cancel();
+    }
+  }
+
+  if (!customElements.get('subsystem-notebook')) customElements.define('subsystem-notebook', SubsystemNotebook);
+</script>

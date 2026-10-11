@@ -1,0 +1,32 @@
+---
+import logo from '~/assets/images/logo.svg';
+---
+
+<span class="site-logo">
+  <img src={logo.src} alt="" width="400" height="120" />
+</span>
+
+<style>
+  .site-logo {
+    display: flex;
+    align-items: center;
+    flex: none;
+    width: 128px;
+    margin-inline-start: 8px;
+  }
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  @media (max-width: 700px) {
+    :global(.home-header) .site-logo {
+      width: 96px;
+    }
+  }
+  @media (max-width: 380px) {
+    :global(.home-header) .site-logo {
+      width: 88px;
+    }
+  }
+</style>

@@ -338,19 +338,6 @@ const teamData: Record<string, TeamMember[]> = {
 
   Media: [
     {
-      name: 'Kokkalla Akshaya',
-      role: 'Member',
-      subdivision: 'Media',
-      speciality: 'Multitasking',
-      about: 'Committed to excellence through hard work, punctuality, and dedication.',
-      photo: 'Akshaya Kokkalla.png',
-      socials: {
-        github: 'https://github.com/akshayakokkalla',
-        linkedin: 'https://www.linkedin.com/in/akshaya-kokkalla-4a591b372',
-        email: 'akshayakokkalla@gmail.com',
-      },
-    },
-    {
       name: 'Janya Billa',
       role: 'Member',
       subdivision: 'Media',
@@ -408,26 +395,18 @@ const teamData: Record<string, TeamMember[]> = {
       },
     },
     {
-      name: 'Rtamanyu',
+      name: 'Lohitashwa Talamanchi',
       role: 'Member',
       subdivision: 'Science',
-      speciality: 'AI, DSA, C++, Python & ROS',
-      about: 'An AI enthusiast with a broad pool of coding experience.',
-      photo: 'Rtamanyu N J.png',
-      socials: {
-        github: 'https://github.com/God-Gamer-Manyu',
-        linkedin: 'https://www.linkedin.com/in/rtamanyu-nadumuri-799b06316',
-        email: 'rtamanyu@gmail.com',
-      },
-    },
-    {
-      name: 'Babitha',
-      role: 'Member',
-      subdivision: 'Science',
-      speciality: null,
-      about: null,
+      speciality: 'PCB Design',
+      about:
+        'Electronics and Communication Engineer leading scientific payload development and embedded module integration.',
       photo: 'default.png',
-      socials: { github: 'https://github.com', linkedin: 'https://linkedin.com', email: '—' },
+      socials: {
+        github: 'https://github.com/ashwa04',
+        linkedin: 'https://www.linkedin.com/in/lohithashwa-talamanchi-51739b327',
+        email: 'lohithashwa@gmail.com',
+      },
     },
     {
       name: 'G Akhileshwar Reddy',
@@ -525,17 +504,16 @@ const teamData: Record<string, TeamMember[]> = {
       },
     },
     {
-      name: 'Lohitashwa Talamanchi',
+      name: 'Rtamanyu',
       role: 'Team Lead',
       subdivision: 'Science',
-      speciality: 'PCB Design',
-      about:
-        'Electronics and Communication Engineer leading scientific payload development and embedded module integration.',
-      photo: 'default.png',
+      speciality: 'AI, DSA, C++, Python & ROS',
+      about: 'An AI enthusiast with a broad pool of coding experience.',
+      photo: 'Rtamanyu N J.png',
       socials: {
-        github: 'https://github.com/ashwa04',
-        linkedin: 'https://www.linkedin.com/in/lohithashwa-talamanchi-51739b327',
-        email: 'lohithashwa@gmail.com',
+        github: 'https://github.com/God-Gamer-Manyu',
+        linkedin: 'https://www.linkedin.com/in/rtamanyu-nadumuri-799b06316',
+        email: 'rtamanyu@gmail.com',
       },
     },
     {

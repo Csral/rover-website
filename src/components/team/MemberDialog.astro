@@ -59,7 +59,7 @@ const socials = [
     padding: 0;
     border: 1px solid #756b5d;
     border-radius: 2px;
-    background: #222123;
+    background: var(--blue-surface);
     color: #d7d1c6;
     box-shadow: 0 25px 50px #0008;
     overflow: auto;
@@ -82,7 +82,7 @@ const socials = [
     height: 44px;
     border: 1px solid #756b5d;
     border-radius: 2px;
-    background: #222123;
+    background: var(--blue-surface);
     color: #e6e0d5;
     font-size: 26px;
     cursor: pointer;
@@ -131,7 +131,7 @@ const socials = [
     margin: 0 0 4px;
   }
   #modal-role {
-    color: #e18a73;
+    color: var(--blue-light);
     font-size: 13px;
     margin: 0;
   }
@@ -139,8 +139,8 @@ const socials = [
     display: inline-block;
     margin-top: 8px;
     padding: 3px 10px;
-    color: #c7ba98;
-    background: #3b352d;
+    color: var(--blue-light);
+    background: var(--blue-surface-strong);
     font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -174,8 +174,12 @@ const socials = [
     width: 40px;
     height: 40px;
     border: 1px solid #756b5d60;
-    color: #c7ba98;
-    background: #29272a;
+    color: var(--blue-light);
+    background: var(--blue-surface-strong);
+  }
+  .profile-socials a:is(:hover, :focus-visible) {
+    color: #e6e0d5;
+    border-color: currentColor;
   }
   .member-dialog [hidden] {
     display: none !important;
