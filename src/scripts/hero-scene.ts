@@ -1,11 +1,11 @@
 import { WebGLRenderer, Scene, OrthographicCamera } from 'three';
 import { createGlobe } from './globe';
 
-/** Keep the globe inside the O, so it follows the letter's layout and GSAP transforms. */
+/** Keep the globe inside the period, following its layout and GSAP transforms. */
 export function createHeroScene(stage: HTMLElement, animated: boolean) {
   const letter = stage.querySelector<HTMLElement>('.earth-letter')!;
   const renderer = new WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'low-power' });
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.5));
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.setClearColor(0x000000, 0);
   renderer.domElement.setAttribute('aria-hidden', 'true');
   letter.append(renderer.domElement);
@@ -20,9 +20,10 @@ export function createHeroScene(stage: HTMLElement, animated: boolean) {
   let visible = true,
     disposed = false,
     contextLost = false;
+  let diameter = letter.clientWidth;
   function draw() {
     if (disposed || contextLost) return;
-    globe.update(time, renderer.getPixelRatio());
+    globe.update(time, renderer.getPixelRatio(), diameter);
     renderer.render(scene, camera);
   }
   function render(now: number) {
@@ -43,7 +44,8 @@ export function createHeroScene(stage: HTMLElement, animated: boolean) {
   }
   const resize = new ResizeObserver(() => {
     if (disposed) return;
-    renderer.setSize(letter.clientWidth, letter.clientHeight, false);
+    diameter = letter.clientWidth;
+    renderer.setSize(diameter, letter.clientHeight, false);
     draw();
   });
   const observer = new IntersectionObserver(([entry]) => {

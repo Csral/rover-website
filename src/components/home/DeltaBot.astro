@@ -1,0 +1,146 @@
+<svg class="delta-bot" viewBox="0 0 320 190" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+  <defs>
+    <linearGradient id="pendant-metal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#65717c"></stop>
+      <stop offset="0.16" stop-color="#a5b0b8"></stop>
+      <stop offset="0.3" stop-color="#424b54"></stop>
+      <stop offset="0.72" stop-color="#252d35"></stop>
+      <stop offset="0.9" stop-color="#6a747e"></stop>
+      <stop offset="1" stop-color="#1a2027"></stop>
+    </linearGradient>
+  </defs>
+  <path class="lamp-casing" d="M8 8H312L319 15 313 38H7L1 15Z"></path>
+  <g class="lamp-details">
+    <path class="lamp-seam" d="M3 15H317M8 31H312M36 16V30M284 16V30"></path>
+    <path class="lamp-brushing" d="M43 20H275M50 23H268M43 26H275"></path>
+    {
+      [18, 302].map((x) => (
+        <g class="lamp-fastener">
+          <circle cx={x} cy="23" r="2.6" />
+          <path d={`M${x - 1} 22L${x + 1} 24M${x + 1} 22L${x - 1} 24`} />
+        </g>
+      ))
+    }
+    <path class="lamp-vents" d="M131 18V28M137 18V28M143 18V28M177 18V28M183 18V28M189 18V28"></path>
+  </g>
+  <!-- Cable sockets belong to both forms; only the lamp's surface details fade. -->
+  {
+    [64, 256].map((x) => (
+      <g class="lamp-terminal">
+        <rect x={x - 5} y="3" width="10" height="6" rx="1" />
+        <path d={`M${x - 3} 4V7M${x} 4V7M${x + 3} 4V7`} />
+      </g>
+    ))
+  }
+  <path class="lamp-led" d="M12 34H308"></path>
+  <g class="delta-mechanism">
+    {
+      [48, 160, 272].map((x, arm) => (
+        <g class="delta-arm" data-arm={arm}>
+          <rect class="delta-motor" x={x - 10} y="17" width="20" height="16" rx="3" />
+          <path class="delta-upper" />
+          <path class="delta-rods" />
+          <circle class="delta-joint" r="3" />
+        </g>
+      ))
+    }
+    <g class="delta-head">
+      <ellipse class="delta-platform" rx="13" ry="5"></ellipse>
+      <rect class="delta-tool" x="-6" y="-1" width="12" height="9" rx="2"></rect>
+      <path class="delta-jaw delta-jaw-left" d="M-10 6V13L-5 16"></path>
+      <path class="delta-jaw delta-jaw-right" d="M10 6V13L5 16"></path>
+    </g>
+  </g>
+</svg>
+<style>
+  .delta-bot :global(*) {
+    transition: none;
+  }
+  .delta-bot {
+    position: absolute;
+    left: 0;
+    top: -0.45em;
+    width: 100%;
+    height: 1.1em;
+    overflow: visible;
+    pointer-events: none;
+    z-index: 5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .lamp-casing {
+    fill: url(#pendant-metal);
+    stroke: #929ea8;
+    stroke-width: 0.8;
+  }
+  .lamp-details,
+  .lamp-terminal {
+    fill: none;
+    stroke: #aab5be;
+    stroke-width: 0.5;
+  }
+  .lamp-seam {
+    stroke: #171e26;
+  }
+  .lamp-brushing {
+    opacity: 0.18;
+    stroke-width: 0.25;
+  }
+  .lamp-fastener circle {
+    fill: #343f49;
+    stroke: #bcc6cf;
+  }
+  .lamp-fastener path {
+    stroke: #10171d;
+  }
+  .lamp-terminal rect {
+    fill: #1b242e;
+    stroke: #9aa9b5;
+  }
+  .lamp-terminal path {
+    stroke: #536c80;
+  }
+  .lamp-vents {
+    stroke: #111820;
+    stroke-width: 1.2;
+  }
+  .lamp-details,
+  .lamp-led {
+    opacity: 1;
+  }
+  .lamp-led {
+    stroke: #ffe1a4;
+    stroke-width: 2.4;
+    filter: drop-shadow(0 2px 3px #e8b46b80);
+  }
+  .delta-mechanism {
+    visibility: hidden;
+  }
+  .delta-motor,
+  .delta-platform,
+  .delta-tool {
+    fill: #161d2a;
+    stroke: #8996a8;
+    stroke-width: 1;
+  }
+  .delta-upper {
+    fill: none;
+    stroke: #8b98aa;
+    stroke-width: 4;
+  }
+  .delta-rods {
+    fill: none;
+    stroke: #aeb8c7;
+    stroke-width: 1.25;
+  }
+  .delta-joint {
+    fill: #26364c;
+    stroke: #bdc7d5;
+    stroke-width: 1;
+  }
+  .delta-jaw {
+    fill: none;
+    stroke: #c4cedc;
+    stroke-width: 2;
+  }
+</style>

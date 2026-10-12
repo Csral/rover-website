@@ -1,0 +1,78 @@
+<svg class="hero-ship" viewBox="0 0 600 120" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+  <g class="ship-rigging">
+    <path d="M300 65V-185M92-170H508M92-170 62 67M508-170 536 67M300-185 92-170M300-185 508-170"></path>
+    <path d="M300-170 138 66M300-170 465 66"></path>
+  </g>
+  <path
+    class="ship-hull"
+    d="M54 68C33 63 17 46 25 27Q37 9 45 23Q50 33 39 34Q45 44 63 48C204 65 397 65 538 48Q555 40 551 28Q542 26 547 16Q558 6 566 22C580 43 562 63 547 72L520 98Q306 131 81 98Z"
+  ></path>
+  <path class="ship-rim" d="M57 51Q297 84 542 51M57 61Q300 92 543 61"></path>
+  <path
+    class="ship-planks"
+    d="M72 78Q300 109 532 78M81 90Q300 119 522 90M118 68 123 103M189 73 193 110M260 77 262 115M335 77 333 115M410 73 406 110M482 66 478 104"
+  ></path>
+  {
+    Array.from({ length: 10 }, (_, i) => (
+      <g class="ship-shield" transform={`translate(${99 + i * 44} ${72 + Math.sin((i / 9) * Math.PI) * 12})`}>
+        <circle r="9" />
+        <path d="M-8 0H8M0-8V8" />
+        <circle class="shield-boss" r="2.2" />
+      </g>
+    ))
+  }
+  <path class="ship-keel" d="M113 109Q301 128 490 109"></path>
+</svg>
+
+<style>
+  .hero-ship {
+    position: absolute;
+    top: 0.8em;
+    left: -0.45em;
+    width: calc(100% + 0.9em);
+    height: 0.55em;
+    overflow: visible;
+    visibility: hidden;
+    pointer-events: none;
+    z-index: -1;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .ship-hull {
+    fill: #15202a;
+    stroke: #94a6b4;
+    stroke-width: 1.6;
+  }
+  .ship-rim {
+    fill: none;
+    stroke: #b89c72;
+    stroke-width: 2;
+  }
+  .ship-planks,
+  .ship-keel {
+    fill: none;
+    stroke: #657788;
+    stroke-width: 0.8;
+  }
+  .ship-rigging {
+    fill: none;
+    stroke: #8895a5;
+    stroke-width: 0.9;
+    opacity: 0.55;
+  }
+  .ship-shield circle {
+    fill: #253d53;
+    stroke: #b49d79;
+    stroke-width: 1;
+  }
+  .ship-shield:nth-child(even) circle {
+    fill: #51402d;
+  }
+  .ship-shield path {
+    stroke: #a2b4c2;
+    stroke-width: 0.5;
+  }
+  .ship-shield .shield-boss {
+    fill: #c6b796;
+  }
+</style>

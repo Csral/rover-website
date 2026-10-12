@@ -1,31 +1,37 @@
 ---
 import GlobeFallback from './GlobeFallback.astro';
+import DeltaBot from './DeltaBot.astro';
+import LetterPrinter from './LetterPrinter.astro';
+import HeroShip from './HeroShip.astro';
 import ink from '~/data/hero-ink.json';
 ---
 
 <div class="hero-type">
   <h1 class="kinetic-title" aria-label="Team Odyssey">
-    <span class="team-word" aria-hidden="true">
-      <span class="hero-letter letter-t">T</span><span class="orbit-pair"
-        ><span class="hero-letter letter-e">e</span><span class="hero-letter letter-a">a</span></span
-      ><span class="hero-letter letter-m">m</span>
+    <span class="team-stage" aria-hidden="true">
+      <span class="pendant-glow"></span>
+      <DeltaBot />
+      <span class="team-word">
+        <HeroShip />
+        <span class="hero-letter letter-t">T</span><span class="orbit-pair"
+          ><span class="hero-letter letter-e">e</span><span class="hero-letter letter-a">a</span></span
+        ><span class="hero-letter letter-m">m</span>
+      </span>
     </span>
     <span class="odyssey-word" aria-hidden="true">
-      <span class="earth-letter hero-letter"><span class="earth-fallback"><GlobeFallback /></span></span><span
-        class="hero-letter letter-d">d</span
-      ><span class="hero-letter letter-y-first">
-        <span class="y-fill">y</span>
-        <svg class="y-drawing" viewBox="0 0 60 100" aria-hidden="true">
-          <path class="y-arm" d="M8 25 28 68"></path><path class="y-stem" d="M50 25 28 77Q23 87 9 87"></path>
-        </svg>
-      </span><span class="hero-letter letter-s-first">s</span><span class="hero-letter letter-s-second">s</span><span
-        class="hero-letter letter-e-last">e</span
+      <span class="hero-letter letter-o">O</span><span class="hero-letter letter-d">d</span><span
+        class="hero-letter letter-y-first">y</span
+      ><span class="hero-letter letter-s-first">s</span><span class="hero-letter letter-s-second">s</span><span
+        class="hero-letter letter-e-last"><LetterPrinter /></span
       ><span class="hero-letter letter-y-last">
         <span class="y-reel"><span>y</span><span aria-hidden="true">y</span><span aria-hidden="true">y</span></span>
-      </span>
+      </span><span class="earth-letter hero-letter"><span class="earth-fallback"><GlobeFallback /></span></span>
     </span>
   </h1>
 </div>
+<svg class="lamp-cables" aria-hidden="true" focusable="false">
+  {[0, 1, 2, 3, 4, 5].map((strand) => <path stroke-opacity={1 - (strand % 3) * 0.23} />)}
+</svg>
 <div class="hero-annotation">
   <span class="typed-note handwritten" aria-label="that's us">that's us</span>
   <svg class="rotating-arrow" viewBox="0 0 240 180" aria-hidden="true">

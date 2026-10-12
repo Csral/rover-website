@@ -92,12 +92,13 @@ export function createGlobe() {
   group.add(grid);
   return {
     group,
-    update(time: number, pixelRatio: number) {
+    update(time: number, pixelRatio: number, diameter: number) {
+      const detailScale = Math.min(1, diameter / 40);
       group.rotation.y = -0.28 + time * 0.06;
       pointMaterial.uniforms.uLight.value = 1.1;
-      pointMaterial.uniforms.uSize.value = 1.2 * pixelRatio;
+      pointMaterial.uniforms.uSize.value = Math.max(0.35, 1.2 * detailScale) * pixelRatio;
       glowMaterial.uniforms.uLight.value = 1.1;
-      glowMaterial.uniforms.uSize.value = pointMaterial.uniforms.uSize.value * 3.5;
+      glowMaterial.uniforms.uSize.value = pointMaterial.uniforms.uSize.value * (1.5 + 2 * detailScale);
       gridMaterial.opacity = 0.44;
     },
     dispose() {

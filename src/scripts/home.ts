@@ -2,6 +2,10 @@ import gsap from 'gsap';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 import { MorphSVGPlugin } from 'gsap/MorphSVGPlugin';
 import type { createHeroScene } from './hero-scene';
+import { createDeltaSwap } from './delta-swap';
+import { createLetterPrint } from './letter-print';
+import { createPendantWires } from './hero-wires';
+import type { HeroLighting } from './hero-atmosphere';
 
 gsap.registerPlugin(DrawSVGPlugin, MorphSVGPlugin);
 type HeroScene = NonNullable<ReturnType<typeof createHeroScene>>;
@@ -25,6 +29,8 @@ export function initHome() {
     (context) => {
       const animated = Boolean(context.conditions?.animated);
       let active = true;
+      const atmosphereController = new AbortController();
+      const lighting: HeroLighting = { light: 0, wake: 0 };
       let resize: ResizeObserver | undefined;
       if (animated) stage.classList.add('kinetic-loading');
 
@@ -34,22 +40,19 @@ export function initHome() {
         note.textContent = "that's us";
         const q = <T extends Element = HTMLElement>(selector: string) => stage!.querySelector<T>(selector)!;
         const team = q('.team-word');
+        const ship = q<SVGSVGElement>('.hero-ship');
+        const positionWires = createPendantWires(stage!);
+        const accentBlue = getComputedStyle(stage!).getPropertyValue('--accent-blue').trim();
         const letters = [...stage!.querySelectorAll<HTMLElement>('.hero-letter')];
         const e = q<HTMLElement>('.letter-e'),
           a = q<HTMLElement>('.letter-a');
         const s1 = q<HTMLElement>('.letter-s-first'),
           s2 = q<HTMLElement>('.letter-s-second');
-        const orbit = { angle: 0 };
+        const delta = animated ? createDeltaSwap(q<HTMLElement>('.orbit-pair'), e, a, lighting) : undefined;
+        const printer = animated ? createLetterPrint(q<HTMLElement>('.letter-e-last')) : undefined;
         const typing = { count: 0 };
         const firstNote = "Yes, that's us";
         const finalNote = "that's us";
-        let orbitX = (e.offsetLeft + e.offsetWidth / 2 + a.offsetLeft + a.offsetWidth / 2) / 2;
-        let eRadius = orbitX - e.offsetLeft - e.offsetWidth / 2;
-        let aRadius = a.offsetLeft + a.offsetWidth / 2 - orbitX;
-        const setEX = gsap.quickSetter(e, 'x', 'px'),
-          setEY = gsap.quickSetter(e, 'y', 'px');
-        const setAX = gsap.quickSetter(a, 'x', 'px'),
-          setAY = gsap.quickSetter(a, 'y', 'px');
         const inkPaths = [...stage!.querySelectorAll<SVGPathElement>('.pen-note path')];
         const arrowPaths = stage!.querySelectorAll('.rotating-arrow path, .return-arrow path');
         let fallenX = 0;
@@ -69,16 +72,28 @@ export function initHome() {
           const targetX = mobile ? word.left + word.width * 0.4 : word.right + 40;
           const targetY = mobile ? word.bottom + 28 : word.top + 10;
           const desiredLeft = targetX - rect.left - 38 * factor;
-          const noteOffset = mobile ? 160 : 248;
-          const noteWidth = mobile ? 145 : 210;
-          const left = Math.min(desiredLeft, stage!.clientWidth - noteOffset - noteWidth - (mobile ? 25 : 45));
-          const top = targetY - rect.top - 25 * factor;
+          const noteOffset = mobile ? 144 : 248;
+          const noteWidth = mobile ? 125 : 210;
+          const left = Math.max(
+            8,
+            Math.min(desiredLeft, stage!.clientWidth - noteOffset - noteWidth - (mobile ? 20 : 45))
+          );
+          let top = targetY - rect.top - 25 * factor;
+          const stickyLeft = Math.min(
+            left + 210 * factor + (mobile ? 28 : 40),
+            stage!.clientWidth - sticky.offsetWidth - 22
+          );
+          const desiredStickyTop = top + 130 * factor + (mobile ? 18 : 28) + (mobile ? 34 : 38);
+          const stickyTop = Math.min(
+            desiredStickyTop,
+            stage!.clientHeight - sticky.offsetHeight - (mobile ? 135 : 130)
+          );
+          // Raise the whole annotation together, preserving the gap above the sticky.
+          top -= desiredStickyTop - stickyTop;
           annotation.style.left = left + 'px';
           annotation.style.top = top + 'px';
           annotation.style.right = 'auto';
           annotation.style.bottom = 'auto';
-          const stickyLeft = left + 210 * factor + (mobile ? 28 : 40);
-          const stickyTop = top + 130 * factor + (mobile ? 18 : 28) + (mobile ? 34 : 38);
           sticky.style.left = stickyLeft + 'px';
           sticky.style.top = stickyTop + 'px';
           sticky.style.right = 'auto';
@@ -88,15 +103,16 @@ export function initHome() {
           fallenY = stickyTop + sticky.offsetHeight * 0.52 - top - 130 * factor;
         }
         placeNotes();
+        positionWires();
         resize = new ResizeObserver(() => {
           placeNotes();
-          orbitX = (e.offsetLeft + e.offsetWidth / 2 + a.offsetLeft + a.offsetWidth / 2) / 2;
-          eRadius = orbitX - e.offsetLeft - e.offsetWidth / 2;
-          aRadius = a.offsetLeft + a.offsetWidth / 2 - orbitX;
+          delta?.refresh();
+          positionWires();
           if (!animated || (sequence && sequence.time() >= sequence.labels.annotations + 2.8)) settleArrow();
         });
         resize.observe(stage!);
         if (!animated) {
+          gsap.set([e, a], { clearProps: 'transform' });
           settleArrow();
           gsap.set(q('.arrow-line'), { attr: { d: 'M210 130C179 142 142 117 109 68' } });
           gsap.set(q('.arrow-head'), { attr: { d: 'M127 71 109 68 111 85' } });
@@ -104,72 +120,76 @@ export function initHome() {
         }
 
         sequence = gsap.timeline({ defaults: { ease: 'power3.out' } });
-        // Reserve every letter's space so the word does not jump as it assembles.
+        const travel = stage!.clientWidth + team.offsetWidth;
+        const wheelTravel = () =>
+          q<HTMLElement>('.letter-o').getBoundingClientRect().left -
+          stage!.getBoundingClientRect().left +
+          q<HTMLElement>('.letter-o').offsetWidth;
+        const wheelDistance = wheelTravel();
+        const wheelAngle = ((wheelDistance / (q<HTMLElement>('.letter-o').offsetHeight * 0.36)) * 180) / Math.PI;
+        sequence.addLabel('arrival', 1.6).addLabel('departure', 2.8).addLabel('odyssey', 2.2);
+        // Team is the sail. Only the hull and rigging depart once it is delivered.
         sequence
           .set(letters, { clearProps: 'transform,color,visibility,opacity' })
-          .set([e, a, q('.letter-m'), ...letters.slice(4)], { autoAlpha: 0 })
+          .set(letters.slice(4), { autoAlpha: 0 })
+          .set(e, { x: a.offsetWidth })
+          .set(a, { x: -e.offsetWidth })
+          .set(ship, { autoAlpha: 1, x: 0, rotation: 0 })
+          .set(q('.kinetic-title'), { color: '#c4bbaa' })
+          .set([team, q('.odyssey-word')], { color: '#c4bbaa' })
+          .set(q('.lamp-led'), { opacity: 0 })
+          .set(q('.pendant-glow'), { opacity: 0 })
+          .set(q('.hero-apology'), { '--caption-warmth': '0%' })
+          .set(q('.delta-mechanism'), { autoAlpha: 0 })
+          .set(stage!.querySelectorAll('.lamp-cables path'), { stroke: '#05070b' })
           .set([q('.hero-sticky'), note], { autoAlpha: 0 })
           .set(note, { textContent: '' })
           .set(typing, { count: 0 })
-          .set(orbit, { angle: 0 })
           .set(q('.rotating-arrow'), { rotation: 0, x: 0, y: 0 })
           .set(q('.rotating-arrow .arrow-line'), { attr: { d: 'M210 130C166 132 91 80 38 25' } })
           .set(q('.rotating-arrow .arrow-head'), { attr: { d: 'M55 28 38 25 41 43' } })
           .set(arrowPaths, { drawSVG: '0% 0%' })
           .set(inkPaths, { drawSVG: '0% 0%', fillOpacity: 0 })
-          .set(q('.y-drawing'), { opacity: 1 })
-          .set(q('.y-fill'), { opacity: 0 })
           .set(q('.y-reel'), { yPercent: 0 })
           .set(q('.hero-sticky .tape'), { scaleX: 0 })
-          .set(team, { x: () => e.offsetWidth + a.offsetWidth })
-          .to(team, { x: 0, duration: 1.2, ease: 'power2.inOut' }, 0.25)
+          .fromTo(team, { x: -travel, autoAlpha: 1 }, { x: 0, duration: 1.45, ease: 'power3.out' }, 0.15)
+          .to(stage!.querySelectorAll('.lamp-cables path'), { stroke: accentBlue, duration: 0.25 }, 'arrival')
+          .to(lighting, { wake: 1, duration: 0.25 }, 'arrival')
+          .to(lighting, { wake: 0, duration: 0.8 }, 'arrival+=0.25')
+          .add(delta!.timeline, 'arrival')
+          .to(q('.hero-apology'), { '--caption-warmth': '16%', duration: 0.65 }, 'arrival+=4.18')
+          .to(team, { color: '#edcc99', duration: 0.65 }, 'arrival+=4.18')
+          .to(q('.odyssey-word'), { color: '#d9c8ae', duration: 0.65 }, 'arrival+=4.18')
+          .to(ship, { x: -travel, rotation: -3, duration: 1.2, ease: 'power2.in' }, 'arrival')
+          .set(ship, { autoAlpha: 0 }, 'departure')
+          .fromTo(q('.letter-d'), { y: 35, rotation: 8 }, { autoAlpha: 1, y: 0, rotation: 0, duration: 0.6 }, 'odyssey')
+          .set(q('.letter-y-first'), { autoAlpha: 1 }, 'odyssey+=0.2')
+          .fromTo(s1, { y: -25, rotation: -15 }, { autoAlpha: 1, y: 0, rotation: 0, duration: 0.55 }, 'odyssey+=0.4')
+          .set(q('.letter-e-last'), { autoAlpha: 1 }, 'odyssey+=0.6')
+          .add(printer!, 'odyssey+=0.6')
+          .set(q('.letter-y-last'), { autoAlpha: 1 }, 'odyssey+=0.75')
+          .to(q('.y-reel'), { yPercent: -200 / 3, duration: 1.25, ease: 'power2.inOut' }, 'odyssey+=0.75')
+          .set(q('.letter-o'), { autoAlpha: 1 }, 'departure')
           .fromTo(
-            [e, a, q('.letter-m')],
-            { x: -35, scaleX: 0.5 },
-            { autoAlpha: 1, x: 0, scaleX: 1, duration: 0.6, stagger: 0.14 },
-            0.4
+            q('.letter-o'),
+            { x: -wheelDistance, rotation: -wheelAngle },
+            { x: 0, rotation: 0, duration: 1.0, ease: 'power2.out' },
+            'departure'
           )
-          .to(
-            orbit,
-            {
-              angle: Math.PI * 4,
-              duration: 2.2,
-              ease: 'power2.inOut',
-              onUpdate: () => {
-                const { angle } = orbit;
-                setEX(eRadius * (1 - Math.cos(angle)));
-                setEY(-eRadius * Math.sin(angle));
-                setAX(aRadius * (Math.cos(angle) - 1));
-                setAY(aRadius * Math.sin(angle));
-              },
-            },
-            1.15
-          )
-          .fromTo(
-            q('.earth-letter'),
-            { scale: 0.6, rotation: -30 },
-            { autoAlpha: 1, scale: 1, rotation: 0, duration: 0.9, ease: 'back.out(1.3)' },
-            1.15
-          )
-          .fromTo(q('.letter-d'), { y: 35, rotation: 8 }, { autoAlpha: 1, y: 0, rotation: 0, duration: 0.6 }, 1.45)
-          .set(q('.letter-y-first'), { autoAlpha: 1 }, 1.65)
-          .fromTo(q('.y-arm'), { drawSVG: '0% 0%' }, { drawSVG: '0% 100%', duration: 0.35 }, 1.65)
-          .fromTo(q('.y-stem'), { drawSVG: '0% 0%' }, { drawSVG: '0% 100%', duration: 0.55 }, 1.9)
-          .to(q('.y-fill'), { opacity: 1, duration: 0.16 }, 2.4)
-          .to(q('.y-drawing'), { opacity: 0, duration: 0.16 }, 2.4)
-          .fromTo(s1, { y: -25, rotation: -15 }, { autoAlpha: 1, y: 0, rotation: 0, duration: 0.55 }, 1.95)
-          .fromTo(q('.letter-e-last'), { scale: 0.7 }, { autoAlpha: 1, scale: 1, duration: 0.55 }, 2.15)
-          .set(q('.letter-y-last'), { autoAlpha: 1 }, 2.3)
-          .to(q('.y-reel'), { yPercent: -200 / 3, duration: 1.25, ease: 'power2.inOut' }, 2.3)
-          // The second s originates on top of the first, then separates into its own slot.
-          .to(s1, { scaleX: 0.7, rotation: -8, duration: 0.22 }, 3.55)
+          .to(s1, { scaleX: 0.7, rotation: -8, duration: 0.22 }, 'odyssey+=1.7')
           .fromTo(
             s2,
             { x: () => s1.offsetLeft - s2.offsetLeft, scaleX: 0.7 },
             { autoAlpha: 1, x: 0, scaleX: 1, duration: 0.7, ease: 'back.out(1.4)' },
-            3.6
+            'odyssey+=1.75'
           )
-          .to(s1, { scaleX: 1, rotation: 0, duration: 0.5, ease: 'back.out(1.4)' }, 3.77);
+          .to(s1, { scaleX: 1, rotation: 0, duration: 0.5, ease: 'back.out(1.4)' }, 'odyssey+=1.92')
+          .fromTo(
+            q('.earth-letter'),
+            { scale: 0.4, y: -8 },
+            { autoAlpha: 1, scale: 1, y: 0, duration: 0.35, ease: 'back.out(1.3)' },
+            'odyssey+=3.6'
+          );
 
         // Start the notes as soon as the last letter settles.
         sequence.addLabel('annotations');
@@ -286,7 +306,15 @@ export function initHome() {
       void document.fonts.ready.then(() => {
         if (active && !disposed) context.add(choreograph);
       });
-      if (animated)
+      if (animated) {
+        void import('./hero-atmosphere')
+          .then(({ createHeroAtmosphere }) => {
+            if (!active || disposed) return;
+            return createHeroAtmosphere(stage, lighting, atmosphereController.signal);
+          })
+          .catch(() => {
+            /* The CSS light remains available without a GPU renderer. */
+          });
         void import('./hero-scene')
           .then(({ createHeroScene }) => {
             if (!active || disposed) return;
@@ -299,9 +327,11 @@ export function initHome() {
           .catch(() => {
             /* The geographic SVG remains visible when WebGL is unavailable. */
           });
+      }
 
       return () => {
         active = false;
+        atmosphereController.abort();
         resize?.disconnect();
         sequence?.kill();
         sequence = undefined;

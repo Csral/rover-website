@@ -1,0 +1,80 @@
+<span class="printed-letter">e</span>
+<svg class="letter-printer" viewBox="0 0 100 103" aria-hidden="true" focusable="false">
+  <defs>
+    <clipPath id="odyssey-print-mask">
+      <text class="print-stencil" x="0" y="88">e</text>
+    </clipPath>
+  </defs>
+  <rect class="print-bed" rx="3"></rect>
+  <path class="print-grid"></path>
+  <path class="print-rails"></path>
+  <path class="print-filament" clip-path="url(#odyssey-print-mask)"></path>
+  <g class="print-gantry">
+    <rect class="print-crossbar" y="-3" height="6" rx="1"></rect>
+  </g>
+  <g class="print-head">
+    <rect class="print-housing" x="-8" y="-9" width="16" height="18" rx="2"></rect>
+    <path class="print-fan" d="M-5-5H5M-5-2H5M-5 1H5"></path>
+    <circle class="print-nozzle" cy="5" r="2"></circle>
+    <circle class="print-status" cx="5" cy="-6" r="1"></circle>
+  </g>
+</svg>
+
+<style>
+  .letter-printer {
+    position: absolute;
+    inset: 0 auto auto 0;
+    width: 1em;
+    height: 1.03em;
+    overflow: visible;
+    visibility: hidden;
+    pointer-events: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .print-stencil {
+    font:
+      500 100px 'Inter Variable',
+      sans-serif;
+    letter-spacing: 0;
+  }
+  .print-bed {
+    fill: #12203940;
+    stroke: #65768b;
+    stroke-width: 0.6;
+  }
+  .print-grid {
+    fill: none;
+    stroke: #6f94c730;
+    stroke-width: 0.3;
+  }
+  .print-rails {
+    fill: none;
+    stroke: #9ba7b9;
+    stroke-width: 1.2;
+  }
+  .print-filament {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.5;
+    stroke-linecap: butt;
+  }
+  .print-crossbar,
+  .print-housing {
+    fill: #172337;
+    stroke: #b1bdcc;
+    stroke-width: 0.7;
+  }
+  .print-fan {
+    stroke: #728299;
+    stroke-width: 0.5;
+  }
+  .print-nozzle {
+    fill: #dfd3b8;
+    stroke: #25344a;
+    stroke-width: 0.5;
+  }
+  .print-status {
+    fill: var(--accent-blue);
+  }
+</style>

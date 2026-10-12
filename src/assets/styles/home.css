@@ -111,6 +111,7 @@ button {
   margin-left: 18px;
 }
 .scrapbook {
+  padding-top: 24px;
   position: relative;
   overflow: clip;
   background-color: var(--paper);
