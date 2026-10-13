@@ -32,6 +32,7 @@
   text-transform: none;
   color: var(--red);
   margin: 0 0 0.4rem;
+  user-select: none;
 }
 .team-page .team-header-text h1 {
   margin: 0 0 0.4rem;
@@ -485,6 +486,10 @@ html[data-scrapbook] .team-page .section-title {
 }
 .team-page .compact-mode .grid-pcard .pcard-sub {
   font-size: 0.58rem;
+}
+
+#meet-team-odyssey {
+  user-select: none;
 }
 
 @media (max-width: 1024px) {

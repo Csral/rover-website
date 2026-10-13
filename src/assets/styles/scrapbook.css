@@ -115,6 +115,7 @@ html[data-scrapbook] :focus-visible {
     500 28px/1.2 'Caveat',
     cursive;
   color: var(--blue-secondary);
+  user-select: none;
 }
 html[data-scrapbook] .scrap-page {
   min-height: 70vh;

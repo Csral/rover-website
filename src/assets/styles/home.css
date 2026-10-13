@@ -143,6 +143,7 @@ h2 {
   font:
     500 29px/1.2 'Caveat',
     cursive;
+  user-select: none;
 }
 .small-note {
   font-size: 12px;
@@ -697,6 +698,21 @@ h2 {
 .notebook-fallback {
   padding: 25px;
   line-height: 1.8;
+}
+#contact-title {
+  user-select: none;
+}
+#build-title {
+  user-select: none;
+}
+#team-title {
+  user-select: none;
+}
+#records-title {
+  user-select: none;
+}
+#about-title {
+  user-select: none;
 }
 @media (max-width: 1050px) {
   .spread {
