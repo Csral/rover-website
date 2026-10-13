@@ -1,0 +1,16 @@
+---
+import 'lenis/dist/lenis.css';
+---
+
+<script>
+  import { initSmoothScroll } from '~/scripts/smooth-scroll';
+
+  initSmoothScroll();
+  document.addEventListener('astro:page-load', initSmoothScroll);
+</script>
+
+<style is:global>
+  html.lenis {
+    scroll-behavior: auto !important;
+  }
+</style>

@@ -1,0 +1,61 @@
+---
+interface Props {
+  kind: string;
+}
+const { kind } = Astro.props;
+---
+
+<svg
+  viewBox="0 0 120 120"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="4"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+  focusable="false"
+>
+  {
+    kind === 'mechanical' && (
+      <>
+        <path
+          d="M51 14 68 13 71 27 80 31 92 23 104 35 96 47 100 56 113 59 112 76 98 79 93 88 100 100 87 111 75 103 66 107 63 119 47 117 44 104 35 100 23 108 12 95 20 83 16 74 3 71 5 54 18 51 23 42 15 30 28 19 40 27 49 23Z"
+          transform="translate(7 0) scale(.89)"
+        />
+        <path d="M76 44C86 55 82 74 68 80S38 75 36 62 43 39 56 38 70 38 76 44Z" />
+        <path d="m51 59 9-8 9 8-9 10Z" stroke-width="3" />
+      </>
+    )
+  }
+  {
+    kind === 'science' && (
+      <>
+        <path d="m46 16 28 1M50 17l-1 30-26 42q-7 14 10 14l53-1q16-1 9-15L70 47l1-30" />
+        <path d="M35 74q12-9 25-1t24-2" stroke-width="3" />
+        <path d="m42 90 5 1m21-3 6-1M58 29l5 1m-6 10 5 1" stroke-width="2.5" />
+        <circle cx="53" cy="64" r="3" stroke-width="2.5" />
+        <circle cx="70" cy="58" r="2" stroke-width="2.5" />
+        <path d="M91 24v10m-5-5 10-1M28 46l-2 5" stroke-width="2.5" />
+      </>
+    )
+  }
+  {
+    kind === 'media' && (
+      <>
+        <path d="m13 38 21-1 7-13 28-1 8 14 25 1q7 1 7 9l-2 44q0 7-9 7l-81-2q-8 0-8-9l1-40q0-8 3-9Z" />
+        <path d="M78 56c8 13 0 29-14 32S38 80 38 65s10-23 24-21q10 0 16 12Z" />
+        <path d="M68 53q-14-7-20 6m-1 9 2 5M18 49l10 1m55-2 12 1" stroke-width="2.5" />
+        <path d="m82 17 2-7m9 13 7-4" stroke-width="2.5" />
+      </>
+    )
+  }
+</svg>
+
+<style>
+  svg {
+    display: block;
+    width: 1em;
+    height: 1em;
+    margin-inline: auto;
+  }
+</style>

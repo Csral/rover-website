@@ -1,0 +1,13 @@
+---
+import { footerData } from '~/navigation';
+import Logo from '../Logo.astro';
+---
+
+<footer class="scrap-footer">
+  <a class="scrap-wordmark" href="/" aria-label="Team Odyssey home">
+    <Logo />
+  </a>
+  <p class="pencil-note">Built by students.</p>
+  <nav aria-label="Social links">{footerData.socialLinks.map((link) => <a href={link.href}>{link.ariaLabel}</a>)}</nav>
+  <small>© {new Date().getFullYear()} Team Odyssey</small>
+</footer>

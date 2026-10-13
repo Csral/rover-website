@@ -1,10 +1,11 @@
 ---
 publishDate: 2025-10-07T01:00:00Z
 author: The Arm Team
-title: Our 6-DOF Rover Arm - Strength Meets Precision 
+title: Our 6-DOF Rover Arm - Strength Meets Precision
 excerpt: Our new 6 Degrees of Freedom (6-DOF) robotic arm is designed for high performance and reliability. Built using a sandwich structure of 3D-printed parts and metal reinforcements, it combines low weight with excellent strength and rigidity.
 image: ~/assets/images/october-arm-post/arm.jpg
 ---
+
 Our new 6 Degrees of Freedom (6-DOF) robotic arm is designed for high performance and reliability. Built using a sandwich structure of 3D-printed parts and metal reinforcements, it combines low weight with excellent strength and rigidity.
 
 ## Structure

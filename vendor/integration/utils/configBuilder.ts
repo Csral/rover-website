@@ -73,7 +73,6 @@ export interface AnalyticsConfig {
   vendors: {
     googleAnalytics: {
       id?: string;
-      partytown?: boolean;
     };
   };
 }

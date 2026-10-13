@@ -1,0 +1,318 @@
+.intro {
+  position: relative;
+  padding: 0;
+  overflow: clip;
+  background: var(--paper);
+  perspective: none;
+}
+.intro-stage {
+  position: relative;
+  height: calc(100svh - var(--home-nav-height));
+  min-height: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: var(--paper);
+  background-image: var(--paper-texture);
+}
+.intro-stage::before,
+.intro-stage::after {
+  content: none;
+}
+.hero-type {
+  position: absolute;
+  left: 14%;
+  right: 8%;
+  top: calc(27svh - var(--home-nav-height));
+  display: block;
+  z-index: 3;
+  perspective: none;
+}
+.kinetic-title {
+  font-family: 'Inter Variable', sans-serif;
+  font-weight: 500;
+  user-select: none;
+  -webkit-user-select: none;
+  font-size: clamp(92px, 11vw, 190px);
+  line-height: 1.03;
+  letter-spacing: -0.07em;
+  color: #edcc99;
+  font-kerning: none;
+}
+.team-word,
+.odyssey-word,
+.orbit-pair {
+  display: flex;
+  align-items: baseline;
+  width: fit-content;
+}
+.team-stage {
+  display: block;
+  position: relative;
+  width: fit-content;
+  margin-left: 0.85em;
+}
+.team-word {
+  position: relative;
+  isolation: isolate;
+  color: #edcc99;
+}
+.lamp-cables {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: var(--accent-blue);
+  stroke-width: 1.2;
+  pointer-events: none;
+  z-index: 2;
+}
+.lamp-cables path {
+  transition: none;
+}
+.pendant-glow {
+  position: absolute;
+  top: -0.24em;
+  left: -25%;
+  width: 150%;
+  height: 2.5em;
+  background: linear-gradient(to bottom, #efba6c22, #efba6c08 60%, transparent);
+  clip-path: polygon(18% 0, 82% 0, 100% 100%, 0 100%);
+  pointer-events: none;
+  z-index: -1;
+}
+.kinetic-loading .team-word {
+  visibility: hidden;
+}
+.kinetic-loading .lamp-led,
+.kinetic-loading .pendant-glow {
+  opacity: 0;
+}
+.kinetic-loading .lamp-cables {
+  stroke: #05070b;
+}
+.orbit-pair {
+  position: relative;
+  /* Restore the Te kerning lost when the letters became separate flex items. */
+  margin-left: -0.055em;
+}
+.hero-atmosphere {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+.atmosphere-ready .pendant-glow {
+  background: none;
+}
+.odyssey-word {
+  margin-top: 0.07em;
+  color: #d9c8ae;
+}
+.hero-letter {
+  display: inline-block;
+  position: relative;
+  transform-origin: center;
+}
+.letter-t {
+  z-index: 2;
+}
+.wheel-metric {
+  visibility: hidden;
+}
+.wheel-glyph {
+  position: absolute;
+  width: 0.89em;
+  height: 0.89em;
+  left: 50%;
+  bottom: 0.06em;
+  transform: translateX(-50%);
+  pointer-events: auto;
+  perspective: 500px;
+}
+.wheel-model,
+.wheel-glyph canvas,
+.wheel-fallback {
+  display: block;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.wheel-ready .wheel-fallback {
+  visibility: hidden;
+}
+.wheel-model {
+  backface-visibility: hidden;
+  transform-origin: 50% 50%;
+}
+.wheel-globe {
+  position: absolute;
+  inset: 6%;
+  opacity: 0;
+  transform: scale(0.85) rotateY(35deg);
+  pointer-events: none;
+}
+.wheel-globe .globe-fallback {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.wheel-globe.globe-ready .globe-fallback {
+  visibility: hidden;
+}
+.kinetic-loading .hero-letter:not(.letter-t),
+.kinetic-loading .hero-sticky,
+.kinetic-loading .hero-annotation,
+.kinetic-loading .hero-apology {
+  visibility: hidden;
+}
+.letter-y-last {
+  width: 0.55em;
+  height: 1.15em;
+  align-self: start;
+  overflow: hidden;
+}
+.y-reel {
+  display: block;
+}
+.y-reel > span {
+  display: block;
+  height: 1.15em;
+}
+.hero-annotation {
+  position: absolute;
+  z-index: 4;
+  width: 240px;
+  height: 180px;
+  right: 15%;
+  bottom: 33%;
+  color: var(--red);
+}
+.typed-note {
+  position: absolute;
+  left: 248px;
+  top: 102px;
+  width: 210px;
+  font-size: 33px;
+  white-space: nowrap;
+  transform: rotate(-7deg);
+}
+.rotating-arrow,
+.return-arrow {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  overflow: visible;
+  pointer-events: none;
+}
+.rotating-arrow {
+  transform: translateY(28px) rotate(-90deg);
+  transform-origin: 87.5% 72.222%;
+}
+.return-arrow {
+  color: var(--blue-muted);
+}
+.hero-sticky {
+  position: absolute;
+  right: 17%;
+  bottom: 58px;
+  z-index: 5;
+  width: 164px;
+  min-height: 106px;
+  padding: 26px 18px 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--blue-note);
+  color: var(--blue-note-ink);
+  box-shadow: 4px 9px 15px #0005;
+  transform: rotate(5deg);
+  clip-path: polygon(0 0, 100% 0, 100% 87%, 90% 100%, 0 100%);
+}
+.hero-sticky .handwritten {
+  font-size: 29px;
+  line-height: 0.85;
+  max-width: 100%;
+}
+.hero-sticky .tape {
+  top: 0;
+  left: 45px;
+  width: 68px;
+  height: 17px;
+  opacity: 0.8;
+}
+.hero-apology {
+  position: absolute;
+  z-index: 4;
+  left: 8%;
+  bottom: 55px;
+  width: min(47vw, var(--ink-width));
+  max-width: var(--ink-width);
+  transform: rotate(-2deg);
+  color: color-mix(in oklab, var(--blue-muted) calc(100% - var(--caption-warmth, 16%)), #edcc99);
+}
+.pen-note {
+  width: 100%;
+  overflow: visible;
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 0.55;
+  stroke-linecap: round;
+}
+@media (max-width: 700px) {
+  .hero-type {
+    left: 7%;
+    right: 4%;
+    top: calc(31svh - var(--home-nav-height));
+  }
+  .kinetic-title {
+    font-size: clamp(53px, 12vw, 84px);
+  }
+  .team-stage {
+    margin-left: 0.65em;
+  }
+  .hero-annotation {
+    right: 33%;
+    bottom: 33%;
+    width: 155px;
+    height: 116px;
+  }
+  .typed-note {
+    left: 144px;
+    top: 64px;
+    width: 125px;
+    font-size: 24px;
+  }
+  .rotating-arrow {
+    transform: translateY(18px) rotate(-90deg);
+  }
+  .hero-sticky {
+    right: 20%;
+    bottom: 140px;
+    width: 137px;
+    min-height: 88px;
+    padding: 22px 13px 12px;
+  }
+  .hero-sticky .handwritten {
+    font-size: 26px;
+  }
+  .hero-sticky .tape {
+    left: 36px;
+  }
+  .hero-apology {
+    left: 7%;
+    width: 84%;
+    bottom: 55px;
+  }
+}

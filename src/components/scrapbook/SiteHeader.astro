@@ -1,0 +1,44 @@
+---
+import ArrowIcon from '~/components/scrapbook/ArrowIcon.astro';
+import Logo from '../Logo.astro';
+
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isCurrent = (href: string) =>
+  path === href || (href === '/teams' && path === '/team') || (href === '/blog' && path.startsWith('/blog/'));
+const links = [
+  { text: 'Home', href: '/' },
+  { text: 'The team', href: '/teams' },
+  { text: 'Field notes', href: '/blog' },
+  { text: 'Links', href: '/links' },
+  { text: 'Records', href: 'http://records.teamodyssey.space/' },
+];
+---
+
+<header class="scrap-nav">
+  <a class="scrap-wordmark" href="/" aria-label="Team Odyssey home">
+    <Logo />
+  </a>
+  <nav class="desktop-links" aria-label="Main navigation">
+    {
+      links.map(({ text, href }) => (
+        <a href={href} aria-current={isCurrent(href) ? 'page' : undefined}>
+          {text}
+        </a>
+      ))
+    }
+    <a class="scrap-contact-link" href="/contact">Say hello <span aria-hidden="true"><ArrowIcon /></span></a>
+  </nav>
+  <details class="mobile-links">
+    <summary>Menu <span aria-hidden="true">＋</span></summary>
+    <nav aria-label="Mobile navigation">
+      {
+        links.map(({ text, href }) => (
+          <a href={href} aria-current={isCurrent(href) ? 'page' : undefined}>
+            {text}
+          </a>
+        ))
+      }
+      <a href="/contact">Say hello <ArrowIcon /></a>
+    </nav>
+  </details>
+</header>

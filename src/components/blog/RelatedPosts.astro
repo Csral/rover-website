@@ -2,7 +2,7 @@
 import { APP_BLOG } from 'astrowind:config';
 
 import { getRelatedPosts } from '~/utils/blog';
-import BlogHighlightedPosts from '../widgets/BlogHighlightedPosts.astro';
+import Grid from './Grid.astro';
 import type { Post } from '~/types';
 import { getBlogPermalink } from '~/utils/permalinks';
 
@@ -12,20 +12,26 @@ export interface Props {
 
 const { post } = Astro.props;
 
-const relatedPosts = post.tags ? await getRelatedPosts(post, 4) : [];
+const relatedPosts =
+  APP_BLOG.isEnabled && APP_BLOG.isRelatedPostsEnabled ? await getRelatedPosts(post, APP_BLOG.relatedPostsCount) : [];
 ---
 
 {
-  APP_BLOG.isRelatedPostsEnabled ? (
-    <BlogHighlightedPosts
-      classes={{
-        container:
-          'pt-0 lg:pt-0 md:pt-0 intersect-once intersect-quarter motion-safe:md:opacity-0 motion-safe:md:intersect:animate-fade',
-      }}
-      title="Related Posts"
-      linkText="View All Posts"
-      linkUrl={getBlogPermalink()}
-      postIds={relatedPosts.map((post) => post.id)}
-    />
+  relatedPosts.length > 0 ? (
+    <section class="relative mx-auto max-w-7xl px-4 md:px-6 pb-12 md:pb-16 lg:pb-20" aria-labelledby="related-title">
+      <div class="flex flex-col lg:justify-between lg:flex-row mb-8">
+        <div class="md:max-w-sm">
+          <h2 id="related-title" class="text-3xl font-bold sm:text-4xl font-heading mb-2">
+            Related Posts
+          </h2>
+          {APP_BLOG.list.isEnabled && (
+            <a class="text-muted hover:text-primary block mb-6 lg:mb-0" href={getBlogPermalink()}>
+              View All Posts »
+            </a>
+          )}
+        </div>
+      </div>
+      <Grid posts={relatedPosts} />
+    </section>
   ) : null
 }

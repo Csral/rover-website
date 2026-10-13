@@ -6,12 +6,14 @@ import type { MetaData } from '~/types';
 export interface Props {
   frontmatter: {
     title?: string;
+    metadata?: MetaData;
   };
 }
 
 const { frontmatter } = Astro.props;
 
 const metadata: MetaData = {
+  ...frontmatter.metadata,
   title: frontmatter?.title,
 };
 ---

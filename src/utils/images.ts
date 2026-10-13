@@ -1,25 +1,12 @@
 import { isUnpicCompatible, unpicOptimizer, astroAssetsOptimizer } from './images-optimization';
 import type { ImageMetadata } from 'astro';
 import type { OpenGraph } from '@astrolib/seo';
+import type { ImagesOptimizer } from './images-optimization';
 
-const load = async function () {
-  let images: Record<string, () => Promise<unknown>> | undefined = undefined;
-  try {
-    images = import.meta.glob('~/assets/images/**/*.{jpeg,jpg,png,tiff,webp,gif,svg,JPEG,JPG,PNG,TIFF,WEBP,GIF,SVG}');
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  } catch (error) {
-    // continue regardless of error
-  }
-  return images;
-};
-
-let _images: Record<string, () => Promise<unknown>> | undefined = undefined;
-
-/** */
-export const fetchLocalImages = async () => {
-  _images = _images || (await load());
-  return _images;
-};
+const images = import.meta.glob<{ default: ImageMetadata }>(
+  '~/assets/images/**/*.{jpeg,jpg,png,tiff,webp,gif,svg,JPEG,JPG,PNG,TIFF,WEBP,GIF,SVG}'
+);
+const imageCache = new Map<string, Promise<ImageMetadata>>();
 
 /** */
 export const findImage = async (
@@ -40,19 +27,19 @@ export const findImage = async (
     return imagePath;
   }
 
-  const images = await fetchLocalImages();
   const key = imagePath.replace('~/', '/src/');
-
-  return images && typeof images[key] === 'function'
-    ? ((await images[key]()) as { default: ImageMetadata })['default']
-    : null;
+  const load = images[key];
+  if (!load) return null;
+  if (!imageCache.has(key))
+    imageCache.set(
+      key,
+      load().then((module) => module.default)
+    );
+  return imageCache.get(key)!;
 };
 
 /** */
-export const adaptOpenGraphImages = async (
-  openGraph: OpenGraph = {},
-  astroSite: URL | undefined = new URL('')
-): Promise<OpenGraph> => {
+export const adaptOpenGraphImages = async (openGraph: OpenGraph = {}, astroSite?: URL): Promise<OpenGraph> => {
   if (!openGraph?.images?.length) {
     return openGraph;
   }
@@ -71,7 +58,14 @@ export const adaptOpenGraphImages = async (
           };
         }
 
-        let _image;
+        if (
+          typeof resolvedImage === 'string' &&
+          /^https?:\/\//.test(resolvedImage) &&
+          !isUnpicCompatible(resolvedImage)
+        ) {
+          return { ...image, url: resolvedImage };
+        }
+        let _image: Awaited<ReturnType<ImagesOptimizer>>[number] | undefined;
 
         if (
           typeof resolvedImage === 'string' &&
@@ -84,14 +78,12 @@ export const adaptOpenGraphImages = async (
             typeof resolvedImage !== 'string' && resolvedImage?.width <= defaultWidth
               ? [resolvedImage?.width, resolvedImage?.height]
               : [defaultWidth, defaultHeight];
-          _image = (
-            await astroAssetsOptimizer(resolvedImage, [dimensions[0]], dimensions[0], dimensions[1], 'jpg')
-          )[0];
+          _image = (await astroAssetsOptimizer(resolvedImage, [dimensions[0]], dimensions[0], dimensions[1], 'jpg'))[0];
         }
 
         if (typeof _image === 'object') {
           return {
-            url: 'src' in _image && typeof _image.src === 'string' ? String(new URL(_image.src, astroSite)) : '',
+            url: astroSite ? String(new URL(_image.src, astroSite)) : _image.src,
             width: 'width' in _image && typeof _image.width === 'number' ? _image.width : undefined,
             height: 'height' in _image && typeof _image.height === 'number' ? _image.height : undefined,
           };
@@ -107,5 +99,5 @@ export const adaptOpenGraphImages = async (
     })
   );
 
-  return { ...openGraph, ...(adaptedImages ? { images: adaptedImages } : {}) };
+  return { ...openGraph, images: adaptedImages.filter((image) => image.url) };
 };
