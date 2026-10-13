@@ -1,0 +1,12 @@
+---
+import { footerData } from '~/navigation';
+---
+
+<footer class="scrap-footer">
+  <a class="scrap-wordmark" href="https://teamodyssey.space/">odyssey<span>.</span></a>
+  <p class="pencil-note">Built by students.</p>
+  <nav aria-label="Social links">
+    {footerData.socialLinks.map(({ href, ariaLabel }) => <a href={href}>{ariaLabel}</a>)}
+  </nav>
+  <small>© {new Date().getFullYear()} Team Odyssey</small>
+</footer>

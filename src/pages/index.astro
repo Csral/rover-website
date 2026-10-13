@@ -1,36 +1,90 @@
 ---
-import Layout from "~/layouts/PageLayout.astro";
+import { Image } from 'astro:assets';
+import Layout from '~/layouts/PageLayout.astro';
+import roverPhoto from '~/assets/images/rover-sunrise.webp';
+import { archive } from '~/data/archive';
 
 const metadata = {
-  title: "Team Odyssey — Records",
+  title: 'Records',
+  description: 'Past seasons of Team Odyssey, saved in the scrapbook. Browse IRC 2025–2026 or meet the current team.',
 };
 ---
 
 <Layout metadata={metadata}>
+  <div class="archive-spread">
+    <div class="page-caption">
+      <span><a href="https://teamodyssey.space/">Team Odyssey</a> / The archive</span>
+      <span>Bengaluru, India</span>
+    </div>
 
-  <section class="flex flex-col items-center justify-center min-h-[70vh] gap-6 px-6 text-center">
+    <section class="archive-intro" aria-labelledby="archive-title">
+      <div>
+        <p class="pencil-note intro-note">Kept for the record.</p>
+        <h1 id="archive-title">A few pages<br />from our past.</h1>
+        <p class="intro-copy">
+          View the progress of our website across the years.<br class="desktop-break" /> Pick a chapter. Meet the people who
+          were there.
+        </p>
+      </div>
+      <div class="margin-scribble" aria-hidden="true">
+        <span class="pencil-note">Different years.<br />Same Odyssey.</span>
+        <svg viewBox="0 0 150 100" fill="none"><path d="M130 8C140 63 69 92 18 79m17-12L18 79l17 13"></path></svg>
+      </div>
+    </section>
 
-    <h1 class="text-4xl font-bold tracking-tight">
-      Records Page
-    </h1>
-
-    <p class="text-lg text-muted dark:text-slate-400 max-w-md">
-      View the progress of this website across multiple years.
-    </p>
-
-    <ul class="flex flex-col gap-2 mt-2">
-      <li>
-        <a href="http://2026.teamodyssey.space/team/" class="text-primary underline hover:opacity-80 transition-opacity">
-          IRC 2025-2026
+    <section class="archive-collection" aria-label="Website records">
+      <article class="archive-entry season-entry">
+        <a class="archive-cover season-cover" href={archive.season.href} aria-label="Open IRC 2025–2026 team archive">
+          <span class="tape" aria-hidden="true"></span>
+          <div class="cover-caption"><span>Team Odyssey</span><span>IRC / Season archive</span></div>
+          <div class="season-years" aria-hidden="true">
+            <span>2025</span><span class="year-divider">to</span><span>2026</span>
+          </div>
+          <span class="cover-footer">The people. The website. That year.</span>
+          <span class="archive-stamp" aria-hidden="true">Saved<br />for later</span>
         </a>
-      </li>
-      <li>
-        <a href="http://teamodyssey.space/team/" class="text-primary underline hover:opacity-80 transition-opacity">
-          Current
+        <div class="entry-caption">
+          <div>
+            <p class="entry-label">Season archive</p><h2><a href={archive.season.href}>{archive.season.title}</a></h2>
+          </div>
+          <a class="entry-arrow" href={archive.season.href} aria-label="Open IRC 2025–2026 team archive">↗</a>
+        </div>
+        <p class="entry-description">{archive.season.description}</p>
+      </article>
+
+      <article class="archive-entry current-entry">
+        <a
+          class="archive-cover current-cover"
+          href={archive.current.href}
+          aria-label="Meet the current Team Odyssey team"
+        >
+          <span class="tape" aria-hidden="true"></span>
+          <Image
+            src={roverPhoto}
+            alt="Skanda rover with its arm extended on red dirt"
+            widths={[440, 660, 880]}
+            sizes="(max-width: 700px) 85vw, 40vw"
+            loading="eager"
+            format="webp"
+          />
+          <span class="pencil-note photo-caption">Still making things move.</span>
+          <span class="current-tag">The current chapter</span>
         </a>
-      </li>
-    </ul>
+        <div class="entry-caption">
+          <div>
+            <p class="entry-label">Back to the present</p><h2>
+              <a href={archive.current.href}>{archive.current.title}</a>
+            </h2>
+          </div>
+          <a class="entry-arrow" href={archive.current.href} aria-label="Meet the current Team Odyssey team">↗</a>
+        </div>
+        <p class="entry-description">{archive.current.description}</p>
+      </article>
+    </section>
 
-  </section>
-
+    <div class="archive-endnote">
+      <p class="pencil-note">A little dust between the pages.</p>
+      <a class="ink-link" href="https://teamodyssey.space/">Back to the workshop <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
 </Layout>

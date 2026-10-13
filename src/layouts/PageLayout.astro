@@ -1,10 +1,7 @@
 ---
 import Layout from '~/layouts/Layout.astro';
-import Header from '~/components/widgets/Header.astro';
-import Footer from '~/components/widgets/Footer.astro';
-
-import { footerData } from '~/navigation';
-
+import Header from '~/components/scrapbook/SiteHeader.astro';
+import Footer from '~/components/scrapbook/SiteFooter.astro';
 import type { MetaData } from '~/types';
 
 export interface Props {
@@ -15,13 +12,7 @@ const { metadata } = Astro.props;
 ---
 
 <Layout metadata={metadata}>
-  <slot name="header">
-    <Header isSticky showRssFeed showToggleTheme />
-  </slot>
-  <main>
-    <slot />
-  </main>
-  <slot name="footer">
-    <Footer {...footerData} />
-  </slot>
+  <slot name="header"><Header /></slot>
+  <main id="page-content" tabindex="-1"><slot /></main>
+  <slot name="footer"><Footer /></slot>
 </Layout>
