@@ -16,6 +16,7 @@ import Favicons from '~/components/Favicons.astro';
 import Metadata from '~/components/common/Metadata.astro';
 import SiteVerification from '~/components/common/SiteVerification.astro';
 import Analytics from '~/components/common/Analytics.astro';
+import SmoothScroll from '~/components/common/SmoothScroll.astro';
 
 // Comment the line below to disable View Transitions
 import { ClientRouter } from 'astro:transitions';
@@ -46,6 +47,7 @@ const { language, textDirection } = I18N;
   <body class="antialiased text-default bg-page tracking-tight">
     <a class="scrap-skip" href="#page-content">Skip to content</a>
     <slot />
+    <SmoothScroll />
 
     <script>
       import { initReveals } from '~/scripts/reveal';

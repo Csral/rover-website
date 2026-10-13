@@ -121,53 +121,49 @@
 .letter-t {
   z-index: 2;
 }
-.earth-letter {
-  --earth-size: max(12px, 0.17em);
-  flex: 0 0 var(--earth-size);
-  width: var(--earth-size);
-  height: var(--earth-size);
-  margin-left: 0.01em;
-  align-self: baseline;
-  border-radius: 50%;
-  overflow: hidden;
-  clip-path: circle(50%);
+.wheel-metric {
+  visibility: hidden;
 }
-.earth-fallback {
+.wheel-glyph {
+  position: absolute;
+  width: 0.89em;
+  height: 0.89em;
+  left: 50%;
+  bottom: 0.06em;
+  transform: translateX(-50%);
+  pointer-events: auto;
+  perspective: 500px;
+}
+.wheel-model,
+.wheel-glyph canvas,
+.wheel-fallback {
   display: block;
   position: absolute;
   inset: 0;
-}
-.earth-fallback .globe-fallback {
-  position: static;
-  transform: none;
   width: 100%;
   height: 100%;
-  filter: drop-shadow(0 0 5px #edbe6460);
 }
-.globe-ready .earth-fallback {
+.wheel-ready .wheel-fallback {
   visibility: hidden;
 }
-.earth-letter canvas {
+.wheel-model {
+  backface-visibility: hidden;
+  transform-origin: 50% 50%;
+}
+.wheel-globe {
   position: absolute;
-  inset: 0;
+  inset: 6%;
+  opacity: 0;
+  transform: scale(0.85) rotateY(35deg);
+  pointer-events: none;
+}
+.wheel-globe .globe-fallback {
+  display: block;
   width: 100%;
   height: 100%;
-  pointer-events: none;
 }
-.earth-letter::before {
-  content: '';
-  position: absolute;
-  inset: -25%;
-  background: radial-gradient(ellipse, #e9b96418, transparent 70%);
-  pointer-events: none;
-}
-.earth-letter::after {
-  content: '';
-  position: absolute;
-  inset: 3%;
-  border: 0.5px solid #edc78e80;
-  border-radius: 50%;
-  pointer-events: none;
+.wheel-globe.globe-ready .globe-fallback {
+  visibility: hidden;
 }
 .kinetic-loading .hero-letter:not(.letter-t),
 .kinetic-loading .hero-sticky,

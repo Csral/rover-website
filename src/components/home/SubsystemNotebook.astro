@@ -1,5 +1,6 @@
 ---
 import ArrowIcon from '~/components/scrapbook/ArrowIcon.astro';
+import SubsystemDoodle from './SubsystemDoodle.astro';
 const subsystems = [
   {
     name: 'Mechanical',
@@ -31,7 +32,7 @@ const subsystems = [
   {
     name: 'Science',
     id: 'science',
-    mark: '⚗',
+    mark: null,
     title: 'Look closer at the ground.',
     description:
       'Samples carry clues. The science team gathers and analyses them, designing experiments and turning the rover’s observations into useful insights.',
@@ -40,7 +41,7 @@ const subsystems = [
   {
     name: 'Media',
     id: 'media',
-    mark: '✳',
+    mark: null,
     title: 'Tell the story behind it.',
     description:
       'Outreach, sponsorships, social media, and documentation. The media team shares the work and connects Team Odyssey with the people who help make it possible.',
@@ -95,7 +96,7 @@ const subsystems = [
             </a>
           </div>
           <div class="subsystem-doodle" aria-hidden="true">
-            <span>{subsystem.mark ?? <ArrowIcon direction="clockwise" />}</span>
+            <span>{subsystem.mark ?? <SubsystemDoodle kind={subsystem.id} />}</span>
             <span class="handwritten">
               {subsystem.name === 'Mechanical' ? 'Built to get a little dusty.' : 'One piece of the bigger picture.'}
             </span>

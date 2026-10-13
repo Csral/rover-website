@@ -227,6 +227,12 @@ const milestones = [
 </Layout>
 <script>
   import { initHome } from '~/scripts/home';
+  import { initRoverStamp } from '~/scripts/rover-stamp';
+  import { initBuildScraps } from '~/scripts/build-scraps';
   initHome();
+  initRoverStamp();
+  initBuildScraps();
   document.addEventListener('astro:page-load', initHome);
+  document.addEventListener('astro:page-load', initRoverStamp);
+  document.addEventListener('astro:page-load', initBuildScraps);
 </script>

@@ -443,11 +443,21 @@ h2 {
   font-size: 23px;
 }
 .build-scraps {
+  position: relative;
+  isolation: isolate;
   display: grid;
   grid-template-columns: 1fr 1.1fr 1fr;
   align-items: center;
   gap: 45px;
   padding: 20px 10px 0;
+}
+.build-scraps > .small-print {
+  position: relative;
+  z-index: 1;
+}
+.build-scraps > .lined-note {
+  position: relative;
+  z-index: 2;
 }
 .small-print {
   padding: 10px 10px 18px;

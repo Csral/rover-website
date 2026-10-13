@@ -1,9 +1,9 @@
 import { WebGLRenderer, Scene, OrthographicCamera } from 'three';
 import { createGlobe } from './globe';
 
-/** Keep the globe inside the period, following its layout and GSAP transforms. */
+/** Run the globe only while the wheel's hover state is active. */
 export function createHeroScene(stage: HTMLElement, animated: boolean) {
-  const letter = stage.querySelector<HTMLElement>('.earth-letter')!;
+  const letter = stage.querySelector<HTMLElement>('.wheel-globe')!;
   const renderer = new WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'low-power' });
   renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
   renderer.setClearColor(0x000000, 0);
@@ -18,6 +18,7 @@ export function createHeroScene(stage: HTMLElement, animated: boolean) {
     last = 0,
     time = 0;
   let visible = true,
+    active = false,
     disposed = false,
     contextLost = false;
   let diameter = letter.clientWidth;
@@ -28,7 +29,7 @@ export function createHeroScene(stage: HTMLElement, animated: boolean) {
   }
   function render(now: number) {
     frame = 0;
-    if (disposed || !animated || !visible || document.hidden || contextLost) return;
+    if (disposed || !active || !animated || !visible || document.hidden || contextLost) return;
     if (!last || now - last >= 1000 / 30) {
       if (last) time += Math.min((now - last) / 1000, 0.1);
       last = now;
@@ -40,7 +41,8 @@ export function createHeroScene(stage: HTMLElement, animated: boolean) {
     cancelAnimationFrame(frame);
     frame = 0;
     last = 0;
-    if (!disposed && animated && visible && !document.hidden && !contextLost) frame = requestAnimationFrame(render);
+    if (!disposed && active && animated && visible && !document.hidden && !contextLost)
+      frame = requestAnimationFrame(render);
   }
   const resize = new ResizeObserver(() => {
     if (disposed) return;
@@ -75,6 +77,11 @@ export function createHeroScene(stage: HTMLElement, animated: boolean) {
   document.addEventListener('visibilitychange', update);
   update();
   return {
+    setActive(value: boolean) {
+      active = value;
+      if (active) draw();
+      update();
+    },
     dispose() {
       disposed = true;
       cancelAnimationFrame(frame);

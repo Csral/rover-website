@@ -2,6 +2,7 @@ import gsap from 'gsap';
 import { DrawSVGPlugin } from 'gsap/DrawSVGPlugin';
 import { MorphSVGPlugin } from 'gsap/MorphSVGPlugin';
 import type { createHeroScene } from './hero-scene';
+import type { createHeroWheel } from './hero-wheel';
 import { createDeltaSwap } from './delta-swap';
 import { createLetterPrint } from './letter-print';
 import { createPendantWires } from './hero-wires';
@@ -30,6 +31,81 @@ export function initHome() {
       const animated = Boolean(context.conditions?.animated);
       let active = true;
       const atmosphereController = new AbortController();
+      const wheelController = new AbortController();
+      let wheel: Awaited<ReturnType<typeof createHeroWheel>>;
+      const wheelGlyph = stage.querySelector<HTMLElement>('.wheel-glyph')!;
+      const wheelFace = wheelGlyph.querySelector<HTMLElement>('.wheel-model')!;
+      const globeFace = wheelGlyph.querySelector<HTMLElement>('.wheel-globe')!;
+      let swap: gsap.core.Timeline | undefined;
+      let globeLoading = false;
+      function showGlobe(show: boolean) {
+        wheelGlyph.dataset.globe = String(show);
+        swap?.kill();
+        context.add(() => {
+          if (!animated) {
+            gsap.set(wheelFace, { opacity: show ? 0 : 1, rotationY: 0, rotationZ: 0, x: 0, scale: 1 });
+            gsap.set(globeFace, { opacity: show ? 1 : 0, rotationY: 0, rotationZ: 0, x: 0, scale: 1 });
+            return;
+          }
+          swap = gsap.timeline();
+          if (show) {
+            swap
+              .to(wheelFace, { rotationY: -90, opacity: 0, duration: 0.28, ease: 'power2.in' }, 0)
+              .to(
+                globeFace,
+                { rotationY: 0, rotationZ: 0, x: 0, scale: 1, opacity: 1, duration: 0.34, ease: 'power3.out' },
+                0.16
+              );
+          } else {
+            // Give the returning wheel a little roll too, once its face is hidden.
+            if (Number(gsap.getProperty(wheelFace, 'opacity')) < 0.05)
+              gsap.set(wheelFace, { rotationY: 0, rotationZ: -14, x: 0, scale: 0.92 });
+            swap
+              .to(globeFace, { rotationZ: 32, x: 0, scale: 0.92, opacity: 0, duration: 0.34, ease: 'power2.inOut' }, 0)
+              .to(
+                wheelFace,
+                { rotationY: 0, rotationZ: 0, x: 0, scale: 1, opacity: 1, duration: 0.36, ease: 'power2.out' },
+                0.1
+              );
+          }
+        });
+        scene?.setActive(show);
+        if (!show || scene || globeLoading) return;
+        globeLoading = true;
+        void import('./hero-scene')
+          .then(({ createHeroScene }) => {
+            if (!active || disposed) return;
+            scene = createHeroScene(stage!, animated);
+            scene.setActive(wheelGlyph.dataset.globe === 'true');
+          })
+          .catch(() => {
+            /* The geographic SVG handles hover when WebGL is unavailable. */
+          })
+          .finally(() => {
+            globeLoading = false;
+          });
+      }
+      wheelGlyph.addEventListener(
+        'pointerenter',
+        (event) => {
+          if (event.pointerType !== 'touch') showGlobe(true);
+        },
+        { signal: wheelController.signal }
+      );
+      wheelGlyph.addEventListener(
+        'pointerleave',
+        (event) => {
+          if (event.pointerType !== 'touch') showGlobe(false);
+        },
+        { signal: wheelController.signal }
+      );
+      wheelGlyph.addEventListener(
+        'pointerup',
+        (event) => {
+          if (event.pointerType === 'touch') showGlobe(wheelGlyph.dataset.globe !== 'true');
+        },
+        { signal: wheelController.signal }
+      );
       const lighting: HeroLighting = { light: 0, wake: 0 };
       let resize: ResizeObserver | undefined;
       if (animated) stage.classList.add('kinetic-loading');
@@ -126,7 +202,8 @@ export function initHome() {
           stage!.getBoundingClientRect().left +
           q<HTMLElement>('.letter-o').offsetWidth;
         const wheelDistance = wheelTravel();
-        const wheelAngle = ((wheelDistance / (q<HTMLElement>('.letter-o').offsetHeight * 0.36)) * 180) / Math.PI;
+        const wheelRadius = q<HTMLElement>('.wheel-glyph').offsetWidth / 2.44;
+        const wheelAngle = ((wheelDistance / wheelRadius) * 180) / Math.PI;
         sequence.addLabel('arrival', 1.6).addLabel('departure', 2.8).addLabel('odyssey', 2.2);
         // Team is the sail. Only the hull and rigging depart once it is delivered.
         sequence
@@ -183,13 +260,7 @@ export function initHome() {
             { autoAlpha: 1, x: 0, scaleX: 1, duration: 0.7, ease: 'back.out(1.4)' },
             'odyssey+=1.75'
           )
-          .to(s1, { scaleX: 1, rotation: 0, duration: 0.5, ease: 'back.out(1.4)' }, 'odyssey+=1.92')
-          .fromTo(
-            q('.earth-letter'),
-            { scale: 0.4, y: -8 },
-            { autoAlpha: 1, scale: 1, y: 0, duration: 0.35, ease: 'back.out(1.3)' },
-            'odyssey+=3.6'
-          );
+          .to(s1, { scaleX: 1, rotation: 0, duration: 0.5, ease: 'back.out(1.4)' }, 'odyssey+=1.92');
 
         // Start the notes as soon as the last letter settles.
         sequence.addLabel('annotations');
@@ -306,6 +377,16 @@ export function initHome() {
       void document.fonts.ready.then(() => {
         if (active && !disposed) context.add(choreograph);
       });
+      void import('./hero-wheel')
+        .then(async ({ createHeroWheel }) => {
+          if (!active || disposed) return;
+          const instance = await createHeroWheel(stage, wheelController.signal);
+          if (!active || disposed) instance?.dispose();
+          else wheel = instance;
+        })
+        .catch(() => {
+          /* The rendering of the same STL stays visible without WebGL. */
+        });
       if (animated) {
         void import('./hero-atmosphere')
           .then(({ createHeroAtmosphere }) => {
@@ -315,23 +396,15 @@ export function initHome() {
           .catch(() => {
             /* The CSS light remains available without a GPU renderer. */
           });
-        void import('./hero-scene')
-          .then(({ createHeroScene }) => {
-            if (!active || disposed) return;
-            try {
-              scene = createHeroScene(stage!, animated);
-            } catch {
-              /* The inline geographic globe remains visible. */
-            }
-          })
-          .catch(() => {
-            /* The geographic SVG remains visible when WebGL is unavailable. */
-          });
       }
 
       return () => {
         active = false;
         atmosphereController.abort();
+        wheelController.abort();
+        wheel?.dispose();
+        swap?.kill();
+        delete wheelGlyph.dataset.globe;
         resize?.disconnect();
         sequence?.kill();
         sequence = undefined;
