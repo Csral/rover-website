@@ -461,6 +461,18 @@ const teamData: Record<string, TeamMember[]> = {
         linkedin: 'https://www.linkedin.com/in/rajesh-madathil-68986a24/',
       },
     },
+    {
+      name: 'Rashmi Verma',
+      role: 'Mentor',
+      speciality: null,
+      about: 'Mentor of Team Odyssey',
+      photo: 'Rashmi.jpeg',
+      socials: {
+        website: '',
+        email: 'v_rashmi@blr.amrita.edu',
+        linkedin: 'https://www.linkedin.com/in/rashmi-verma-6b759116/',
+      },
+    },
   ],
 
   TeamLead: [
