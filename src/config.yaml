@@ -8,7 +8,7 @@ site:
 metadata:
   title:
     default: 'Team Odyssey'
-    template: '%s — Team Odyssey'
+    template: '%s - Team Odyssey'
   description: 'The official website for the Rover team at Amrita Bengaluru'
   robots:
     index: true
